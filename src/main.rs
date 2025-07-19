@@ -7,7 +7,7 @@ use winit::event_loop::EventLoop;
 use winit::keyboard::KeyCode;
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
-
+pub mod maths;
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
 const BOX_SIZE: i16 = 64;
@@ -143,8 +143,8 @@ impl World {
 		frame
 			.as_flattened_mut()
 			.fill(Colour::new(0x48, 0xb2, 0xe8, 255));
-		if self.box_y + BOX_SIZE > 720 || self.box_x + BOX_SIZE > 1280 {
-			return
+		if self.box_y + BOX_SIZE > HEIGHT as i16 || self.box_x + BOX_SIZE > WIDTH as i16 {
+			return;
 		}
 		for row in &mut frame[(self.box_y as usize)..((self.box_y + BOX_SIZE) as usize)] {
 			row[(self.box_x as usize)..((self.box_x + BOX_SIZE) as usize)]
