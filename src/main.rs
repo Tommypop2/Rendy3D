@@ -1,5 +1,3 @@
-use std::mem::{transmute, transmute_copy};
-
 use error_iter::ErrorIter as _;
 use log::error;
 use pixels::{Error, Pixels, SurfaceTexture};
@@ -142,12 +140,12 @@ impl World {
 	/// Assumes the default texture format: `wgpu::TextureFormat::Rgba8UnormSrgb`
 	fn draw(&self, frame: &mut [u8]) {
 		let frame = frame_pixels(frame);
-		dbg!(
-			frame
-				.as_flattened_mut()
-				.fill(Colour::new(0x48, 0xb2, 0xe8, 255))
-		);
-
+		frame
+			.as_flattened_mut()
+			.fill(Colour::new(0x48, 0xb2, 0xe8, 255));
+		if self.box_y + BOX_SIZE > 720 || self.box_x + BOX_SIZE > 1280 {
+			return
+		}
 		for row in &mut frame[(self.box_y as usize)..((self.box_y + BOX_SIZE) as usize)] {
 			row[(self.box_x as usize)..((self.box_x + BOX_SIZE) as usize)]
 				.fill(Colour::new(0x5e, 0x48, 0xe8, 255));
