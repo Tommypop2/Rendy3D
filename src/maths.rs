@@ -1,5 +1,17 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
-
+pub trait Sqrt {
+	fn sqrt(self) -> Self;
+}
+impl Sqrt for f32 {
+	fn sqrt(self) -> Self {
+		f32::sqrt(self)
+	}
+}
+impl Sqrt for f64 {
+	fn sqrt(self) -> Self {
+		f64::sqrt(self)
+	}
+}
 #[derive(PartialEq, Debug)]
 pub struct Vector3<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
 {
@@ -26,6 +38,16 @@ impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + 
 	}
 	pub fn dot_with(&self, b: &Self) -> T {
 		Self::dot(self, b)
+	}
+	pub fn magnitude_squared(&self) -> T {
+		self.x * self.x + self.y * self.y + self.z * self.z
+	}
+}
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy + Sqrt>
+	Vector3<T>
+{
+	pub fn magnitude(&self) -> T {
+		self.magnitude_squared().sqrt()
 	}
 }
 // Add
@@ -130,5 +152,11 @@ mod test {
 			vec1.cross_with(&vec2),
 			Vector3::new(2 * 1 - 2 * 3, -(1 * 1 - 3 * 3), 1 * 2 - 2 * 3)
 		)
+	}
+	#[test]
+	fn magnitude() {
+		let vec1 = Vector3::new(1.0, 2.0, 3.0);
+		assert_eq!(vec1.magnitude_squared(), 14.0);
+		assert_eq!(vec1.magnitude(), f64::sqrt(14.0))
 	}
 }
