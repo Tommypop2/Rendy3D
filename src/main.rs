@@ -12,7 +12,7 @@ use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
 use crate::graphics::screen::{Point, Screen};
-use crate::graphics::shapes::polygon::Polygon;
+use crate::graphics::shapes::triangle::Triangle2D;
 pub mod graphics;
 pub mod maths;
 const WIDTH: u32 = 1280;
@@ -107,17 +107,16 @@ impl World {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
-		// screen.draw_shape(Triangle::new(
-		// 	Point::new(500, 300),
-		// 	Point::new(800, 400),
-		// 	Point::new(640, 600),
-		// ));
-		screen.draw_shape(Polygon::new(&vec![
-			Point::new(500, 300),
-			Point::new(800, 300),
-			Point::new(800, 600),
-			Point::new(500, 600),
-		]));
+		for (i, x) in (40..(WIDTH - 40)).step_by(100).into_iter().enumerate() {
+			for (w, y) in (40..(HEIGHT - 100)).step_by(100).into_iter().enumerate() {
+				screen.set_draw_colour(Colour::COLOURS[(w + i) % Colour::COLOURS.len()].clone());
+				screen.draw_shape(Triangle2D::new(
+					Point::new(x as usize + 10, y as usize),
+					Point::new(100 + x as usize, y as usize),
+					Point::new(100 + x as usize, y as usize + 100),
+				));
+			}
+		}
 	}
 }
 

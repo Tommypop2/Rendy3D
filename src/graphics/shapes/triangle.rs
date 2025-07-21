@@ -2,7 +2,7 @@ use crate::graphics::screen::{Point, Screen};
 pub trait Draw {
 	fn draw(&self, screen: &mut Screen);
 }
-pub struct Triangle {
+pub struct Triangle2D {
 	vertex1: Point,
 	vertex2: Point,
 	vertex3: Point,
@@ -13,7 +13,7 @@ pub struct BoundingArea {
 	min_y: usize,
 	max_y: usize,
 }
-impl Triangle {
+impl Triangle2D {
 	pub fn new(vertex1: Point, vertex2: Point, vertex3: Point) -> Self {
 		Self {
 			vertex1,
@@ -45,7 +45,7 @@ impl Triangle {
 		}
 	}
 }
-impl Draw for Triangle {
+impl Draw for Triangle2D {
 	fn draw(&self, screen: &mut Screen) {
 		screen.draw_line(self.vertex1, self.vertex2);
 		screen.draw_line(self.vertex2, self.vertex3);
@@ -57,9 +57,9 @@ impl Draw for Triangle {
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
 				let p = Point::new(x,y);
-				let abp = Triangle::new(self.vertex1, self.vertex2, p).doubled_area();
-				let bcp = Triangle::new(self.vertex2, self.vertex3, p).doubled_area();
-				let acp = Triangle::new(self.vertex1, self.vertex3, p).doubled_area();
+				let abp = Triangle2D::new(self.vertex1, self.vertex2, p).doubled_area();
+				let bcp = Triangle2D::new(self.vertex2, self.vertex3, p).doubled_area();
+				let acp = Triangle2D::new(self.vertex1, self.vertex3, p).doubled_area();
 
 				if abc == abp + bcp + acp {
 					// Point inside triangle, so draw

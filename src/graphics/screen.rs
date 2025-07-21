@@ -1,6 +1,10 @@
 use pixels::Pixels;
 
-use crate::{frame_pixels, graphics::{colour::Colour, shapes::triangle::Draw}, maths::vector2::Vector2, WIDTH};
+use crate::{
+	WIDTH, frame_pixels,
+	graphics::{colour::Colour, shapes::triangle::Draw},
+	maths::vector::vector2::Vector2,
+};
 
 pub struct Screen<'a> {
 	pub pixels: Pixels<'a>,
