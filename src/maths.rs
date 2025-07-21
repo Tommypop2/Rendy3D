@@ -1,17 +1,25 @@
-use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
-pub trait Sqrt {
+use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
+pub trait SqrtAcos {
 	fn sqrt(self) -> Self;
+	fn acos(self) -> Self;
 }
-impl Sqrt for f32 {
+impl SqrtAcos for f32 {
 	fn sqrt(self) -> Self {
 		f32::sqrt(self)
 	}
+	fn acos(self) -> Self {
+		f32::acos(self)
+	}
 }
-impl Sqrt for f64 {
+impl SqrtAcos for f64 {
 	fn sqrt(self) -> Self {
 		f64::sqrt(self)
 	}
+	fn acos(self) -> Self {
+		f64::acos(self)
+	}
 }
+
 #[derive(PartialEq, Debug)]
 pub struct Vector3<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
 {
@@ -43,11 +51,22 @@ impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + 
 		self.x * self.x + self.y * self.y + self.z * self.z
 	}
 }
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy + Sqrt>
-	Vector3<T>
+impl<
+	T: Mul<Output = T>
+		+ Add<Output = T>
+		+ Sub<Output = T>
+		+ Neg<Output = T>
+		+ Copy
+		+ SqrtAcos
+		+ Div<Output = T>,
+> Vector3<T>
 {
 	pub fn magnitude(&self) -> T {
 		self.magnitude_squared().sqrt()
+	}
+	pub fn angle(&self, b: &Self) -> T {
+		let cos_theta = Self::dot(self, b) / (self.magnitude() * b.magnitude());
+		T::acos(cos_theta)
 	}
 }
 // Add
