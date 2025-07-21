@@ -1,18 +1,134 @@
-use std::ops::{Add, Mul};
+use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-pub struct Vector3<T: Mul<Output = T> + Add<Output = T>> {
+#[derive(PartialEq, Debug)]
+pub struct Vector3<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
+{
 	x: T,
 	y: T,
 	z: T,
 }
-impl<T: Mul<Output = T> + Add<Output = T>> Vector3<T> {
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> Vector3<T> {
 	pub fn new(x: T, y: T, z: T) -> Self {
 		Self { x, y, z }
 	}
-	fn cross(a: Self, b: Self) -> Self {
-		todo!();
+	pub fn cross(a: &Self, b: &Self) -> Self {
+		Self {
+			x: a.y * b.z - b.y * a.z,
+			y: -(a.x * b.z - b.x * a.z),
+			z: a.x * b.y - b.x * a.y,
+		}
 	}
-	fn dot(a: Self, b: Self) -> T {
+	pub fn dot(a: &Self, b: &Self) -> T {
 		a.x * b.x + a.y * b.y + a.z * b.z
+	}
+	pub fn cross_with(&self, b: &Self) -> Self {
+		Self::cross(self, b)
+	}
+	pub fn dot_with(&self, b: &Self) -> T {
+		Self::dot(self, b)
+	}
+}
+// Add
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> Add<Self>
+	for Vector3<T>
+{
+	type Output = Self;
+
+	fn add(mut self, rhs: Self) -> Self::Output {
+		self += rhs;
+		self
+	}
+}
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
+	AddAssign<Self> for Vector3<T>
+{
+	fn add_assign(&mut self, rhs: Self) {
+		*self = Self {
+			x: self.x + rhs.x,
+			y: self.y + rhs.y,
+			z: self.z + rhs.z,
+		}
+	}
+}
+
+// Subtract
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> Sub<Self>
+	for Vector3<T>
+{
+	type Output = Self;
+
+	fn sub(mut self, rhs: Self) -> Self::Output {
+		self -= rhs;
+		self
+	}
+}
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
+	SubAssign<Self> for Vector3<T>
+{
+	fn sub_assign(&mut self, rhs: Self) {
+		*self = Self {
+			x: self.x - rhs.x,
+			y: self.y - rhs.y,
+			z: self.z - rhs.z,
+		}
+	}
+}
+
+// Multiply
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> MulAssign<T>
+	for Vector3<T>
+{
+	fn mul_assign(&mut self, rhs: T) {
+		*self = Self {
+			x: self.x * rhs,
+			y: self.y * rhs,
+			z: self.z * rhs,
+		}
+	}
+}
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> Mul<T>
+	for Vector3<T>
+{
+	type Output = Self;
+	fn mul(mut self, rhs: T) -> Self {
+		self *= rhs;
+		self
+	}
+}
+#[cfg(test)]
+mod test {
+	use super::*;
+
+	#[test]
+	fn addition() {
+		let vec1 = Vector3::new(1, 2, 3);
+		let vec2 = Vector3::new(3, 2, 1);
+		assert_eq!(vec1 + vec2, Vector3::new(4, 4, 4))
+	}
+	#[test]
+	fn subtraction() {
+		let vec1 = Vector3::new(1, 2, 3);
+		let vec2 = Vector3::new(3, 2, 1);
+		assert_eq!(vec1 - vec2, Vector3::new(-2, 0, 2))
+	}
+	#[test]
+	fn multiplication() {
+		let vec1 = Vector3::new(1, 2, 3);
+		assert_eq!(vec1 * 5, Vector3::new(5, 10, 15))
+	}
+	#[test]
+	fn dot() {
+		let vec1 = Vector3::new(1, 2, 3);
+		let vec2 = Vector3::new(3, 2, 1);
+		assert_eq!(vec1.dot_with(&vec2), 3 + 4 + 3)
+	}
+	#[test]
+	fn cross() {
+		let vec1 = Vector3::new(1, 2, 3);
+		let vec2 = Vector3::new(3, 2, 1);
+		assert_eq!(
+			vec1.cross_with(&vec2),
+			Vector3::new(2 * 1 - 2 * 3, -(1 * 1 - 3 * 3), 1 * 2 - 2 * 3)
+		)
 	}
 }
