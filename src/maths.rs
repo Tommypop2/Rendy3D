@@ -178,4 +178,10 @@ mod test {
 		assert_eq!(vec1.magnitude_squared(), 14.0);
 		assert_eq!(vec1.magnitude(), f64::sqrt(14.0))
 	}
+	#[test]
+	fn angle() {
+		let vec1 = Vector3::new(1.0, 2.0, 3.0);
+		let vec2 = Vector3::new(3.0, 2.0, 1.0);
+		assert_eq!(vec1.angle(&vec2), 0.7751933733103613);
+	}
 }
