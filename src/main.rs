@@ -12,6 +12,7 @@ use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
 use crate::graphics::screen::{Point, Screen};
+use crate::graphics::shapes::triangle::Triangle;
 use crate::maths::vector2::Vector2;
 pub mod graphics;
 pub mod maths;
@@ -107,7 +108,7 @@ impl World {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
-		screen.draw_triangle(Point::new(500, 300), Point::new(800, 400), Point::new(640,600));
+		screen.draw_shape(Triangle::new(Point::new(500, 300), Point::new(800, 400), Point::new(640,600)));
 	}
 }
 

@@ -77,11 +77,6 @@ impl<'a> Screen<'a> {
 	pub fn draw_shape<T: Draw>(&mut self, shape: T) {
 		shape.draw(self);
 	}
-	pub fn draw_triangle(&mut self, vertex1: Point, vertex2: Point, vertex3: Point) {
-		self.draw_line(vertex1, vertex2);
-		self.draw_line(vertex2, vertex3);
-		self.draw_line(vertex3, vertex1);
-	}
 	pub fn clear(&mut self, colour: Colour) {
 		self.frame().as_flattened_mut().fill(colour);
 	}

@@ -14,6 +14,13 @@ pub struct BoundingArea {
 	max_y: usize,
 }
 impl Triangle {
+	pub fn new(vertex1: Point, vertex2: Point, vertex3: Point) -> Self {
+		Self {
+			vertex1,
+			vertex2,
+			vertex3,
+		}
+	}
 	fn bounding_area(&self) -> BoundingArea {
 		let min_x = self.vertex1.x.min(self.vertex2.x).min(self.vertex3.x);
 		let max_x = self.vertex1.x.max(self.vertex2.x).max(self.vertex3.x);
