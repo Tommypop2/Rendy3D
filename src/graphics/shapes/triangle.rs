@@ -76,7 +76,7 @@ impl Draw for Triangle2D {
 
 				if abc == abp + bcp + acp {
 					// Point inside triangle, so draw
-					screen.draw_point(p);
+					viewport.draw_point(screen, p);
 				}
 			}
 		}

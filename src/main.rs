@@ -12,7 +12,7 @@ use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
 use crate::graphics::screen::{Point, Screen};
-use crate::graphics::shapes::triangle::Triangle2D;
+use crate::graphics::shapes::triangle::{BoundingArea, Triangle2D};
 use crate::graphics::viewport::Viewport;
 pub mod graphics;
 pub mod maths;
@@ -41,7 +41,8 @@ fn main() -> Result<(), Error> {
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
 	let mut screen = Screen::new(pixels);
-	let mut viewport = Viewport::default();
+	let mut viewport =
+		Viewport::new(BoundingArea::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
@@ -51,13 +52,16 @@ fn main() -> Result<(), Error> {
 			..
 		} = event
 		{
+			// Clear buffer
+			screen.clear(Colour::BLACK);
 			let start = Instant::now();
 			world.draw(&mut viewport, &mut screen);
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
-
+			viewport.set_area(BoundingArea::new(frame_num % 40, WIDTH as usize, 0, HEIGHT as usize));
 			if frame_num % 1000 == 0 {
+				//
 				let mean = sum as f64 / frame_num as f64;
 				frame_num = 0;
 				sum = 0;
@@ -85,7 +89,7 @@ fn main() -> Result<(), Error> {
 			}
 
 			world.update();
-			// window.request_redraw();
+			window.request_redraw();
 		}
 	});
 	res.map_err(|e| Error::UserDefined(Box::new(e)))
@@ -112,11 +116,14 @@ impl World {
 		for (i, x) in (40..(WIDTH - 40)).step_by(100).into_iter().enumerate() {
 			for (w, y) in (40..(HEIGHT - 100)).step_by(100).into_iter().enumerate() {
 				screen.set_draw_colour(Colour::COLOURS[(w + i) % Colour::COLOURS.len()].clone());
-				viewport.draw_shape(screen, Triangle2D::new(
-					Point::new(x as usize + 10, y as usize),
-					Point::new(100 + x as usize, y as usize),
-					Point::new(100 + x as usize, y as usize + 100),
-				));
+				viewport.draw_shape(
+					screen,
+					Triangle2D::new(
+						Point::new(x as usize + 10, y as usize),
+						Point::new(100 + x as usize, y as usize),
+						Point::new(100 + x as usize, y as usize + 100),
+					),
+				);
 			}
 		}
 	}

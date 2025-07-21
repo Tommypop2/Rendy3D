@@ -21,6 +21,7 @@ impl Default for Viewport {
 		}
 	}
 }
+#[derive(Debug)]
 pub enum ViewportCreationError {
 	MaxXGreaterThanScreenSize,
 	MaxYGreaterThanScreenSize,
@@ -34,6 +35,9 @@ impl Viewport {
 			return Err(ViewportCreationError::MaxYGreaterThanScreenSize);
 		}
 		Ok(Self { area })
+	}
+	pub fn set_area(&mut self, area: BoundingArea) {
+		self.area = area;
 	}
 	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: Point) {
 		let offset = Point::new(self.area.min_x, self.area.min_y);

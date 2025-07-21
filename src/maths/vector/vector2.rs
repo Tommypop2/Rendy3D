@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul};
+use std::ops::{Add, AddAssign, Mul};
 
 use crate::maths::Float;
 
@@ -23,6 +23,15 @@ impl<T: Mul<Output = T> + Add<Output = T> + Copy> Vector2<T> {
 impl<T: Mul<Output = T> + Add<Output = T> + Copy + Float> Vector2<T> {
 	pub fn magnitude(&self) -> T {
 		self.magnitude_squared().sqrt()
+	}
+}
+
+impl<T: Mul<Output = T> + Add<Output = T> + Copy> AddAssign<Vector2<T>> for Vector2<T> {
+	fn add_assign(&mut self, rhs: Vector2<T>) {
+		*self = Self {
+			x: self.x + rhs.x,
+			y: self.y + rhs.y,
+		}
 	}
 }
 
