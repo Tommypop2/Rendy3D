@@ -25,3 +25,13 @@ impl<T: Mul<Output = T> + Add<Output = T> + Copy + Float> Vector2<T> {
 		self.magnitude_squared().sqrt()
 	}
 }
+
+impl<T: Mul<Output = T> + Add<Output = T> + Copy> Add<Vector2<T>> for Vector2<T> {
+	type Output = Vector2<T>;
+	fn add(self, rhs: Vector2<T>) -> Self::Output {
+		Self {
+			x: self.x + rhs.x,
+			y: self.y + rhs.y,
+		}
+	}
+}

@@ -13,6 +13,7 @@ use winit_input_helper::WinitInputHelper;
 use crate::graphics::colour::Colour;
 use crate::graphics::screen::{Point, Screen};
 use crate::graphics::shapes::triangle::Triangle2D;
+use crate::graphics::viewport::Viewport;
 pub mod graphics;
 pub mod maths;
 const WIDTH: u32 = 1280;
@@ -40,6 +41,7 @@ fn main() -> Result<(), Error> {
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
 	let mut screen = Screen::new(pixels);
+	let mut viewport = Viewport::default();
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
@@ -50,7 +52,7 @@ fn main() -> Result<(), Error> {
 		} = event
 		{
 			let start = Instant::now();
-			world.draw(&mut screen);
+			world.draw(&mut viewport, &mut screen);
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
@@ -103,14 +105,14 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw(&self, screen: &mut Screen) {
+	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen) {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
 		for (i, x) in (40..(WIDTH - 40)).step_by(100).into_iter().enumerate() {
 			for (w, y) in (40..(HEIGHT - 100)).step_by(100).into_iter().enumerate() {
 				screen.set_draw_colour(Colour::COLOURS[(w + i) % Colour::COLOURS.len()].clone());
-				screen.draw_shape(Triangle2D::new(
+				viewport.draw_shape(screen, Triangle2D::new(
 					Point::new(x as usize + 10, y as usize),
 					Point::new(100 + x as usize, y as usize),
 					Point::new(100 + x as usize, y as usize + 100),
