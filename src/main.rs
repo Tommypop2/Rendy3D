@@ -34,7 +34,7 @@ fn main() -> Result<(), Error> {
 			.unwrap()
 	};
 
-	let mut pixels = {
+	let pixels = {
 		let window_size = window.inner_size();
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?

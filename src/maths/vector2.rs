@@ -1,6 +1,6 @@
 use std::ops::{Add, Mul};
 
-use crate::maths::SqrtAcos;
+use crate::maths::Float;
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector2<T: Mul<Output = T> + Add<Output = T> + Copy> {
@@ -20,7 +20,7 @@ impl<T: Mul<Output = T> + Add<Output = T> + Copy> Vector2<T> {
 	}
 }
 
-impl<T: Mul<Output = T> + Add<Output = T> + Copy + SqrtAcos> Vector2<T> {
+impl<T: Mul<Output = T> + Add<Output = T> + Copy + Float> Vector2<T> {
 	pub fn magnitude(&self) -> T {
 		self.magnitude_squared().sqrt()
 	}

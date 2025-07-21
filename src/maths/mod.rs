@@ -1,11 +1,11 @@
-pub mod vector3;
 pub mod vector2;
+pub mod vector3;
 
-pub trait SqrtAcos {
+pub trait Float {
 	fn sqrt(self) -> Self;
 	fn acos(self) -> Self;
 }
-impl SqrtAcos for f32 {
+impl Float for f32 {
 	fn sqrt(self) -> Self {
 		f32::sqrt(self)
 	}
@@ -13,7 +13,7 @@ impl SqrtAcos for f32 {
 		f32::acos(self)
 	}
 }
-impl SqrtAcos for f64 {
+impl Float for f64 {
 	fn sqrt(self) -> Self {
 		f64::sqrt(self)
 	}

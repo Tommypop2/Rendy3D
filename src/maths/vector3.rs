@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 
-use crate::maths::SqrtAcos;
+use crate::maths::Float;
 #[derive(PartialEq, Debug)]
 pub struct Vector3<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
 {
@@ -38,7 +38,7 @@ impl<
 		+ Sub<Output = T>
 		+ Neg<Output = T>
 		+ Copy
-		+ SqrtAcos
+		+ Float
 		+ Div<Output = T>,
 > Vector3<T>
 {
