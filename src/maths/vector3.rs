@@ -1,25 +1,6 @@
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
-pub trait SqrtAcos {
-	fn sqrt(self) -> Self;
-	fn acos(self) -> Self;
-}
-impl SqrtAcos for f32 {
-	fn sqrt(self) -> Self {
-		f32::sqrt(self)
-	}
-	fn acos(self) -> Self {
-		f32::acos(self)
-	}
-}
-impl SqrtAcos for f64 {
-	fn sqrt(self) -> Self {
-		f64::sqrt(self)
-	}
-	fn acos(self) -> Self {
-		f64::acos(self)
-	}
-}
 
+use crate::maths::SqrtAcos;
 #[derive(PartialEq, Debug)]
 pub struct Vector3<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
 {
