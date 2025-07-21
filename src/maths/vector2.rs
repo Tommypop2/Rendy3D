@@ -2,9 +2,10 @@ use std::ops::{Add, Mul};
 
 use crate::maths::SqrtAcos;
 
+#[derive(Debug, Clone, Copy)]
 pub struct Vector2<T: Mul<Output = T> + Add<Output = T> + Copy> {
-	x: T,
-	y: T,
+	pub x: T,
+	pub y: T,
 }
 
 impl<T: Mul<Output = T> + Add<Output = T> + Copy> Vector2<T> {

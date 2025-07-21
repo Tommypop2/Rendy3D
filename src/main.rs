@@ -11,7 +11,8 @@ use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
-use crate::graphics::screen::Screen;
+use crate::graphics::screen::{Point, Screen};
+use crate::maths::vector2::Vector2;
 pub mod graphics;
 pub mod maths;
 const WIDTH: u32 = 1280;
@@ -103,7 +104,10 @@ impl World {
 	fn update(&mut self) {}
 
 	fn draw(&self, screen: &mut Screen) {
-		screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
+		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
+		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
+		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
+		screen.draw_triangle(Point::new(500, 300), Point::new(800, 400), Point::new(640,600));
 	}
 }
 
