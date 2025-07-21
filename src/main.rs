@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use error_iter::ErrorIter as _;
 use log::error;
 use pixels::{Error, Pixels, SurfaceTexture};
@@ -7,6 +9,10 @@ use winit::event_loop::EventLoop;
 use winit::keyboard::KeyCode;
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
+
+use crate::graphics::colour::Colour;
+use crate::graphics::screen::Screen;
+pub mod graphics;
 pub mod maths;
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
@@ -32,16 +38,29 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
+	let mut screen = Screen::new(pixels);
 	let mut world = World::new();
-
+	let mut frame_num: usize = 0;
+	let mut sum: u128 = 0;
 	let res = event_loop.run(|event, elwt| {
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
 		} = event
 		{
-			world.draw(pixels.frame_mut());
-			if let Err(err) = pixels.render() {
+			let start = Instant::now();
+			world.draw(&mut screen);
+			let time_taken = start.elapsed();
+			frame_num += 1;
+			sum += time_taken.as_micros();
+
+			if frame_num % 1000 == 0 {
+				let mean = sum as f64 / frame_num as f64;
+				frame_num = 0;
+				sum = 0;
+				println!("Mean draw time taken over most recent 1000 frames is {mean} microseconds")
+			}
+			if let Err(err) = screen.pixels.render() {
 				log_error("pixels.render", err);
 				elwt.exit();
 				return;
@@ -55,7 +74,7 @@ fn main() -> Result<(), Error> {
 			}
 
 			if let Some(size) = input.window_resized() {
-				if let Err(err) = pixels.resize_surface(size.width, size.height) {
+				if let Err(err) = screen.pixels.resize_surface(size.width, size.height) {
 					log_error("pixels.resize_surface", err);
 					elwt.exit();
 					return;
@@ -75,29 +94,6 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 		error!("  Caused by: {source}");
 	}
 }
-#[repr(C)]
-#[derive(Clone, Debug)]
-struct Colour {
-	red: u8,
-	green: u8,
-	blue: u8,
-	alpha: u8,
-}
-impl Colour {
-	pub fn new(red: u8, green: u8, blue: u8, alpha: u8) -> Self {
-		Self {
-			red,
-			green,
-			blue,
-			alpha,
-		}
-	}
-}
-impl Default for Colour {
-	fn default() -> Self {
-		Self::new(255, 255, 255, 255)
-	}
-}
 
 impl World {
 	fn new() -> Self {
@@ -106,11 +102,8 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw(&self, frame: &mut [u8]) {
-		let frame = frame_pixels(frame);
-		frame
-			.as_flattened_mut()
-			.fill(Colour::new(0x48, 0xb2, 0xe8, 255));
+	fn draw(&self, screen: &mut Screen) {
+		screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 	}
 }
 

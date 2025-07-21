@@ -1,4 +1,6 @@
 pub mod vector3;
+pub mod vector2;
+
 pub trait SqrtAcos {
 	fn sqrt(self) -> Self;
 	fn acos(self) -> Self;
