@@ -16,8 +16,10 @@ use crate::graphics::shapes_2d::triangle::{BoundingArea, Triangle2D};
 use crate::graphics::shapes_3d::point::Point;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
+use crate::loaders::stl::load_file;
 use crate::maths::matrices::matrix4::Matrix4;
 pub mod graphics;
+pub mod loaders;
 pub mod maths;
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
@@ -49,6 +51,7 @@ fn main() -> Result<(), Error> {
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
+	let mesh = load_file("./300_polygon_sphere_100mm.STL");
 	let res = event_loop.run(|event, elwt| {
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
@@ -58,7 +61,7 @@ fn main() -> Result<(), Error> {
 			// Clear buffer
 			screen.clear(Colour::BLACK);
 			let start = Instant::now();
-			world.draw(&mut viewport, &mut screen);
+			world.draw(&mut viewport, &mut screen, &mesh);
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
@@ -117,7 +120,7 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen) {
+	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen, mesh: &Vec<Triangle3D>) {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
@@ -134,13 +137,27 @@ impl World {
 		// 		);
 		// 	}
 		// }
-		let x: std::time::Duration = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap();
-		let triangle_3d = Triangle3D::new(
-			Point::new(0.0, -0.1, 0.0),
-			Point::new(0.3, 0.1, 0.0),
-			Point::new(-0.2, 0.1, 0.0),
-		).apply(Matrix4::rotation(x.as_secs_f64()));
-		viewport.draw_shape::<Triangle2D>(screen, triangle_3d.into())
+		let x: std::time::Duration = SystemTime::now()
+			.duration_since(SystemTime::UNIX_EPOCH)
+			.unwrap();
+		// let triangle_3d = Triangle3D::new(
+		// 	Point::new(0.0, -0.1, 0.0),
+		// 	Point::new(0.3, 0.1, 0.0),
+		// 	Point::new(-0.2, 0.1, 0.0),
+		// )
+		// .apply(Matrix4::rotation(x.as_secs_f64()));
+		for (i, triangle) in mesh.iter().enumerate() {
+			screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
+			viewport.draw_shape::<Triangle2D>(
+				screen,
+				triangle
+					.clone()
+					.apply(Matrix4::rotation_x(x.as_secs_f64()))
+					.apply(Matrix4::rotation_y(x.as_secs_f64()))
+					.apply(Matrix4::rotation_z(x.as_secs_f64()))
+					.into(),
+			)
+		}
 	}
 }
 

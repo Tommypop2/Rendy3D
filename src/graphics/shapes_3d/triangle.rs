@@ -2,7 +2,7 @@ use crate::{
 	graphics::{shapes_2d::triangle::Triangle2D, shapes_3d::point::Point},
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
-
+#[derive(Clone)]
 pub struct Triangle3D {
 	vertex1: Point,
 	vertex2: Point,

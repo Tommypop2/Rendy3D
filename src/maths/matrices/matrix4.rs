@@ -58,8 +58,14 @@ where
 	pub fn translation(vector: Vector3<T>) -> Self {
 		Self::unit().with_translation(vector)
 	}
-	pub fn rotation(angle: T) -> Self {
+	pub fn rotation_x(angle: T) -> Self {
 		Matrix3::rotate_x(angle).into()
+	}
+	pub fn rotation_y(angle: T) -> Self {
+		Matrix3::rotate_y(angle).into()
+	}
+	pub fn rotation_z(angle: T) -> Self {
+		Matrix3::rotate_z(angle).into()
 	}
 }
 

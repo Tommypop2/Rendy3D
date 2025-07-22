@@ -13,8 +13,8 @@ impl PixelCoordinate {
 impl From<Point> for PixelCoordinate {
 	fn from(value: Point) -> Self {
 		let offset = PixelCoordinate::new((WIDTH / 2) as usize, (HEIGHT / 2) as usize);
-		let x = (offset.x as f64 + value.x * WIDTH as f64).round() as usize;
-		let y = (offset.y as f64 + value.y * WIDTH as f64).round() as usize;
+		let x = (offset.x as f64 + value.x * (WIDTH as f64) / 100.0).round() as usize;
+		let y = (offset.y as f64 + value.y * (HEIGHT as f64) / 100.0).round() as usize;
 		Self::new(x, y)
 	}
 }
