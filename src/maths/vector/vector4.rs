@@ -1,7 +1,4 @@
-use crate::maths::{
-	Float,
-	vector::vector3::{Vector3, VectorType},
-};
+use crate::maths::vector::vector3::{Vector3, VectorType};
 #[derive(Default)]
 pub struct Vector4<T> {
 	pub x: T,

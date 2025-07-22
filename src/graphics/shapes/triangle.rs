@@ -27,7 +27,11 @@ impl BoundingArea {
 	}
 }
 impl Triangle2D {
-	pub fn new(vertex1: PixelCoordinate, vertex2: PixelCoordinate, vertex3: PixelCoordinate) -> Self {
+	pub fn new(
+		vertex1: PixelCoordinate,
+		vertex2: PixelCoordinate,
+		vertex3: PixelCoordinate,
+	) -> Self {
 		Self {
 			vertex1,
 			vertex2,

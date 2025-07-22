@@ -1,7 +1,8 @@
 use crate::graphics::{
 	colour::Colour,
 	screen::PixelCoordinate,
-	shapes::triangle::{Draw, Triangle2D}, viewport::Viewport,
+	shapes::triangle::{Draw, Triangle2D},
+	viewport::Viewport,
 };
 
 pub struct Polygon<'a> {
@@ -13,8 +14,7 @@ impl<'a> Polygon<'a> {
 		Self { points }
 	}
 	pub fn to_triangles(&self) -> Vec<Triangle2D> {
-		let mut triangles: Vec<Triangle2D> = vec![];
-		triangles.reserve(self.points.len() - 2);
+		let mut triangles: Vec<Triangle2D> = Vec::with_capacity(self.points.len() - 2);
 		let first = self.points[0];
 		let len = self.points.len();
 		for i in 1..(len - 1) {

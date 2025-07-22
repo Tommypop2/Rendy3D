@@ -44,7 +44,12 @@ impl Viewport {
 		let p = point + offset;
 		screen.draw_point(p);
 	}
-	fn draw_line_low(&mut self, screen: &mut super::screen::Screen, start: PixelCoordinate, end: PixelCoordinate) {
+	fn draw_line_low(
+		&mut self,
+		screen: &mut super::screen::Screen,
+		start: PixelCoordinate,
+		end: PixelCoordinate,
+	) {
 		let dx = (end.x - start.x) as i32;
 		let (dy, yi) = {
 			let dy = end.y as i32 - start.y as i32;
@@ -56,13 +61,18 @@ impl Viewport {
 			self.draw_point(screen, PixelCoordinate::new(x, y as usize));
 			if d > 0 {
 				y += yi;
-				d = d + (2 * (dy - dx))
+				d += 2 * (dy - dx)
 			} else {
-				d = d + 2 * dy
+				d += 2 * dy
 			}
 		}
 	}
-	fn draw_line_high(&mut self, screen: &mut super::screen::Screen, start: PixelCoordinate, end: PixelCoordinate) {
+	fn draw_line_high(
+		&mut self,
+		screen: &mut super::screen::Screen,
+		start: PixelCoordinate,
+		end: PixelCoordinate,
+	) {
 		let (dx, xi) = {
 			let dx = end.x as i32 - start.x as i32;
 			if dx < 0 { (-dx, -1) } else { (dx, 1) }
@@ -74,26 +84,29 @@ impl Viewport {
 			self.draw_point(screen, PixelCoordinate::new(x as usize, y));
 			if d > 0 {
 				x += xi;
-				d = d + (2 * (dx - dy))
+				d += 2 * (dx - dy)
 			} else {
-				d = d + 2 * dx
+				d += 2 * dx
 			}
 		}
 	}
-	pub fn draw_line(&mut self, screen: &mut super::screen::Screen, start: PixelCoordinate, end: PixelCoordinate) {
+	pub fn draw_line(
+		&mut self,
+		screen: &mut super::screen::Screen,
+		start: PixelCoordinate,
+		end: PixelCoordinate,
+	) {
 		if usize::abs_diff(start.y, end.y) < usize::abs_diff(start.x, end.x) {
 			if end.x > start.x {
 				self.draw_line_low(screen, start, end);
 			} else {
 				self.draw_line_low(screen, end, start);
 			}
-		} else {
-			if end.y > start.y {
-				self.draw_line_high(screen, start, end);
-			} else {
-				self.draw_line_high(screen, end, start);
-			}
-		}
+		} else if end.y > start.y {
+  				self.draw_line_high(screen, start, end);
+  			} else {
+  				self.draw_line_high(screen, end, start);
+  			}
 	}
 	pub fn draw_shape<T: Draw>(&mut self, screen: &mut super::screen::Screen, shape: T) {
 		shape.draw(self, screen);

@@ -59,7 +59,12 @@ fn main() -> Result<(), Error> {
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
-			viewport.set_area(BoundingArea::new(frame_num % 40, WIDTH as usize, 0, HEIGHT as usize));
+			viewport.set_area(BoundingArea::new(
+				frame_num % 40,
+				WIDTH as usize,
+				0,
+				HEIGHT as usize,
+			));
 			if frame_num % 1000 == 0 {
 				//
 				let mean = sum as f64 / frame_num as f64;
@@ -113,8 +118,8 @@ impl World {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
-		for (i, x) in (40..(WIDTH - 40)).step_by(100).into_iter().enumerate() {
-			for (w, y) in (40..(HEIGHT - 100)).step_by(100).into_iter().enumerate() {
+		for (i, x) in (40..(WIDTH - 40)).step_by(100).enumerate() {
+			for (w, y) in (40..(HEIGHT - 100)).step_by(100).enumerate() {
 				screen.set_draw_colour(Colour::COLOURS[(w + i) % Colour::COLOURS.len()].clone());
 				viewport.draw_shape(
 					screen,
@@ -132,10 +137,10 @@ impl World {
 const fn frame_pixels(frame: &mut [u8]) -> &mut [[Colour; WIDTH as usize]] {
 	// SAFETY: Format for each pixel matches the layout of the `Colour` struct (and is 4 bytes)
 	// mem::transmute doesn't work here as it doesn't adjust the length of the slice, even though it is transmuted into a 2D array (so the length reduces)
-	let frame = unsafe {
+	
+	(unsafe {
 		let ptr = frame as *mut [u8];
 		let casted = ptr as *mut [[Colour; WIDTH as usize]; HEIGHT as usize];
 		&mut *casted
-	};
-	frame
+	}) as _
 }

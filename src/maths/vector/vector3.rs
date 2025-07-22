@@ -1,7 +1,4 @@
-use std::{
-	ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign},
-	process::Output,
-};
+use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use crate::maths::Float;
 pub trait VectorType:
@@ -156,7 +153,7 @@ mod test {
 		let vec2 = Vector3::new(3, 2, 1);
 		assert_eq!(
 			vec1.cross_with(&vec2),
-			Vector3::new(2 * 1 - 2 * 3, -(1 * 1 - 3 * 3), 1 * 2 - 2 * 3)
+			Vector3::new(2 - 2 * 3, -(1 - 3 * 3), 2 - 2 * 3)
 		)
 	}
 	#[test]

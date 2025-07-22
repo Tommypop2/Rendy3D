@@ -1,2 +1,2 @@
-pub mod triangle;
 pub mod polygon;
+pub mod triangle;
