@@ -1,6 +1,5 @@
-use crate::maths::vector::vector3::Vector3;
+use crate::graphics::{shapes_2d::triangle::Triangle2D, shapes_3d::point::Point};
 
-pub type Point = Vector3<f64>;
 pub struct Triangle3D {
 	vertex1: Point,
 	vertex2: Point,
@@ -14,5 +13,15 @@ impl Triangle3D {
 			vertex2,
 			vertex3,
 		}
+	}
+}
+
+impl From<Triangle3D> for Triangle2D {
+	fn from(value: Triangle3D) -> Self {
+		Self::new(
+			value.vertex1.into(),
+			value.vertex2.into(),
+			value.vertex3.into(),
+		)
 	}
 }

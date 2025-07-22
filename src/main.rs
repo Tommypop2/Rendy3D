@@ -11,8 +11,10 @@ use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
-use crate::graphics::screen::{PixelCoordinate, Screen};
+use crate::graphics::screen::Screen;
 use crate::graphics::shapes_2d::triangle::{BoundingArea, Triangle2D};
+use crate::graphics::shapes_3d::point::Point;
+use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
 pub mod graphics;
 pub mod maths;
@@ -118,26 +120,32 @@ impl World {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
-		for (i, x) in (40..(WIDTH - 40)).step_by(100).enumerate() {
-			for (w, y) in (40..(HEIGHT - 100)).step_by(100).enumerate() {
-				screen.set_draw_colour(Colour::COLOURS[(w + i) % Colour::COLOURS.len()].clone());
-				viewport.draw_shape(
-					screen,
-					Triangle2D::new(
-						PixelCoordinate::new(x as usize + 10, y as usize),
-						PixelCoordinate::new(100 + x as usize, y as usize),
-						PixelCoordinate::new(100 + x as usize, y as usize + 100),
-					),
-				);
-			}
-		}
+		// for (i, x) in (40..(WIDTH - 40)).step_by(100).enumerate() {
+		// 	for (w, y) in (40..(HEIGHT - 100)).step_by(100).enumerate() {
+		// 		screen.set_draw_colour(Colour::COLOURS[(w + i) % Colour::COLOURS.len()].clone());
+		// 		viewport.draw_shape(
+		// 			screen,
+		// 			Triangle2D::new(
+		// 				PixelCoordinate::new(x as usize + 10, y as usize),
+		// 				PixelCoordinate::new(100 + x as usize, y as usize),
+		// 				PixelCoordinate::new(100 + x as usize, y as usize + 100),
+		// 			),
+		// 		);
+		// 	}
+		// }
+		let triangle_3d = Triangle3D::new(
+			Point::new(0.0, 0.0, 0.0),
+			Point::new(0.3, 0.2, 0.0),
+			Point::new(-0.2, 0.2, 0.0),
+		);
+		viewport.draw_shape::<Triangle2D>(screen, triangle_3d.into())
 	}
 }
 
 const fn frame_pixels(frame: &mut [u8]) -> &mut [[Colour; WIDTH as usize]] {
 	// SAFETY: Format for each pixel matches the layout of the `Colour` struct (and is 4 bytes)
 	// mem::transmute doesn't work here as it doesn't adjust the length of the slice, even though it is transmuted into a 2D array (so the length reduces)
-	
+
 	(unsafe {
 		let ptr = frame as *mut [u8];
 		let casted = ptr as *mut [[Colour; WIDTH as usize]; HEIGHT as usize];
