@@ -6,7 +6,7 @@ pub struct Screen<'a> {
 	pub pixels: Pixels<'a>,
 	pub draw_colour: Colour,
 }
-pub type Point = Vector2<usize>;
+pub type PixelCoordinate = Vector2<usize>;
 impl<'a> Screen<'a> {
 	pub fn new(pixels: Pixels<'a>) -> Self {
 		Self {
@@ -20,7 +20,7 @@ impl<'a> Screen<'a> {
 	pub fn set_draw_colour(&mut self, colour: Colour) {
 		self.draw_colour = colour;
 	}
-	pub fn draw_point(&mut self, point: Point) {
+	pub fn draw_point(&mut self, point: PixelCoordinate) {
 		self.frame()[point.y][point.x] = self.draw_colour.clone();
 	}
 	pub fn clear(&mut self, colour: Colour) {

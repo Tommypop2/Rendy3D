@@ -1,14 +1,14 @@
 use crate::graphics::{
-	screen::{Point, Screen},
+	screen::{PixelCoordinate, Screen},
 	viewport::Viewport,
 };
 pub trait Draw {
 	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen);
 }
 pub struct Triangle2D {
-	vertex1: Point,
-	vertex2: Point,
-	vertex3: Point,
+	vertex1: PixelCoordinate,
+	vertex2: PixelCoordinate,
+	vertex3: PixelCoordinate,
 }
 pub struct BoundingArea {
 	pub min_x: usize,
@@ -27,7 +27,7 @@ impl BoundingArea {
 	}
 }
 impl Triangle2D {
-	pub fn new(vertex1: Point, vertex2: Point, vertex3: Point) -> Self {
+	pub fn new(vertex1: PixelCoordinate, vertex2: PixelCoordinate, vertex3: PixelCoordinate) -> Self {
 		Self {
 			vertex1,
 			vertex2,
@@ -69,7 +69,7 @@ impl Draw for Triangle2D {
 		let abc = self.doubled_area();
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
-				let p = Point::new(x, y);
+				let p = PixelCoordinate::new(x, y);
 				let abp = Triangle2D::new(self.vertex1, self.vertex2, p).doubled_area();
 				let bcp = Triangle2D::new(self.vertex2, self.vertex3, p).doubled_area();
 				let acp = Triangle2D::new(self.vertex1, self.vertex3, p).doubled_area();

@@ -11,7 +11,7 @@ use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
-use crate::graphics::screen::{Point, Screen};
+use crate::graphics::screen::{PixelCoordinate, Screen};
 use crate::graphics::shapes::triangle::{BoundingArea, Triangle2D};
 use crate::graphics::viewport::Viewport;
 pub mod graphics;
@@ -119,9 +119,9 @@ impl World {
 				viewport.draw_shape(
 					screen,
 					Triangle2D::new(
-						Point::new(x as usize + 10, y as usize),
-						Point::new(100 + x as usize, y as usize),
-						Point::new(100 + x as usize, y as usize + 100),
+						PixelCoordinate::new(x as usize + 10, y as usize),
+						PixelCoordinate::new(100 + x as usize, y as usize),
+						PixelCoordinate::new(100 + x as usize, y as usize + 100),
 					),
 				);
 			}

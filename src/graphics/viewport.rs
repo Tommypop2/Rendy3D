@@ -1,7 +1,7 @@
 use crate::{
 	HEIGHT, WIDTH,
 	graphics::{
-		screen::Point,
+		screen::PixelCoordinate,
 		shapes::triangle::{BoundingArea, Draw},
 	},
 };
@@ -39,12 +39,12 @@ impl Viewport {
 	pub fn set_area(&mut self, area: BoundingArea) {
 		self.area = area;
 	}
-	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: Point) {
-		let offset = Point::new(self.area.min_x, self.area.min_y);
+	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: PixelCoordinate) {
+		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y);
 		let p = point + offset;
 		screen.draw_point(p);
 	}
-	fn draw_line_low(&mut self, screen: &mut super::screen::Screen, start: Point, end: Point) {
+	fn draw_line_low(&mut self, screen: &mut super::screen::Screen, start: PixelCoordinate, end: PixelCoordinate) {
 		let dx = (end.x - start.x) as i32;
 		let (dy, yi) = {
 			let dy = end.y as i32 - start.y as i32;
@@ -53,7 +53,7 @@ impl Viewport {
 		let mut d = 2 * dy - dx;
 		let mut y = start.y as i32;
 		for x in start.x..=end.x {
-			self.draw_point(screen, Point::new(x, y as usize));
+			self.draw_point(screen, PixelCoordinate::new(x, y as usize));
 			if d > 0 {
 				y += yi;
 				d = d + (2 * (dy - dx))
@@ -62,7 +62,7 @@ impl Viewport {
 			}
 		}
 	}
-	fn draw_line_high(&mut self, screen: &mut super::screen::Screen, start: Point, end: Point) {
+	fn draw_line_high(&mut self, screen: &mut super::screen::Screen, start: PixelCoordinate, end: PixelCoordinate) {
 		let (dx, xi) = {
 			let dx = end.x as i32 - start.x as i32;
 			if dx < 0 { (-dx, -1) } else { (dx, 1) }
@@ -71,7 +71,7 @@ impl Viewport {
 		let mut d = 2 * dx - dy;
 		let mut x = start.x as i32;
 		for y in start.y..=end.y {
-			self.draw_point(screen, Point::new(x as usize, y));
+			self.draw_point(screen, PixelCoordinate::new(x as usize, y));
 			if d > 0 {
 				x += xi;
 				d = d + (2 * (dx - dy))
@@ -80,7 +80,7 @@ impl Viewport {
 			}
 		}
 	}
-	pub fn draw_line(&mut self, screen: &mut super::screen::Screen, start: Point, end: Point) {
+	pub fn draw_line(&mut self, screen: &mut super::screen::Screen, start: PixelCoordinate, end: PixelCoordinate) {
 		if usize::abs_diff(start.y, end.y) < usize::abs_diff(start.x, end.x) {
 			if end.x > start.x {
 				self.draw_line_low(screen, start, end);
