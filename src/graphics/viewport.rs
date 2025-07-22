@@ -39,9 +39,16 @@ impl Viewport {
 	pub fn set_area(&mut self, area: BoundingArea) {
 		self.area = area;
 	}
+	pub fn contains_point(&self, point: PixelCoordinate) -> bool {
+		let area = &self.area;
+		point.x >= area.min_x && point.x <= area.max_x && point.y >= area.min_y && point.y < area.max_y
+	}
 	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: PixelCoordinate) {
 		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y);
 		let p = point + offset;
+		if !self.contains_point(p) {
+			return
+		}
 		screen.draw_point(p);
 	}
 	fn draw_line_low(
