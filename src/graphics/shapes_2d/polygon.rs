@@ -1,7 +1,7 @@
 use crate::graphics::{
 	colour::Colour,
 	screen::PixelCoordinate,
-	shapes::triangle::{Draw, Triangle2D},
+	shapes_2d::triangle::{Draw, Triangle2D},
 	viewport::Viewport,
 };
 

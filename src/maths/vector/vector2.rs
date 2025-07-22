@@ -1,6 +1,9 @@
 use std::ops::{Add, AddAssign, Mul};
 
-use crate::maths::Float;
+use crate::maths::{
+	Float,
+	vector::vector3::{Vector3, VectorType},
+};
 
 #[derive(Debug, Clone, Copy)]
 pub struct Vector2<T: Mul<Output = T> + Add<Output = T> + Copy> {
@@ -42,5 +45,14 @@ impl<T: Mul<Output = T> + Add<Output = T> + Copy> Add<Vector2<T>> for Vector2<T>
 			x: self.x + rhs.x,
 			y: self.y + rhs.y,
 		}
+	}
+}
+
+impl<T> From<Vector3<T>> for Vector2<T>
+where
+	T: VectorType,
+{
+	fn from(value: Vector3<T>) -> Self {
+		Self::new(value.x, value.y)
 	}
 }

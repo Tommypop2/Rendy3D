@@ -12,7 +12,7 @@ use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
 use crate::graphics::screen::{PixelCoordinate, Screen};
-use crate::graphics::shapes::triangle::{BoundingArea, Triangle2D};
+use crate::graphics::shapes_2d::triangle::{BoundingArea, Triangle2D};
 use crate::graphics::viewport::Viewport;
 pub mod graphics;
 pub mod maths;

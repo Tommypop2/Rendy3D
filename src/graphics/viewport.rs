@@ -2,7 +2,7 @@ use crate::{
 	HEIGHT, WIDTH,
 	graphics::{
 		screen::PixelCoordinate,
-		shapes::triangle::{BoundingArea, Draw},
+		shapes_2d::triangle::{BoundingArea, Draw},
 	},
 };
 
