@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::{f32, ops::Deref};
 
 use derive_more::{Add, Deref, DerefMut};
 use fixed_capacity_vec::FixedCapacityVec;
@@ -11,7 +11,7 @@ use crate::{
 
 pub struct Screen<'a> {
 	pub pixels: Pixels<'a>,
-	pub z_buffer: Box<[Box<[u16; WIDTH as usize]>; HEIGHT as usize]>,
+	pub z_buffer: Box<[Box<[f32; WIDTH as usize]>; HEIGHT as usize]>,
 	pub draw_colour: Colour,
 }
 
@@ -20,16 +20,16 @@ impl<'a> Screen<'a> {
 		Self {
 			pixels,
 			z_buffer: {
-				let mut data: FixedCapacityVec<Box<[u16; WIDTH as usize]>, { (HEIGHT) as usize }> =
+				let mut data: FixedCapacityVec<Box<[f32; WIDTH as usize]>, { (HEIGHT) as usize }> =
 					FixedCapacityVec::new();
 				while let Ok(_) = data.try_push({
-					let mut data: FixedCapacityVec<u16, { WIDTH as usize }> =
+					let mut data: FixedCapacityVec<f32, { WIDTH as usize }> =
 						FixedCapacityVec::new();
-					while let Ok(_) = data.try_push(0) {}
-					let boxed: Box<[u16; WIDTH as usize]> = data.try_into().unwrap();
+					while let Ok(_) = data.try_push(f32::NEG_INFINITY) {}
+					let boxed: Box<[f32; WIDTH as usize]> = data.try_into().unwrap();
 					boxed
 				}) {}
-				let boxed: Box<[Box<[u16; WIDTH as usize]>; HEIGHT as usize]> =
+				let boxed: Box<[Box<[f32; WIDTH as usize]>; HEIGHT as usize]> =
 					data.try_into().unwrap();
 				boxed
 			},
@@ -42,7 +42,13 @@ impl<'a> Screen<'a> {
 	pub fn set_draw_colour(&mut self, colour: Colour) {
 		self.draw_colour = colour;
 	}
+	pub fn reset_z_buffer(&mut self) {
+		for row in self.z_buffer.iter_mut() {
+			row.fill(f32::NEG_INFINITY);
+		}
+	}
 	pub fn clear(&mut self, colour: Colour) {
+		self.reset_z_buffer();
 		self.frame().as_flattened_mut().fill(colour);
 	}
 }

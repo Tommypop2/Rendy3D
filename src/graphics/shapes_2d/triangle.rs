@@ -69,12 +69,12 @@ impl Draw for Triangle2D {
 			return;
 		}
 		// If all vertices are below the current pixels in the Z-map, also don't draw
-		if !(viewport.is_point_above_current_point(screen, self.vertex1)
-			|| viewport.is_point_above_current_point(screen, self.vertex2)
-			|| viewport.is_point_above_current_point(screen, self.vertex3))
-		{
-			return;
-		}
+		// if (viewport.has_drawn_above_point(screen, self.vertex1)
+		// 	&& viewport.has_drawn_above_point(screen, self.vertex2)
+		// 	&& viewport.has_drawn_above_point(screen, self.vertex3))
+		// {
+		// 	return;
+		// }
 		viewport.draw_line(screen, self.vertex1, self.vertex2);
 		viewport.draw_line(screen, self.vertex2, self.vertex3);
 		viewport.draw_line(screen, self.vertex3, self.vertex1);
@@ -84,7 +84,7 @@ impl Draw for Triangle2D {
 		let abc = self.doubled_area();
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
-				let p = PixelCoordinate::new(x, y, 0);
+				let p = PixelCoordinate::new(x, y, 0.0);
 				let abp = Triangle2D::new(self.vertex1, self.vertex2, p).doubled_area();
 				let bcp = Triangle2D::new(self.vertex2, self.vertex3, p).doubled_area();
 				let acp = Triangle2D::new(self.vertex1, self.vertex3, p).doubled_area();

@@ -52,7 +52,7 @@ impl Viewport {
 			&& point.y < area.max_y
 	}
 	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: PixelCoordinate) {
-		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y, 0);
+		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y, point.z);
 		let p = point + offset;
 		if !self.contains_point(p) {
 			return;
@@ -73,7 +73,7 @@ impl Viewport {
 		let mut d = 2 * dy - dx;
 		let mut y = start.y as i32;
 		for x in start.x..=end.x {
-			self.draw_point(screen, PixelCoordinate::new(x, y as usize, 0));
+			self.draw_point(screen, PixelCoordinate::new(x, y as usize, start.z));
 			if d > 0 {
 				y += yi;
 				d += 2 * (dy - dx)
@@ -96,7 +96,7 @@ impl Viewport {
 		let mut d = 2 * dx - dy;
 		let mut x = start.x as i32;
 		for y in start.y..=end.y {
-			self.draw_point(screen, PixelCoordinate::new(x as usize, y, 0));
+			self.draw_point(screen, PixelCoordinate::new(x as usize, y, start.z));
 			if d > 0 {
 				x += xi;
 				d += 2 * (dx - dy)
@@ -105,13 +105,13 @@ impl Viewport {
 			}
 		}
 	}
-	pub fn is_point_above_current_point(&self, screen: &Screen, p: PixelCoordinate) -> bool {
+	pub fn has_drawn_above_point(&self, screen: &Screen, p: PixelCoordinate) -> bool {
 		if !self.contains_point(p) {
-			return false;
+			return true;
 		}
 		let (x, y, z) = p.as_tuple();
 		let current_z = screen.z_buffer[y][x];
-		if z as u16 > current_z { true } else { false }
+		if z < current_z { true } else { false }
 	}
 	pub fn draw_line(
 		&mut self,
