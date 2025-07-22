@@ -1,7 +1,4 @@
-use crate::graphics::{
-	screen::{PixelCoordinate, Screen},
-	viewport::Viewport,
-};
+use crate::graphics::{screen::Screen, shapes_2d::point::PixelCoordinate, viewport::Viewport};
 pub trait Draw {
 	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen);
 }

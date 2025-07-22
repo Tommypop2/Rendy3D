@@ -1,12 +1,18 @@
+use std::ops::Deref;
+
+use derive_more::{Add, Deref, DerefMut};
 use pixels::Pixels;
 
-use crate::{WIDTH, frame_pixels, graphics::colour::Colour, maths::vector::vector2::Vector2};
+use crate::{
+	WIDTH, frame_pixels,
+	graphics::{colour::Colour, shapes_2d::point::PixelCoordinate},
+};
 
 pub struct Screen<'a> {
 	pub pixels: Pixels<'a>,
 	pub draw_colour: Colour,
 }
-pub type PixelCoordinate = Vector2<usize>;
+
 impl<'a> Screen<'a> {
 	pub fn new(pixels: Pixels<'a>) -> Self {
 		Self {

@@ -14,7 +14,7 @@ impl<T> VectorType for T where
 		+ MulAssign
 {
 }
-#[derive(PartialEq, Debug, Default)]
+#[derive(PartialEq, Debug, Default, Clone, Copy)]
 pub struct Vector3<T> {
 	pub x: T,
 	pub y: T,

@@ -1,8 +1,8 @@
 use crate::{
 	HEIGHT, WIDTH,
-	graphics::{
-		screen::PixelCoordinate,
-		shapes_2d::triangle::{BoundingArea, Draw},
+	graphics::shapes_2d::{
+		point::PixelCoordinate,
+		triangle::{BoundingArea, Draw},
 	},
 };
 
@@ -103,10 +103,10 @@ impl Viewport {
 				self.draw_line_low(screen, end, start);
 			}
 		} else if end.y > start.y {
-  				self.draw_line_high(screen, start, end);
-  			} else {
-  				self.draw_line_high(screen, end, start);
-  			}
+			self.draw_line_high(screen, start, end);
+		} else {
+			self.draw_line_high(screen, end, start);
+		}
 	}
 	pub fn draw_shape<T: Draw>(&mut self, screen: &mut super::screen::Screen, shape: T) {
 		shape.draw(self, screen);

@@ -2,3 +2,4 @@
 
 pub mod polygon;
 pub mod triangle;
+pub mod point;
