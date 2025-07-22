@@ -1,14 +1,21 @@
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use crate::maths::Float;
-#[derive(PartialEq, Debug)]
-pub struct Vector3<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
+pub trait VectorType:
+	Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy
 {
+}
+impl<T> VectorType for T where
+	T: Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy
+{
+}
+#[derive(PartialEq, Debug)]
+pub struct Vector3<T: VectorType> {
 	x: T,
 	y: T,
 	z: T,
 }
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> Vector3<T> {
+impl<T: VectorType> Vector3<T> {
 	pub fn new(x: T, y: T, z: T) -> Self {
 		Self { x, y, z }
 	}
@@ -32,16 +39,7 @@ impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + 
 		self.x * self.x + self.y * self.y + self.z * self.z
 	}
 }
-impl<
-	T: Mul<Output = T>
-		+ Add<Output = T>
-		+ Sub<Output = T>
-		+ Neg<Output = T>
-		+ Copy
-		+ Float
-		+ Div<Output = T>,
-> Vector3<T>
-{
+impl<T: VectorType + Float + Div<Output = T>> Vector3<T> {
 	pub fn magnitude(&self) -> T {
 		self.magnitude_squared().sqrt()
 	}

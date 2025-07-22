@@ -1,4 +1,5 @@
 pub mod vector;
+pub mod matrices;
 
 pub trait Float {
 	fn sqrt(self) -> Self;
