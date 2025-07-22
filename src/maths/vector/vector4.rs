@@ -1,5 +1,5 @@
 use crate::maths::vector::vector3::{Vector3, VectorType};
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Vector4<T> {
 	pub x: T,
 	pub y: T,

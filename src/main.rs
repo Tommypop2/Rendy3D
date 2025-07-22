@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::time::{Instant, SystemTime};
 
 use error_iter::ErrorIter as _;
 use log::error;
@@ -16,6 +16,7 @@ use crate::graphics::shapes_2d::triangle::{BoundingArea, Triangle2D};
 use crate::graphics::shapes_3d::point::Point;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
+use crate::maths::matrices::matrix4::Matrix4;
 pub mod graphics;
 pub mod maths;
 const WIDTH: u32 = 1280;
@@ -61,12 +62,12 @@ fn main() -> Result<(), Error> {
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
-			viewport.set_area(BoundingArea::new(
-				frame_num % 40,
-				WIDTH as usize,
-				0,
-				HEIGHT as usize,
-			));
+			// viewport.set_area(BoundingArea::new(
+			// 	frame_num % 40,
+			// 	WIDTH as usize,
+			// 	0,
+			// 	HEIGHT as usize,
+			// ));
 			if frame_num % 1000 == 0 {
 				//
 				let mean = sum as f64 / frame_num as f64;
@@ -133,11 +134,12 @@ impl World {
 		// 		);
 		// 	}
 		// }
+		let x: std::time::Duration = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap();
 		let triangle_3d = Triangle3D::new(
-			Point::new(0.0, 0.0, 0.0),
-			Point::new(0.3, 0.2, 0.0),
-			Point::new(-0.2, 0.2, 0.0),
-		);
+			Point::new(0.0, -0.1, 0.0),
+			Point::new(0.3, 0.1, 0.0),
+			Point::new(-0.2, 0.1, 0.0),
+		).apply(Matrix4::rotation(x.as_secs_f64()));
 		viewport.draw_shape::<Triangle2D>(screen, triangle_3d.into())
 	}
 }

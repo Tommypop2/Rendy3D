@@ -9,7 +9,7 @@ use crate::maths::{
 	},
 };
 
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct Matrix4<T> {
 	// Matrix Columns
 	x: Vector4<T>,

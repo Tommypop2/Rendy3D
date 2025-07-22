@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 
-use crate::maths::Float;
+use crate::maths::{Float, vector::vector4::Vector4};
 pub trait VectorType:
 	Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy + MulAssign
 {
@@ -45,6 +45,12 @@ impl<T: VectorType> Vector3<T> {
 	}
 }
 impl<T: VectorType + Float + Div<Output = T>> Vector3<T> {
+	pub fn to_homogenous(self) -> Vector4<T> {
+		Vector4::new(self.x, self.y, self.z, T::one())
+	}
+	pub fn from_homogenous(c: Vector4<T>) -> Self {
+		Self::new(c.x / c.w, c.y / c.w, c.z / c.w)
+	}
 	pub fn magnitude(&self) -> T {
 		self.magnitude_squared().sqrt()
 	}

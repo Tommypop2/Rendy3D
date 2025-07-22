@@ -1,4 +1,7 @@
-use crate::graphics::{shapes_2d::triangle::Triangle2D, shapes_3d::point::Point};
+use crate::{
+	graphics::{shapes_2d::triangle::Triangle2D, shapes_3d::point::Point},
+	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
+};
 
 pub struct Triangle3D {
 	vertex1: Point,
@@ -13,6 +16,18 @@ impl Triangle3D {
 			vertex2,
 			vertex3,
 		}
+	}
+	pub fn apply(mut self, matrix: Matrix4<f64>) -> Self {
+		self.vertex1 = Point::from_vector(Vector3::from_homogenous(
+			matrix.clone() * self.vertex1.to_homogenous(),
+		));
+		self.vertex2 = Point::from_vector(Vector3::from_homogenous(
+			matrix.clone() * self.vertex2.to_homogenous(),
+		));
+		self.vertex3 = Point::from_vector(Vector3::from_homogenous(
+			matrix * self.vertex3.to_homogenous(),
+		));
+		self
 	}
 }
 
