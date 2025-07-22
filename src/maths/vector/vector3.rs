@@ -1,19 +1,27 @@
-use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::{
+	ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign},
+	process::Output,
+};
 
 use crate::maths::Float;
 pub trait VectorType:
-	Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy
+	Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy + MulAssign
 {
 }
 impl<T> VectorType for T where
-	T: Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy
+	T: Mul<Output = Self>
+		+ Add<Output = Self>
+		+ Sub<Output = Self>
+		+ Neg<Output = Self>
+		+ Copy
+		+ MulAssign
 {
 }
-#[derive(PartialEq, Debug)]
-pub struct Vector3<T: VectorType> {
-	x: T,
-	y: T,
-	z: T,
+#[derive(PartialEq, Debug, Default)]
+pub struct Vector3<T> {
+	pub x: T,
+	pub y: T,
+	pub z: T,
 }
 impl<T: VectorType> Vector3<T> {
 	pub fn new(x: T, y: T, z: T) -> Self {

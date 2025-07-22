@@ -1,23 +1,73 @@
-pub mod vector;
 pub mod matrices;
+pub mod vector;
 
 pub trait Float {
 	fn sqrt(self) -> Self;
+	// Trig
+	fn sin(self) -> Self;
+	fn cos(self) -> Self;
+	fn tan(self) -> Self;
+	fn asin(self) -> Self;
 	fn acos(self) -> Self;
+	fn atan(self) -> Self;
+	fn one() -> Self;
+	fn zero() -> Self;
 }
 impl Float for f32 {
 	fn sqrt(self) -> Self {
-		f32::sqrt(self)
+		Self::sqrt(self)
+	}
+	fn sin(self) -> Self {
+		Self::sin(self)
+	}
+	fn cos(self) -> Self {
+		Self::cos(self)
+	}
+	fn tan(self) -> Self {
+		Self::tan(self)
+	}
+	fn asin(self) -> Self {
+		Self::asin(self)
 	}
 	fn acos(self) -> Self {
-		f32::acos(self)
+		Self::acos(self)
+	}
+	fn atan(self) -> Self {
+		Self::atan(self)
+	}
+	fn one() -> Self {
+		1.0
+	}
+	fn zero() -> Self {
+		0.0
 	}
 }
 impl Float for f64 {
 	fn sqrt(self) -> Self {
-		f64::sqrt(self)
+		Self::sqrt(self)
+	}
+	fn sin(self) -> Self {
+		Self::sin(self)
+	}
+	fn cos(self) -> Self {
+		Self::cos(self)
+	}
+	fn tan(self) -> Self {
+		Self::tan(self)
+	}
+	fn asin(self) -> Self {
+		Self::asin(self)
 	}
 	fn acos(self) -> Self {
-		f64::acos(self)
+		Self::acos(self)
+	}
+	fn atan(self) -> Self {
+		Self::atan(self)
+	}
+	fn one() -> Self {
+		1.0
+	}
+	fn zero() -> Self {
+		0.0
 	}
 }
