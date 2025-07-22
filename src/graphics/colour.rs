@@ -24,8 +24,17 @@ impl Default for Colour {
 impl Colour {
 	pub const RED: Colour = Colour::new(255, 0, 0, 255);
 	pub const GREEN: Colour = Colour::new(0, 255, 0, 255);
+	pub const TEAL: Colour = Colour::new(0, 128, 128, 255);
+	pub const CYAN: Colour = Colour::new(0, 255, 255, 255);
 	pub const BLUE: Colour = Colour::new(0, 0, 255, 255);
 	pub const WHITE: Colour = Colour::new(255, 255, 255, 255);
 	pub const BLACK: Colour = Colour::new(0, 0, 0, 0);
-	pub const COLOURS: &[Colour] = &[Colour::RED, Colour::GREEN, Colour::BLUE, Colour::WHITE];
+	pub const COLOURS: &[Colour] = &[
+		Colour::RED,
+		Colour::GREEN,
+		Colour::TEAL,
+		Colour::CYAN,
+		Colour::BLUE,
+		Colour::WHITE,
+	];
 }
