@@ -61,6 +61,10 @@ impl Triangle2D {
 }
 impl Draw for Triangle2D {
 	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen) {
+		// Optimisation: If all vertices aren't visible, don't draw
+		if !(viewport.contains_point(self.vertex1) || viewport.contains_point(self.vertex2) || viewport.contains_point(self.vertex3)) {
+			return;
+		}
 		viewport.draw_line(screen, self.vertex1, self.vertex2);
 		viewport.draw_line(screen, self.vertex2, self.vertex3);
 		viewport.draw_line(screen, self.vertex3, self.vertex1);
