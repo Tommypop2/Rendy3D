@@ -1,8 +1,13 @@
+use std::thread::Scope;
+
 use crate::{
 	HEIGHT, WIDTH,
-	graphics::shapes_2d::{
-		point::PixelCoordinate,
-		triangle::{BoundingArea, Draw},
+	graphics::{
+		screen::Screen,
+		shapes_2d::{
+			point::PixelCoordinate,
+			triangle::{BoundingArea, Draw},
+		},
 	},
 };
 
@@ -41,15 +46,18 @@ impl Viewport {
 	}
 	pub fn contains_point(&self, point: PixelCoordinate) -> bool {
 		let area = &self.area;
-		point.x >= area.min_x && point.x < area.max_x && point.y >= area.min_y && point.y < area.max_y
+		point.x >= area.min_x
+			&& point.x < area.max_x
+			&& point.y >= area.min_y
+			&& point.y < area.max_y
 	}
 	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: PixelCoordinate) {
-		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y);
+		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y, 0);
 		let p = point + offset;
 		if !self.contains_point(p) {
-			return
+			return;
 		}
-		screen.draw_point(p);
+		p.draw(self, screen);
 	}
 	fn draw_line_low(
 		&mut self,
@@ -65,7 +73,7 @@ impl Viewport {
 		let mut d = 2 * dy - dx;
 		let mut y = start.y as i32;
 		for x in start.x..=end.x {
-			self.draw_point(screen, PixelCoordinate::new(x, y as usize));
+			self.draw_point(screen, PixelCoordinate::new(x, y as usize, 0));
 			if d > 0 {
 				y += yi;
 				d += 2 * (dy - dx)
@@ -88,7 +96,7 @@ impl Viewport {
 		let mut d = 2 * dx - dy;
 		let mut x = start.x as i32;
 		for y in start.y..=end.y {
-			self.draw_point(screen, PixelCoordinate::new(x as usize, y));
+			self.draw_point(screen, PixelCoordinate::new(x as usize, y, 0));
 			if d > 0 {
 				x += xi;
 				d += 2 * (dx - dy)
@@ -96,6 +104,14 @@ impl Viewport {
 				d += 2 * dx
 			}
 		}
+	}
+	pub fn is_point_above_current_point(&self, screen: &Screen, p: PixelCoordinate) -> bool {
+		if !self.contains_point(p) {
+			return false;
+		}
+		let (x, y, z) = p.as_tuple();
+		let current_z = screen.z_buffer[y][x];
+		if z as u16 > current_z { true } else { false }
 	}
 	pub fn draw_line(
 		&mut self,

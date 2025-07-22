@@ -36,9 +36,9 @@ impl Triangle2D {
 		}
 	}
 	pub fn doubled_area(&self) -> usize {
-		let (x1, y1) = self.vertex1.as_tuple();
-		let (x2, y2) = self.vertex2.as_tuple();
-		let (x3, y3) = self.vertex3.as_tuple();
+		let (x1, y1, _) = self.vertex1.as_tuple();
+		let (x2, y2, _) = self.vertex2.as_tuple();
+		let (x3, y3, _) = self.vertex3.as_tuple();
 
 		i32::abs(
 			x1 as i32 * (y2 as i32 - y3 as i32)
@@ -62,7 +62,17 @@ impl Triangle2D {
 impl Draw for Triangle2D {
 	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen) {
 		// Optimisation: If all vertices aren't visible, don't draw
-		if !(viewport.contains_point(self.vertex1) || viewport.contains_point(self.vertex2) || viewport.contains_point(self.vertex3)) {
+		if !(viewport.contains_point(self.vertex1)
+			|| viewport.contains_point(self.vertex2)
+			|| viewport.contains_point(self.vertex3))
+		{
+			return;
+		}
+		// If all vertices are below the current pixels in the Z-map, also don't draw
+		if !(viewport.is_point_above_current_point(screen, self.vertex1)
+			|| viewport.is_point_above_current_point(screen, self.vertex2)
+			|| viewport.is_point_above_current_point(screen, self.vertex3))
+		{
 			return;
 		}
 		viewport.draw_line(screen, self.vertex1, self.vertex2);
@@ -74,7 +84,7 @@ impl Draw for Triangle2D {
 		let abc = self.doubled_area();
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
-				let p = PixelCoordinate::new(x, y);
+				let p = PixelCoordinate::new(x, y, 0);
 				let abp = Triangle2D::new(self.vertex1, self.vertex2, p).doubled_area();
 				let bcp = Triangle2D::new(self.vertex2, self.vertex3, p).doubled_area();
 				let acp = Triangle2D::new(self.vertex1, self.vertex3, p).doubled_area();

@@ -20,10 +20,15 @@ pub struct Vector3<T> {
 	pub y: T,
 	pub z: T,
 }
-impl<T: VectorType> Vector3<T> {
+impl<T> Vector3<T> {
 	pub fn new(x: T, y: T, z: T) -> Self {
 		Self { x, y, z }
 	}
+	pub fn as_tuple(self) -> (T, T, T) {
+		(self.x, self.y, self.z)
+	}
+}
+impl<T: VectorType> Vector3<T> {
 	pub fn cross(a: &Self, b: &Self) -> Self {
 		Self {
 			x: a.y * b.z - b.y * a.z,
@@ -60,9 +65,7 @@ impl<T: VectorType + Float + Div<Output = T>> Vector3<T> {
 	}
 }
 // Add
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> Add<Self>
-	for Vector3<T>
-{
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Copy> Add<Self> for Vector3<T> {
 	type Output = Self;
 
 	fn add(mut self, rhs: Self) -> Self::Output {
@@ -70,9 +73,7 @@ impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + 
 		self
 	}
 }
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy>
-	AddAssign<Self> for Vector3<T>
-{
+impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Copy> AddAssign<Self> for Vector3<T> {
 	fn add_assign(&mut self, rhs: Self) {
 		*self = Self {
 			x: self.x + rhs.x,

@@ -1,5 +1,8 @@
 use crate::{
-	graphics::{shapes_2d::triangle::Triangle2D, shapes_3d::point::Point},
+	graphics::{
+		shapes_2d::triangle::{Draw, Triangle2D},
+		shapes_3d::point::Point,
+	},
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
 #[derive(Clone)]
@@ -38,5 +41,16 @@ impl From<Triangle3D> for Triangle2D {
 			value.vertex2.into(),
 			value.vertex3.into(),
 		)
+	}
+}
+
+impl Draw for Triangle3D {
+	fn draw(
+		&self,
+		viewport: &mut crate::graphics::viewport::Viewport,
+		screen: &mut crate::graphics::screen::Screen,
+	) {
+		let t: Triangle2D = self.clone().into();
+		t.draw(viewport, screen);
 	}
 }

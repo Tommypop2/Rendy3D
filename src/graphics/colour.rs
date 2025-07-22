@@ -27,6 +27,7 @@ impl Colour {
 	pub const TEAL: Colour = Colour::new(0, 128, 128, 255);
 	pub const CYAN: Colour = Colour::new(0, 255, 255, 255);
 	pub const BLUE: Colour = Colour::new(0, 0, 255, 255);
+	pub const PURPLE: Colour = Colour::new(138, 43, 226, 255);
 	pub const WHITE: Colour = Colour::new(255, 255, 255, 255);
 	pub const BLACK: Colour = Colour::new(0, 0, 0, 0);
 	pub const COLOURS: &[Colour] = &[
@@ -35,6 +36,7 @@ impl Colour {
 		Colour::TEAL,
 		Colour::CYAN,
 		Colour::BLUE,
+		Colour::PURPLE,
 		Colour::WHITE,
 	];
 }
