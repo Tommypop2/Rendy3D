@@ -41,7 +41,7 @@ impl Viewport {
 	}
 	pub fn contains_point(&self, point: PixelCoordinate) -> bool {
 		let area = &self.area;
-		point.x >= area.min_x && point.x <= area.max_x && point.y >= area.min_y && point.y < area.max_y
+		point.x >= area.min_x && point.x < area.max_x && point.y >= area.min_y && point.y < area.max_y
 	}
 	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: PixelCoordinate) {
 		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y);
