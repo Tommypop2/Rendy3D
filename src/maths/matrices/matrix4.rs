@@ -23,7 +23,19 @@ impl<T> Matrix4<T> {
 		Self { x, y, z, w }
 	}
 }
-
+impl<T> Mul<Matrix4<T>> for Matrix4<T>
+where
+	T: VectorType,
+{
+	type Output = Matrix4<T>;
+	fn mul(self, rhs: Matrix4<T>) -> Self::Output {
+		let x = self.clone() * rhs.x;
+		let y = self.clone() * rhs.y;
+		let z = self.clone() * rhs.z;
+		let w = self * rhs.w;
+		Self::new(x, y, z, w)
+	}
+}
 impl<T> Mul<Vector4<T>> for Matrix4<T>
 where
 	T: VectorType,
