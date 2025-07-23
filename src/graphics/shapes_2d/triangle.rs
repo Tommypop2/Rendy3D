@@ -1,4 +1,8 @@
-use crate::graphics::{screen::Screen, shapes_2d::point::PixelCoordinate, viewport::Viewport};
+use crate::graphics::{
+	screen::Screen,
+	shapes_2d::{line::Line, point::PixelCoordinate},
+	viewport::Viewport,
+};
 pub trait Draw {
 	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen);
 }
@@ -69,15 +73,18 @@ impl Draw for Triangle2D {
 			return;
 		}
 		// If all vertices are below the current pixels in the Z-map, also don't draw
-		// if (viewport.has_drawn_above_point(screen, self.vertex1)
-		// 	&& viewport.has_drawn_above_point(screen, self.vertex2)
-		// 	&& viewport.has_drawn_above_point(screen, self.vertex3))
-		// {
-		// 	return;
-		// }
-		viewport.draw_line(screen, self.vertex1, self.vertex2);
-		viewport.draw_line(screen, self.vertex2, self.vertex3);
-		viewport.draw_line(screen, self.vertex3, self.vertex1);
+		if !(viewport.point_above_z_buffer(screen, self.vertex1)
+			|| viewport.point_above_z_buffer(screen, self.vertex2)
+			|| viewport.point_above_z_buffer(screen, self.vertex3))
+		{
+			return;
+		}
+		// viewport.draw_line(screen, self.vertex1, self.vertex2);
+		// viewport.draw_line(screen, self.vertex2, self.vertex3);
+		// viewport.draw_line(screen, self.vertex3, self.vertex1);
+		Line::new(self.vertex1, self.vertex2).draw(viewport, screen);
+		Line::new(self.vertex2, self.vertex3).draw(viewport, screen);
+		Line::new(self.vertex3, self.vertex1).draw(viewport, screen);
 		// Now need to fill in the triangle
 		let bounding_area = self.bounding_area();
 		// Iterate over all pixels that could possible contain the triangle
@@ -91,7 +98,8 @@ impl Draw for Triangle2D {
 
 				if abc == abp + bcp + acp {
 					// Point inside triangle, so draw
-					viewport.draw_point(screen, p);
+					// viewport.draw_point(screen, p);
+					p.draw(viewport, screen);
 				}
 			}
 		}

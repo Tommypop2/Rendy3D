@@ -146,13 +146,34 @@ impl World {
 		// 	Point::new(-0.2, 0.1, 0.0),
 		// )
 		// .apply(Matrix4::rotation(x.as_secs_f64()));
-		let transform = Matrix4::rotation_z(x.as_secs_f64())
-			* Matrix4::rotation_y(x.as_secs_f64())
-			* Matrix4::rotation_x(x.as_secs_f64());
-		for (i, triangle) in mesh.iter().enumerate() {
-			screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
-			viewport.draw_shape(screen, triangle.clone().apply(transform.clone()))
-		}
+		// println!("{:?}", Matrix4::scale(100.0));
+		screen.set_draw_colour(Colour::RED);
+		viewport.draw_shape(
+			screen,
+			Triangle3D::new(
+				Point::new(0.0, -0.1, 0.0),
+				Point::new(0.3, 0.1, 0.0),
+				Point::new(-0.2, 0.1, 0.0),
+			)
+			.apply(Matrix4::scale(100.0)),
+		);
+		screen.set_draw_colour(Colour::PURPLE);
+		viewport.draw_shape(
+			screen,
+			Triangle3D::new(
+				Point::new(0.2, -0.1, -0.2),
+				Point::new(0.3, 0.1, -0.2),
+				Point::new(-0.2, 0.1, -0.2),
+			)
+			.apply(Matrix4::scale(100.0)),
+		);
+		// let transform = Matrix4::rotation_z(x.as_secs_f64())
+		// 	* Matrix4::rotation_y(x.as_secs_f64())
+		// 	* Matrix4::rotation_x(x.as_secs_f64());
+		// for (i, triangle) in mesh.iter().enumerate() {
+		// 	screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
+		// 	viewport.draw_shape(screen, triangle.clone().apply(transform.clone()))
+		// }
 	}
 }
 

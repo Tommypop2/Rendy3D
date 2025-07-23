@@ -37,11 +37,12 @@ impl Draw for PixelCoordinate {
 		screen: &mut crate::graphics::screen::Screen,
 	) {
 		// Record Z in Z buffer
-		// if !viewport.has_drawn_above_point(screen, *self) {
-		// 	screen.z_buffer[self.y][self.x] = self.z;
-		// } else {
-		// 	return;
-		// }
-		screen.frame()[self.y][self.x] = screen.draw_colour.clone();
+		if viewport.point_above_z_buffer(screen, *self) {
+			screen.z_buffer[self.y][self.x] = self.z;
+		} else {
+			return;
+		}
+		// screen.frame()[self.y][self.x] = screen.draw_colour.clone();
+		viewport.draw_point(screen, *self);
 	}
 }

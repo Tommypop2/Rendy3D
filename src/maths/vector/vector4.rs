@@ -1,5 +1,7 @@
+use std::ops::{Mul, MulAssign};
+
 use crate::maths::vector::vector3::{Vector3, VectorType};
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct Vector4<T> {
 	pub x: T,
 	pub y: T,
@@ -19,5 +21,16 @@ where
 {
 	fn from(value: Vector3<T>) -> Self {
 		Self::new(value.x, value.y, value.z, Default::default())
+	}
+}
+impl<T> MulAssign<T> for Vector4<T>
+where
+	T: MulAssign + Clone,
+{
+	fn mul_assign(&mut self, rhs: T) {
+		self.x *= rhs.clone();
+		self.y *= rhs.clone();
+		self.z *= rhs.clone();
+		self.w *= rhs;
 	}
 }

@@ -1,4 +1,4 @@
-use std::ops::Mul;
+use std::ops::{Mul, MulAssign};
 
 use crate::maths::{
 	Float,
@@ -9,7 +9,7 @@ use crate::maths::{
 	},
 };
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct Matrix4<T> {
 	// Matrix Columns
 	x: Vector4<T>,
@@ -70,6 +70,14 @@ where
 	pub fn translation(vector: Vector3<T>) -> Self {
 		Self::unit().with_translation(vector)
 	}
+	pub fn with_scale(mut self, scale: T) -> Self {
+		self *= scale;
+		self.w.w = T::one();
+		self
+	}
+	pub fn scale(scale: T) -> Self {
+		Self::unit().with_scale(scale)
+	}
 	pub fn rotation_x(angle: T) -> Self {
 		Matrix3::rotate_x(angle).into()
 	}
@@ -92,5 +100,27 @@ where
 			value.z.into(),
 			Vector4::new(T::zero(), T::zero(), T::zero(), T::one()),
 		)
+	}
+}
+
+impl<T> MulAssign<T> for Matrix4<T>
+where
+	T: MulAssign + Clone,
+{
+	fn mul_assign(&mut self, rhs: T) {
+		self.x *= rhs.clone();
+		self.y *= rhs.clone();
+		self.z *= rhs.clone();
+		self.w *= rhs;
+	}
+}
+impl<T> Mul<T> for Matrix4<T>
+where
+	T: MulAssign + Clone,
+{
+	type Output = Self;
+	fn mul(mut self, rhs: T) -> Self::Output {
+		self *= rhs;
+		self
 	}
 }

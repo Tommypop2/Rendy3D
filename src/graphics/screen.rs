@@ -1,6 +1,5 @@
-use std::{f32, ops::Deref};
+use std::f32;
 
-use derive_more::{Add, Deref, DerefMut};
 use fixed_capacity_vec::FixedCapacityVec;
 use pixels::Pixels;
 
@@ -41,6 +40,9 @@ impl<'a> Screen<'a> {
 	}
 	pub fn set_draw_colour(&mut self, colour: Colour) {
 		self.draw_colour = colour;
+	}
+	pub fn draw_point(&mut self, p: PixelCoordinate) {
+		self.frame()[p.y][p.x] = self.draw_colour.clone();
 	}
 	pub fn reset_z_buffer(&mut self) {
 		for row in self.z_buffer.iter_mut() {
