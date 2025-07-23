@@ -1,8 +1,9 @@
 use derive_more::{Add, Deref, DerefMut};
+use hsv::hsv_to_rgb;
 
 use crate::{
 	HEIGHT, WIDTH,
-	graphics::{shapes_2d::triangle::Draw, shapes_3d::point::Point},
+	graphics::{colour::Colour, shapes_2d::triangle::Draw, shapes_3d::point::Point},
 	maths::vector::{vector2::Vector2, vector3::Vector3},
 };
 
@@ -29,20 +30,29 @@ impl From<Point> for PixelCoordinate {
 		Self::new(x, y, value.z as f32)
 	}
 }
-
+pub static mut MAX_Z: f32 = 0.0;
 impl Draw for PixelCoordinate {
 	fn draw(
 		&self,
 		viewport: &mut crate::graphics::viewport::Viewport,
 		screen: &mut crate::graphics::screen::Screen,
 	) {
-		// Record Z in Z buffer
-		if viewport.point_above_z_buffer(screen, *self) {
+		// Record Z in Z buffer if point is above Z buffer
+		if !viewport.point_below_z_buffer(screen, *self) {
 			screen.z_buffer[self.y][self.x] = self.z;
-		} else {
-			return;
+		}
+		else {
+			return
 		}
 		// screen.frame()[self.y][self.x] = screen.draw_colour.clone();
+		unsafe {
+			if (self.z > MAX_Z) {
+				MAX_Z = self.z
+			}
+		};
+		let z_normalised = self.z / (56.241528 * 2.0) + 0.5;
+		let (r,g,b) = hsv_to_rgb((z_normalised * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
+		screen.set_draw_colour(Colour::new(r, g, b, 255));
 		viewport.draw_point(screen, *self);
 	}
 }

@@ -2,6 +2,7 @@ use std::time::{Instant, SystemTime};
 
 use error_iter::ErrorIter as _;
 use log::error;
+use pixels::wgpu::hal::auxil::MAX_I32_BINDING_SIZE;
 use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
@@ -12,7 +13,8 @@ use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
 use crate::graphics::screen::Screen;
-use crate::graphics::shapes_2d::triangle::{BoundingArea, Triangle2D};
+use crate::graphics::shapes_2d::point::MAX_Z;
+use crate::graphics::shapes_2d::triangle::{BoundingArea, TRIANGLE_RENDER_COUNT, Triangle2D};
 use crate::graphics::shapes_3d::point::Point;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
@@ -147,33 +149,38 @@ impl World {
 		// )
 		// .apply(Matrix4::rotation(x.as_secs_f64()));
 		// println!("{:?}", Matrix4::scale(100.0));
-		screen.set_draw_colour(Colour::RED);
-		viewport.draw_shape(
-			screen,
-			Triangle3D::new(
-				Point::new(0.0, -0.1, 0.0),
-				Point::new(0.3, 0.1, 0.0),
-				Point::new(-0.2, 0.1, 0.0),
-			)
-			.apply(Matrix4::scale(100.0)),
-		);
-		screen.set_draw_colour(Colour::PURPLE);
-		viewport.draw_shape(
-			screen,
-			Triangle3D::new(
-				Point::new(0.2, -0.1, -0.2),
-				Point::new(0.3, 0.1, -0.2),
-				Point::new(-0.2, 0.1, -0.2),
-			)
-			.apply(Matrix4::scale(100.0)),
-		);
-		// let transform = Matrix4::rotation_z(x.as_secs_f64())
-		// 	* Matrix4::rotation_y(x.as_secs_f64())
-		// 	* Matrix4::rotation_x(x.as_secs_f64());
-		// for (i, triangle) in mesh.iter().enumerate() {
-		// 	screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
-		// 	viewport.draw_shape(screen, triangle.clone().apply(transform.clone()))
-		// }
+		// screen.set_draw_colour(Colour::RED);
+		// viewport.draw_shape(
+		// 	screen,
+		// 	Triangle3D::new(
+		// 		Point::new(0.0, -0.1, 0.0),
+		// 		Point::new(0.3, 0.1, 0.0),
+		// 		Point::new(-0.2, 0.1, 0.0),
+		// 	)
+		// 	.apply(Matrix4::scale(100.0)),
+		// );
+		// screen.set_draw_colour(Colour::PURPLE);
+		// viewport.draw_shape(
+		// 	screen,
+		// 	Triangle3D::new(
+		// 		Point::new(0.2, -0.1, -0.2),
+		// 		Point::new(0.3, 0.1, -0.2),
+		// 		Point::new(-0.2, 0.1, -0.2),
+		// 	)
+		// 	.apply(Matrix4::scale(100.0)),
+		// );
+		let transform = Matrix4::rotation_z(x.as_secs_f64())
+			* Matrix4::rotation_y(x.as_secs_f64())
+			* Matrix4::rotation_x(x.as_secs_f64());
+		for (i, triangle) in mesh.iter().enumerate() {
+			screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
+			viewport.draw_shape(screen, triangle.clone().apply(transform.clone()))
+		}
+		println!("Actual # of triangles drawn: {}", unsafe {
+			TRIANGLE_RENDER_COUNT
+		});
+		unsafe { TRIANGLE_RENDER_COUNT = 0 }
+		println!("MAX Z: {}", unsafe { MAX_Z })
 	}
 }
 

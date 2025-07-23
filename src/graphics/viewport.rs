@@ -59,14 +59,17 @@ impl Viewport {
 		}
 		screen.draw_point(p);
 	}
-	pub fn point_above_z_buffer(&self, screen: &Screen, p: PixelCoordinate) -> bool {
+	pub fn point_below_z_buffer(&self, screen: &Screen, p: PixelCoordinate) -> bool {
 		if !self.contains_point(p) {
-			return false;
+			return true;
 		}
-		let (x, y, z) = p.as_tuple();
-		let buffered_z = screen.z_buffer[y][x];
-		let diff = z - buffered_z;
-		if diff > -100.0 { true } else { false }
+		let (_, _, z) = p.as_tuple();
+		let buffered_z = screen.get_z_in_z_buffer(p);
+		if z < buffered_z && f32::abs(z - buffered_z) >= 0.01 {
+			true
+		} else {
+			false
+		}
 	}
 	pub fn draw_shape<T: Draw>(&mut self, screen: &mut super::screen::Screen, shape: T) {
 		shape.draw(self, screen);

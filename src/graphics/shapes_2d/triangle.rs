@@ -63,6 +63,7 @@ impl Triangle2D {
 		}
 	}
 }
+pub static mut TRIANGLE_RENDER_COUNT: usize = 0;
 impl Draw for Triangle2D {
 	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen) {
 		// Optimisation: If all vertices aren't visible, don't draw
@@ -73,15 +74,17 @@ impl Draw for Triangle2D {
 			return;
 		}
 		// If all vertices are below the current pixels in the Z-map, also don't draw
-		if !(viewport.point_above_z_buffer(screen, self.vertex1)
-			|| viewport.point_above_z_buffer(screen, self.vertex2)
-			|| viewport.point_above_z_buffer(screen, self.vertex3))
-		{
-			return;
-		}
+		// This doesn't work in practice as triangles on the same level share vertices
+		// if viewport.point_below_z_buffer(screen, self.vertex1)
+		// 	&& viewport.point_below_z_buffer(screen, self.vertex2)
+		// 	&& viewport.point_below_z_buffer(screen, self.vertex3)
+		// {
+		// 	return;
+		// }
 		// viewport.draw_line(screen, self.vertex1, self.vertex2);
 		// viewport.draw_line(screen, self.vertex2, self.vertex3);
 		// viewport.draw_line(screen, self.vertex3, self.vertex1);
+		unsafe { TRIANGLE_RENDER_COUNT += 1 };
 		Line::new(self.vertex1, self.vertex2).draw(viewport, screen);
 		Line::new(self.vertex2, self.vertex3).draw(viewport, screen);
 		Line::new(self.vertex3, self.vertex1).draw(viewport, screen);
@@ -91,7 +94,7 @@ impl Draw for Triangle2D {
 		let abc = self.doubled_area();
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
-				let p = PixelCoordinate::new(x, y, 0.0);
+				let p = PixelCoordinate::new(x, y, self.vertex1.z);
 				let abp = Triangle2D::new(self.vertex1, self.vertex2, p).doubled_area();
 				let bcp = Triangle2D::new(self.vertex2, self.vertex3, p).doubled_area();
 				let acp = Triangle2D::new(self.vertex1, self.vertex3, p).doubled_area();

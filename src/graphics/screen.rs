@@ -44,6 +44,9 @@ impl<'a> Screen<'a> {
 	pub fn draw_point(&mut self, p: PixelCoordinate) {
 		self.frame()[p.y][p.x] = self.draw_colour.clone();
 	}
+	pub fn get_z_in_z_buffer(&self, p: PixelCoordinate) -> f32 {
+		self.z_buffer[p.y][p.x]
+	}
 	pub fn reset_z_buffer(&mut self) {
 		for row in self.z_buffer.iter_mut() {
 			row.fill(f32::NEG_INFINITY);
