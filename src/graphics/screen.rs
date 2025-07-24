@@ -21,13 +21,16 @@ impl<'a> Screen<'a> {
 			z_buffer: {
 				let mut data: FixedCapacityVec<Box<[f32; WIDTH as usize]>, { (HEIGHT) as usize }> =
 					FixedCapacityVec::new();
-				while data.try_push({
-					let mut data: FixedCapacityVec<f32, { WIDTH as usize }> =
-						FixedCapacityVec::new();
-					while data.try_push(f32::NEG_INFINITY).is_ok() {}
-					let boxed: Box<[f32; WIDTH as usize]> = data.try_into().unwrap();
-					boxed
-				}).is_ok() {}
+				while data
+					.try_push({
+						let mut data: FixedCapacityVec<f32, { WIDTH as usize }> =
+							FixedCapacityVec::new();
+						while data.try_push(f32::NEG_INFINITY).is_ok() {}
+						let boxed: Box<[f32; WIDTH as usize]> = data.try_into().unwrap();
+						boxed
+					})
+					.is_ok()
+				{}
 				let boxed: Box<[Box<[f32; WIDTH as usize]>; HEIGHT as usize]> =
 					data.try_into().unwrap();
 				boxed

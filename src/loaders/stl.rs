@@ -12,7 +12,7 @@ pub fn load_file<P: AsRef<Path>>(path: P) -> Vec<Triangle3D> {
 		.map(|v| Point::new(v.0[0] as f64, v.0[1] as f64, v.0[2] as f64))
 		.collect::<Vec<Point>>();
 	let triangles = stl.faces;
-	
+
 	triangles
 		.iter()
 		.map(|indexed_triangle| {

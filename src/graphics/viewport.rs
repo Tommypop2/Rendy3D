@@ -1,4 +1,3 @@
-
 use crate::{
 	HEIGHT, WIDTH,
 	graphics::{
