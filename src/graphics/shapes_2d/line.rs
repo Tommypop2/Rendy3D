@@ -18,6 +18,7 @@ impl Line {
 		start: PixelCoordinate,
 		end: PixelCoordinate,
 	) {
+		let min_z = start.z.min(end.z);
 		let dx = (end.x - start.x) as i32;
 		let (dy, yi) = {
 			let dy = end.y as i32 - start.y as i32;
@@ -26,7 +27,7 @@ impl Line {
 		let mut d = 2 * dy - dx;
 		let mut y = start.y as i32;
 		for x in start.x..=end.x {
-			PixelCoordinate::new(x, y as usize, start.z).draw(viewport, screen);
+			PixelCoordinate::new(x, y as usize, min_z).draw(viewport, screen);
 			if d > 0 {
 				y += yi;
 				d += 2 * (dy - dx)
@@ -41,6 +42,7 @@ impl Line {
 		start: PixelCoordinate,
 		end: PixelCoordinate,
 	) {
+		let min_z = start.z.min(end.z);
 		let (dx, xi) = {
 			let dx = end.x as i32 - start.x as i32;
 			if dx < 0 { (-dx, -1) } else { (dx, 1) }
@@ -49,7 +51,7 @@ impl Line {
 		let mut d = 2 * dx - dy;
 		let mut x = start.x as i32;
 		for y in start.y..=end.y {
-			PixelCoordinate::new(x as usize, y, start.z).draw(viewport, screen);
+			PixelCoordinate::new(x as usize, y, min_z).draw(viewport, screen);
 			if d > 0 {
 				x += xi;
 				d += 2 * (dx - dy)

@@ -94,7 +94,11 @@ impl Draw for Triangle2D {
 		let abc = self.doubled_area();
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
-				let p = PixelCoordinate::new(x, y, self.vertex1.z);
+				let p = PixelCoordinate::new(
+					x,
+					y,
+					self.vertex1.z.min(self.vertex2.z).min(self.vertex3.z),
+				);
 				let abp = Triangle2D::new(self.vertex1, self.vertex2, p).doubled_area();
 				let bcp = Triangle2D::new(self.vertex2, self.vertex3, p).doubled_area();
 				let acp = Triangle2D::new(self.vertex1, self.vertex3, p).doubled_area();
