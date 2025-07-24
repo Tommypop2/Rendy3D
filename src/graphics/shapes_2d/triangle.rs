@@ -83,7 +83,7 @@ impl Draw for Triangle2D {
 		// viewport.draw_line(screen, self.vertex1, self.vertex2);
 		// viewport.draw_line(screen, self.vertex2, self.vertex3);
 		// viewport.draw_line(screen, self.vertex3, self.vertex1);
-		unsafe { TRIANGLE_RENDER_COUNT += 1 };
+		// unsafe { TRIANGLE_RENDER_COUNT += 1 };
 		Line::new(self.vertex1, self.vertex2).draw(viewport, screen);
 		Line::new(self.vertex2, self.vertex3).draw(viewport, screen);
 		Line::new(self.vertex3, self.vertex1).draw(viewport, screen);

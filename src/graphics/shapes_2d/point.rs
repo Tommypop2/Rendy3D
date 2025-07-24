@@ -45,14 +45,14 @@ impl Draw for PixelCoordinate {
 			return
 		}
 		// screen.frame()[self.y][self.x] = screen.draw_colour.clone();
-		unsafe {
-			if (self.z > MAX_Z) {
-				MAX_Z = self.z
-			}
-		};
-		let z_normalised = self.z / (56.241528 * 2.0) + 0.5;
-		let (r,g,b) = hsv_to_rgb((z_normalised * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
-		screen.set_draw_colour(Colour::new(r, g, b, 255));
+		// unsafe {
+		// 	if (self.z > MAX_Z) {
+		// 		MAX_Z = self.z
+		// 	}
+		// };
+		// let z_normalised = self.z / (56.241528 * 2.0) + 0.5;
+		// let (r,g,b) = hsv_to_rgb((z_normalised * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
+		// screen.set_draw_colour(Colour::new(r, g, b, 255));
 		viewport.draw_point(screen, *self);
 	}
 }

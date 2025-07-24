@@ -176,11 +176,11 @@ impl World {
 			screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
 			viewport.draw_shape(screen, triangle.clone().apply(transform.clone()))
 		}
-		println!("Actual # of triangles drawn: {}", unsafe {
-			TRIANGLE_RENDER_COUNT
-		});
-		unsafe { TRIANGLE_RENDER_COUNT = 0 }
-		println!("MAX Z: {}", unsafe { MAX_Z })
+		// println!("Actual # of triangles drawn: {}", unsafe {
+		// 	TRIANGLE_RENDER_COUNT
+		// });
+		// unsafe { TRIANGLE_RENDER_COUNT = 0 }
+		// println!("MAX Z: {}", unsafe { MAX_Z })
 	}
 }
 
