@@ -75,7 +75,8 @@ fn main() -> Result<(), Error> {
 				let mean = sum as f64 / frame_num as f64;
 				frame_num = 0;
 				sum = 0;
-				println!("Mean draw time taken over most recent 1000 frames is {mean} microseconds")
+				println!("Mean draw time taken over most recent 1000 frames is {mean} microseconds");
+				println!("This is {} FPS", 1E6/mean)
 			}
 			if let Err(err) = screen.pixels.render() {
 				log_error("pixels.render", err);
