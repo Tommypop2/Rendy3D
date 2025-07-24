@@ -1,6 +1,6 @@
 use std::ops::MulAssign;
 
-use crate::maths::vector::vector3::{Vector3, VectorType};
+use crate::vector::vector3::{Vector3, VectorType};
 #[derive(Default, Clone, Debug)]
 pub struct Vector4<T> {
 	pub x: T,

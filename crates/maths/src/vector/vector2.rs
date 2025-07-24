@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Mul};
 
-use crate::maths::{
+use crate::{
 	Float,
 	vector::vector3::{Vector3, VectorType},
 };

@@ -2,6 +2,7 @@ use std::time::{Instant, SystemTime};
 
 use error_iter::ErrorIter as _;
 use log::error;
+use maths::matrices::matrix4::Matrix4;
 use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
@@ -16,10 +17,8 @@ use crate::graphics::shapes_2d::triangle::BoundingArea;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
 use crate::loaders::stl::load_file;
-use crate::maths::matrices::matrix4::Matrix4;
 pub mod graphics;
 pub mod loaders;
-pub mod maths;
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
 

@@ -1,15 +1,16 @@
+use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
+
 use crate::{
 	graphics::{
 		shapes_2d::triangle::{Draw, Triangle2D},
 		shapes_3d::point::Point,
 	},
-	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
 #[derive(Clone)]
 pub struct Triangle3D {
-	vertex1: Point,
-	vertex2: Point,
-	vertex3: Point,
+	pub vertex1: Point,
+	pub vertex2: Point,
+	pub vertex3: Point,
 }
 
 impl Triangle3D {
@@ -31,6 +32,9 @@ impl Triangle3D {
 			matrix * self.vertex3.to_homogenous(),
 		));
 		self
+	}
+	pub fn vertices(&self) -> [Point; 3] {
+		[self.vertex1, self.vertex2, self.vertex3]
 	}
 }
 

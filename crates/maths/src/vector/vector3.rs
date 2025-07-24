@@ -1,6 +1,6 @@
 use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
 
-use crate::maths::{Float, vector::vector4::Vector4};
+use crate::{Float, vector::vector4::Vector4};
 pub trait VectorType:
 	Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy + MulAssign
 {

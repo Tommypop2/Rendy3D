@@ -1,6 +1,6 @@
 use std::ops::{Mul, MulAssign};
 
-use crate::maths::{
+use crate::{
 	Float,
 	matrices::matrix3::Matrix3,
 	vector::{
