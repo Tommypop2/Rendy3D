@@ -86,6 +86,11 @@ impl Draw for Line {
 		viewport: &mut crate::graphics::viewport::Viewport,
 		screen: &mut crate::graphics::screen::Screen,
 	) {
+		if viewport.point_below_z_buffer(screen, self.start)
+			&& viewport.point_below_z_buffer(screen, self.end)
+		{
+			return;
+		}
 		self.draw_line(viewport, screen, self.start, self.end);
 	}
 }

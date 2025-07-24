@@ -50,7 +50,7 @@ fn main() -> Result<(), Error> {
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
-	let mesh = load_file("./300_polygon_sphere_100mm.STL");
+	let mesh = load_file("./GatlingGuineaPig.stl");
 	let res = event_loop.run(|event, elwt| {
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,

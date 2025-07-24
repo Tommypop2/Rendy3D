@@ -5,7 +5,7 @@ use crate::graphics::shapes_3d::{point::Point, triangle::Triangle3D};
 pub fn load_file<P: AsRef<Path>>(path: P) -> Vec<Triangle3D> {
 	let mut file = OpenOptions::new().read(true).open(path).unwrap();
 	let stl = stl_io::read_stl(&mut file).unwrap();
-	stl.validate().unwrap();
+	// stl.validate().unwrap();
 	let vertices = stl
 		.vertices
 		.iter()
