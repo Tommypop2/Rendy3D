@@ -2,7 +2,6 @@ use std::time::{Instant, SystemTime};
 
 use error_iter::ErrorIter as _;
 use log::error;
-use pixels::wgpu::hal::auxil::MAX_I32_BINDING_SIZE;
 use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
@@ -13,9 +12,7 @@ use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
 use crate::graphics::screen::Screen;
-use crate::graphics::shapes_2d::point::MAX_Z;
-use crate::graphics::shapes_2d::triangle::{BoundingArea, TRIANGLE_RENDER_COUNT, Triangle2D};
-use crate::graphics::shapes_3d::point::Point;
+use crate::graphics::shapes_2d::triangle::BoundingArea;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
 use crate::loaders::stl::load_file;
@@ -122,7 +119,7 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen, mesh: &Vec<Triangle3D>) {
+	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen, mesh: &[Triangle3D]) {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));

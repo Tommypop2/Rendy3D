@@ -1,4 +1,4 @@
-use std::ops::{Mul, MulAssign};
+use std::ops::MulAssign;
 
 use crate::maths::vector::vector3::{Vector3, VectorType};
 #[derive(Default, Clone, Debug)]

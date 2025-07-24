@@ -12,7 +12,8 @@ pub fn load_file<P: AsRef<Path>>(path: P) -> Vec<Triangle3D> {
 		.map(|v| Point::new(v.0[0] as f64, v.0[1] as f64, v.0[2] as f64))
 		.collect::<Vec<Point>>();
 	let triangles = stl.faces;
-	let triangles = triangles
+	
+	triangles
 		.iter()
 		.map(|indexed_triangle| {
 			let vertex_indices = indexed_triangle.vertices;
@@ -22,6 +23,5 @@ pub fn load_file<P: AsRef<Path>>(path: P) -> Vec<Triangle3D> {
 				vertices[vertex_indices[2]],
 			)
 		})
-		.collect::<Vec<Triangle3D>>();
-	triangles
+		.collect::<Vec<Triangle3D>>()
 }

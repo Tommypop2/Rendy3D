@@ -1,10 +1,8 @@
-use derive_more::{Add, Deref, DerefMut};
-use hsv::hsv_to_rgb;
+use derive_more::Add;
 
 use crate::{
 	HEIGHT, WIDTH,
-	graphics::{colour::Colour, shapes_2d::triangle::Draw, shapes_3d::point::Point},
-	maths::vector::{vector2::Vector2, vector3::Vector3},
+	graphics::{shapes_2d::triangle::Draw, shapes_3d::point::Point},
 };
 
 #[derive(Clone, Add, Copy)]
@@ -40,9 +38,8 @@ impl Draw for PixelCoordinate {
 		// Record Z in Z buffer if point is above Z buffer
 		if !viewport.point_below_z_buffer(screen, *self) {
 			screen.z_buffer[self.y][self.x] = self.z;
-		}
-		else {
-			return
+		} else {
+			return;
 		}
 		// screen.frame()[self.y][self.x] = screen.draw_colour.clone();
 		// unsafe {

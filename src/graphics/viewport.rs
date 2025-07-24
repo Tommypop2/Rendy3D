@@ -1,4 +1,3 @@
-use std::thread::Scope;
 
 use crate::{
 	HEIGHT, WIDTH,
@@ -65,11 +64,7 @@ impl Viewport {
 		}
 		let (_, _, z) = p.as_tuple();
 		let buffered_z = screen.get_z_in_z_buffer(p);
-		if z < buffered_z && f32::abs(z - buffered_z) >= 0.01 {
-			true
-		} else {
-			false
-		}
+		z < buffered_z && f32::abs(z - buffered_z) >= 0.01
 	}
 	pub fn draw_shape<T: Draw>(&mut self, screen: &mut super::screen::Screen, shape: T) {
 		shape.draw(self, screen);
