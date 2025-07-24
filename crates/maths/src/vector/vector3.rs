@@ -63,6 +63,16 @@ impl<T: VectorType + Float + Div<Output = T>> Vector3<T> {
 		let cos_theta = Self::dot(self, b) / (self.magnitude() * b.magnitude());
 		T::acos(cos_theta)
 	}
+	pub fn normalize(&mut self) {
+		let m = self.magnitude();
+		self.x = self.x / m;
+		self.y = self.y / m;
+		self.z = self.z / m;
+	}
+	pub fn normalized(mut self) -> Self {
+		self.normalize();
+		self
+	}
 }
 // Add
 impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Copy> Add<Self> for Vector3<T> {

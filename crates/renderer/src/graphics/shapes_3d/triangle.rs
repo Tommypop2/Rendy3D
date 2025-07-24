@@ -1,10 +1,8 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
-use crate::{
-	graphics::{
-		shapes_2d::triangle::{Draw, Triangle2D},
-		shapes_3d::point::Point,
-	},
+use crate::graphics::{
+	shapes_2d::triangle::{Draw, Triangle2D},
+	shapes_3d::point::Point,
 };
 #[derive(Clone)]
 pub struct Triangle3D {
@@ -35,6 +33,12 @@ impl Triangle3D {
 	}
 	pub fn vertices(&self) -> [Point; 3] {
 		[self.vertex1, self.vertex2, self.vertex3]
+	}
+	pub fn normal(&self) -> Vector3<f64> {
+		let side1 = self.vertex1 - self.vertex2;
+		let side2 = self.vertex1 - self.vertex3;
+		let normal = side1.cross_with(&side2);
+		normal
 	}
 }
 

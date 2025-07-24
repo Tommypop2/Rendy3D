@@ -3,6 +3,7 @@ use std::time::{Instant, SystemTime};
 use error_iter::ErrorIter as _;
 use log::error;
 use maths::matrices::matrix4::Matrix4;
+use maths::vector::vector3::Vector3;
 use pixels::{Error, Pixels, SurfaceTexture};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
@@ -168,9 +169,20 @@ impl World {
 		let transform = Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64());
+		let light_dir = Vector3::new(0.0, 0.0, 1.0);
 		for (i, triangle) in mesh.iter().enumerate() {
-			screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
-			viewport.draw_shape(screen, triangle.clone().apply(transform.clone()))
+			let transformed = triangle.clone().apply(transform.clone());
+			let n = transformed.normal();
+			let intensity = n.normalized().dot_with(&light_dir);
+			// Back-face culling :)
+			if intensity < 0.0 {
+				continue;
+			}
+			let val = (255.0 * intensity) as u8;
+			screen.set_draw_colour(Colour::new(val, val, val, 0xff));
+			// screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
+
+			viewport.draw_shape(screen, transformed)
 		}
 		// println!("Actual # of triangles drawn: {}", unsafe {
 		// 	TRIANGLE_RENDER_COUNT

@@ -2,5 +2,6 @@
 resolver = "3"
 members = ["crates/*"]
 
-[profile.release]
+[profile.profile]
+inherits = "release"
 debug = true

@@ -1,8 +1,8 @@
-use derive_more::{Add, Deref, DerefMut};
+use derive_more::{Add, Deref, DerefMut, Sub};
 use maths::vector::vector3::Vector3;
 
 /// Coordinates between -1 and 1
-#[derive(Deref, DerefMut, Clone, Add, Copy)]
+#[derive(Deref, DerefMut, Clone, Add, Copy, Sub)]
 pub struct Point(Vector3<f64>);
 
 impl Point {
