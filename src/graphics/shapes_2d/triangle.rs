@@ -73,14 +73,13 @@ impl Draw for Triangle2D {
 		{
 			return;
 		}
-		// If all vertices are below the current pixels in the Z-map, also don't draw
-		// This doesn't work in practice as triangles on the same level share vertices
-		// if viewport.point_below_z_buffer(screen, self.vertex1)
-		// 	&& viewport.point_below_z_buffer(screen, self.vertex2)
-		// 	&& viewport.point_below_z_buffer(screen, self.vertex3)
-		// {
-		// 	return;
-		// }
+		// If all vertices are below the current pixels in the Z buffer, also don't draw
+		if viewport.point_below_z_buffer(screen, self.vertex1)
+			&& viewport.point_below_z_buffer(screen, self.vertex2)
+			&& viewport.point_below_z_buffer(screen, self.vertex3)
+		{
+			return;
+		}
 		// viewport.draw_line(screen, self.vertex1, self.vertex2);
 		// viewport.draw_line(screen, self.vertex2, self.vertex3);
 		// viewport.draw_line(screen, self.vertex3, self.vertex1);
@@ -90,7 +89,7 @@ impl Draw for Triangle2D {
 		Line::new(self.vertex3, self.vertex1).draw(viewport, screen);
 		// Now need to fill in the triangle
 		let bounding_area = self.bounding_area();
-		// Iterate over all pixels that could possible contain the triangle
+		// Iterate over all pixels that could possibly contain the triangle
 		let abc = self.doubled_area();
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
