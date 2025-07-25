@@ -70,10 +70,32 @@ where
 	pub fn translation(vector: Vector3<T>) -> Self {
 		Self::unit().with_translation(vector)
 	}
-	pub fn with_scale(mut self, scale: T) -> Self {
-		self *= scale;
-		self.w.w = T::one();
+	// Scale
+	pub fn with_scale_x(mut self, scale: T) -> Self {
+		self.x.x *= scale;
 		self
+	}
+	pub fn scale_x(scale: T) -> Self {
+		Self::unit().with_scale_x(scale)
+	}
+	pub fn with_scale_y(mut self, scale: T) -> Self {
+		self.y.y *= scale;
+		self
+	}
+	pub fn scale_y(scale: T) -> Self {
+		Self::unit().with_scale_y(scale)
+	}
+	pub fn with_scale_z(mut self, scale: T) -> Self {
+		self.z.z *= scale;
+		self
+	}
+	pub fn scale_z(scale: T) -> Self {
+		Self::unit().with_scale_z(scale)
+	}
+	pub fn with_scale(self, scale: T) -> Self {
+		self.with_scale_x(scale)
+			.with_scale_y(scale)
+			.with_scale_z(scale)
 	}
 	pub fn scale(scale: T) -> Self {
 		Self::unit().with_scale(scale)
