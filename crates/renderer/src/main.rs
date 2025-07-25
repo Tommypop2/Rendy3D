@@ -75,8 +75,10 @@ fn main() -> Result<(), Error> {
 				let mean = sum as f64 / frame_num as f64;
 				frame_num = 0;
 				sum = 0;
-				println!("Mean draw time taken over most recent 1000 frames is {mean} microseconds");
-				println!("This is {} FPS", 1E6/mean)
+				println!(
+					"Mean draw time taken over most recent 1000 frames is {mean} microseconds"
+				);
+				println!("This is {} FPS", 1E6 / mean)
 			}
 			if let Err(err) = screen.pixels.render() {
 				log_error("pixels.render", err);
@@ -167,9 +169,11 @@ impl World {
 		// 	)
 		// 	.apply(Matrix4::scale(100.0)),
 		// );
-		let transform = Matrix4::rotation_z(x.as_secs_f64())
+		let transform = Matrix4::scale_x(HEIGHT as f64 / WIDTH as f64)
+			* Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
-			* Matrix4::rotation_x(x.as_secs_f64()) * Matrix4::scale(5.0);
+			* Matrix4::rotation_x(x.as_secs_f64())
+			* Matrix4::scale(5.0);
 		let light_dir = Vector3::new(0.0, 0.0, 1.0);
 		for (i, triangle) in mesh.iter().enumerate() {
 			let transformed = triangle.clone().apply(transform.clone());
