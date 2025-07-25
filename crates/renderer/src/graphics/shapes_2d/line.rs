@@ -1,7 +1,5 @@
 use crate::graphics::{
-	screen::Screen,
-	shapes_2d::{point::PixelCoordinate, triangle::Draw},
-	viewport::Viewport,
+	draw::Draw, screen::Screen, shapes_2d::point::PixelCoordinate, viewport::Viewport,
 };
 
 pub struct Line {

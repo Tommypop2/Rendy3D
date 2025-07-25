@@ -1,11 +1,9 @@
 use crate::{
 	HEIGHT, WIDTH,
 	graphics::{
+		draw::Draw,
 		screen::Screen,
-		shapes_2d::{
-			point::PixelCoordinate,
-			triangle::{BoundingArea, Draw},
-		},
+		shapes_2d::{point::PixelCoordinate, triangle::BoundingArea},
 	},
 };
 

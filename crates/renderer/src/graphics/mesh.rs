@@ -1,4 +1,4 @@
-use crate::graphics::{shapes_2d::triangle, shapes_3d::triangle::Triangle3D};
+use crate::graphics::shapes_3d::triangle::Triangle3D;
 
 pub struct Mesh {
 	/// Triangles that make up the shape
@@ -21,7 +21,7 @@ impl Mesh {
 		// }
 		self.triangles
 			.iter()
-			.fold((0.0, 0.0, 0.0), |mut dimensions, element| {
+			.fold((0.0, 0.0, 0.0), |dimensions, element| {
 				let (width_x, width_y, width_z) = dimensions;
 
 				dimensions

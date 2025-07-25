@@ -1,9 +1,8 @@
 use derive_more::Add;
-use hsv::hsv_to_rgb;
 
 use crate::{
 	HEIGHT, WIDTH,
-	graphics::{colour::Colour, shapes_2d::triangle::Draw, shapes_3d::point::Point},
+	graphics::{draw::Draw, shapes_3d::point::Point},
 };
 
 #[derive(Clone, Add, Copy)]

@@ -1,11 +1,10 @@
 use crate::graphics::{
+	draw::Draw,
 	screen::Screen,
 	shapes_2d::{line::Line, point::PixelCoordinate},
 	viewport::Viewport,
 };
-pub trait Draw {
-	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen);
-}
+
 pub struct Triangle2D {
 	vertex1: PixelCoordinate,
 	vertex2: PixelCoordinate,

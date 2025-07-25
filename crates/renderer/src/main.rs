@@ -50,7 +50,7 @@ fn main() -> Result<(), Error> {
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
-	let mesh = load_file("./cube.stl");
+	let mesh = load_file("./GatlingGuineaPig.stl");
 	let res = event_loop.run(|event, elwt| {
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
@@ -173,7 +173,7 @@ impl World {
 			* Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64())
-			* Matrix4::scale(5.0);
+			* Matrix4::scale(1.0);
 		let light_dir = Vector3::new(0.0, 0.0, 1.0);
 		for (i, triangle) in mesh.iter().enumerate() {
 			let transformed = triangle.clone().apply(transform.clone());
