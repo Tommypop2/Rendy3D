@@ -34,6 +34,9 @@ impl Triangle3D {
 	pub fn vertices(&self) -> [Point; 3] {
 		[self.vertex1, self.vertex2, self.vertex3]
 	}
+	pub fn vertices_mut(&mut self) -> [&mut Point; 3] {
+		[&mut self.vertex1, &mut self.vertex2, &mut self.vertex3]
+	}
 	pub fn normal(&self) -> Vector3<f64> {
 		let side1 = self.vertex1 - self.vertex2;
 		let side2 = self.vertex1 - self.vertex3;
