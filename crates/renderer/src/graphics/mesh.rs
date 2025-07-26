@@ -14,7 +14,11 @@ pub struct Dimensions {
 	max_z: f64,
 }
 impl Mesh {
+	pub fn new(triangles: Vec<Triangle3D>) -> Self {
+		Self { triangles }
+	}
 	pub fn dimensions(&self) {
+		todo!();
 		let first = self.triangles[0].clone();
 		// let initial = Dimensions {
 		// 	min_x: first

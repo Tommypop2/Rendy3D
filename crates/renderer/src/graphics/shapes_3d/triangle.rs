@@ -1,7 +1,7 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{draw::Draw, shapes_2d::triangle::Triangle2D, shapes_3d::point::Point};
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Triangle3D {
 	pub vertex1: Point,
 	pub vertex2: Point,

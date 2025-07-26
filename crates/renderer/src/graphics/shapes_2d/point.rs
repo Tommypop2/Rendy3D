@@ -1,8 +1,8 @@
 use derive_more::Add;
+use hsv::hsv_to_rgb;
 
 use crate::{
-	HEIGHT, WIDTH,
-	graphics::{draw::Draw, shapes_3d::point::Point},
+	graphics::{colour::Colour, draw::Draw, shapes_3d::point::Point}, HEIGHT, WIDTH
 };
 
 #[derive(Clone, Add, Copy)]
@@ -23,8 +23,8 @@ impl PixelCoordinate {
 impl From<Point> for PixelCoordinate {
 	fn from(value: Point) -> Self {
 		let offset = PixelCoordinate::new((WIDTH / 2) as usize, (HEIGHT / 2) as usize, 0.0);
-		let x = (offset.x as f64 + value.x * (WIDTH as f64) / 100.0).round() as usize;
-		let y = (offset.y as f64 + value.y * (HEIGHT as f64) / 100.0).round() as usize;
+		let x = (offset.x as f64 + value.x * (WIDTH as f64) / 2.0).round() as usize;
+		let y = (offset.y as f64 - value.y * (HEIGHT as f64) / 2.0).round() as usize;
 		Self::new(x, y, value.z as f32)
 	}
 }
@@ -48,7 +48,7 @@ impl Draw for PixelCoordinate {
 		// 	}
 		// };
 		// let z_normalised = self.z / (56.241528 * 2.0) + 0.5;
-		// let (r,g,b) = hsv_to_rgb((z_normalised * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
+		// let (r,g,b) = hsv_to_rgb((self.z * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
 		// screen.set_draw_colour(Colour::new(r, g, b, 255));
 		viewport.draw_point(screen, *self);
 	}

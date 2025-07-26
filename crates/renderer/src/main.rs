@@ -13,8 +13,11 @@ use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
+use crate::graphics::draw::Draw;
+use crate::graphics::perspective::perspective_matrix;
 use crate::graphics::screen::Screen;
 use crate::graphics::shapes_2d::triangle::BoundingArea;
+use crate::graphics::shapes_3d::point::Point;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
 use crate::loaders::stl::load_file;
@@ -51,6 +54,8 @@ fn main() -> Result<(), Error> {
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
 	let mesh = load_file("./GatlingGuineaPig.stl");
+	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
+	// let pers_mat = Matrix4::unit();
 	let res = event_loop.run(|event, elwt| {
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
@@ -60,7 +65,7 @@ fn main() -> Result<(), Error> {
 			// Clear buffer
 			screen.clear(Colour::BLACK);
 			let start = Instant::now();
-			world.draw(&mut viewport, &mut screen, &mesh);
+			world.draw(&mut viewport, &mut screen, &mesh, pers_mat.clone());
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
@@ -122,7 +127,13 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen, mesh: &[Triangle3D]) {
+	fn draw(
+		&self,
+		viewport: &mut Viewport,
+		screen: &mut Screen,
+		mesh: &[Triangle3D],
+		perspective_matrix: Matrix4<f64>,
+	) {
 		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
 		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
@@ -169,11 +180,33 @@ impl World {
 		// 	)
 		// 	.apply(Matrix4::scale(100.0)),
 		// );
-		let transform = Matrix4::scale_x(HEIGHT as f64 / WIDTH as f64)
+
+		// Triangle3D::new(
+		// 	Point::new(1.0, -0.1, -0.2),
+		// 	Point::new(0.3, 1.0, -0.2),
+		// 	Point::new(-0.2, -1.0, -0.2),
+		// )
+		// .apply(perspective_matrix * Matrix4::translation(Vector3::new(0.0, 0.0, -10.0)))
+		// .draw(viewport, screen);
+		// let transform = perspective_matrix.clone()
+		// 	* Matrix4::translation(Vector3::new(0.0, 0.0, -10.0))
+		// 	* Matrix4::rotation_z(x.as_secs_f64())
+		// 	* Matrix4::rotation_y(x.as_secs_f64())
+		// 	* Matrix4::rotation_x(x.as_secs_f64());
+		// for triangle in mesh.iter() {
+		// 	triangle
+		// 		.clone()
+		// 		.apply(
+		// 			transform.clone(),
+		// 		)
+		// 		.draw(viewport, screen);
+		// }
+		let transform = perspective_matrix * Matrix4::scale_x(HEIGHT as f64 / WIDTH as f64)
+			* Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
 			* Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64())
-			* Matrix4::scale(1.0);
+			* Matrix4::scale(0.01);
 		let light_dir = Vector3::new(0.0, 0.0, 1.0);
 		for (i, triangle) in mesh.iter().enumerate() {
 			let transformed = triangle.clone().apply(transform.clone());
@@ -185,8 +218,11 @@ impl World {
 			}
 			let val = (255.0 * intensity) as u8;
 			screen.set_draw_colour(Colour::new(val, val, val, 0xff));
-			// screen.set_draw_colour(Colour::COLOURS[(i) % Colour::COLOURS.len()].clone());
-
+			// let mut colour = Colour::COLOURS[(i) % Colour::COLOURS.len()].clone();
+			// colour.alpha = val;
+			// screen.set_draw_colour(colour);
+			// let perspectified = transformed.apply(perspective_matrix.clone());
+			// println!("{:?}", perspectified);
 			viewport.draw_shape(screen, transformed)
 		}
 		// println!("Actual # of triangles drawn: {}", unsafe {

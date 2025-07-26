@@ -19,7 +19,7 @@ pub struct Matrix4<T> {
 }
 
 impl<T> Matrix4<T> {
-	pub fn new(x: Vector4<T>, y: Vector4<T>, z: Vector4<T>, w: Vector4<T>) -> Self {
+	pub const fn new(x: Vector4<T>, y: Vector4<T>, z: Vector4<T>, w: Vector4<T>) -> Self {
 		Self { x, y, z, w }
 	}
 }
