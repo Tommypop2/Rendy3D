@@ -16,8 +16,7 @@ use crate::graphics::colour::Colour;
 use crate::graphics::draw::Draw;
 use crate::graphics::perspective::perspective_matrix;
 use crate::graphics::screen::Screen;
-use crate::graphics::shapes_2d::triangle::BoundingArea;
-use crate::graphics::shapes_3d::point::Point;
+use crate::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
 use crate::loaders::stl::load_file;
@@ -49,7 +48,7 @@ fn main() -> Result<(), Error> {
 	};
 	let mut screen = Screen::new(pixels);
 	let mut viewport =
-		Viewport::new(BoundingArea::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
+		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
@@ -201,7 +200,8 @@ impl World {
 		// 		)
 		// 		.draw(viewport, screen);
 		// }
-		let transform = perspective_matrix * Matrix4::scale_x(HEIGHT as f64 / WIDTH as f64)
+		let transform = perspective_matrix
+			* Matrix4::scale_x(HEIGHT as f64 / WIDTH as f64)
 			* Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
 			* Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())

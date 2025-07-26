@@ -3,17 +3,17 @@ use crate::{
 	graphics::{
 		draw::Draw,
 		screen::Screen,
-		shapes_2d::{point::PixelCoordinate, triangle::BoundingArea},
+		shapes_2d::{bounding_area::BoundingArea2D, point::PixelCoordinate},
 	},
 };
 
 pub struct Viewport {
-	area: BoundingArea,
+	area: BoundingArea2D,
 }
 impl Default for Viewport {
 	fn default() -> Self {
 		Self {
-			area: BoundingArea {
+			area: BoundingArea2D {
 				min_x: 0,
 				max_x: WIDTH as usize,
 				min_y: 0,
@@ -28,7 +28,7 @@ pub enum ViewportCreationError {
 	MaxYGreaterThanScreenSize,
 }
 impl Viewport {
-	pub fn new(area: BoundingArea) -> Result<Self, ViewportCreationError> {
+	pub fn new(area: BoundingArea2D) -> Result<Self, ViewportCreationError> {
 		if area.max_x > WIDTH as usize {
 			return Err(ViewportCreationError::MaxXGreaterThanScreenSize);
 		}
@@ -37,7 +37,7 @@ impl Viewport {
 		}
 		Ok(Self { area })
 	}
-	pub fn set_area(&mut self, area: BoundingArea) {
+	pub fn set_area(&mut self, area: BoundingArea2D) {
 		self.area = area;
 	}
 	pub fn contains_point(&self, point: PixelCoordinate) -> bool {

@@ -1,7 +1,7 @@
 use crate::graphics::{
 	draw::Draw,
 	screen::Screen,
-	shapes_2d::{line::Line, point::PixelCoordinate},
+	shapes_2d::{bounding_area::BoundingArea2D, line::Line, point::PixelCoordinate},
 	viewport::Viewport,
 };
 
@@ -10,22 +10,7 @@ pub struct Triangle2D {
 	vertex2: PixelCoordinate,
 	vertex3: PixelCoordinate,
 }
-pub struct BoundingArea {
-	pub min_x: usize,
-	pub max_x: usize,
-	pub min_y: usize,
-	pub max_y: usize,
-}
-impl BoundingArea {
-	pub fn new(min_x: usize, max_x: usize, min_y: usize, max_y: usize) -> Self {
-		Self {
-			min_x,
-			max_x,
-			min_y,
-			max_y,
-		}
-	}
-}
+
 impl Triangle2D {
 	pub fn new(
 		vertex1: PixelCoordinate,
@@ -49,12 +34,12 @@ impl Triangle2D {
 				+ x3 as i32 * (y1 as i32 - y2 as i32),
 		) as usize
 	}
-	fn bounding_area(&self) -> BoundingArea {
+	fn bounding_area(&self) -> BoundingArea2D {
 		let min_x = self.vertex1.x.min(self.vertex2.x).min(self.vertex3.x);
 		let max_x = self.vertex1.x.max(self.vertex2.x).max(self.vertex3.x);
 		let min_y = self.vertex1.y.min(self.vertex2.y).min(self.vertex3.y);
 		let max_y = self.vertex1.y.max(self.vertex2.y).max(self.vertex3.y);
-		BoundingArea {
+		BoundingArea2D {
 			min_x,
 			max_x,
 			min_y,
