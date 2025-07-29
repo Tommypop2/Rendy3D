@@ -1,7 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use crate::{
-	traits::{float::Float, num::Num},
+	traits::{float::Float, num::Num, signed::Signed},
 	vector::vector4::Vector4,
 };
 
@@ -19,7 +19,7 @@ impl<T> Vector3<T> {
 		(self.x, self.y, self.z)
 	}
 }
-impl<T: Num + Neg<Output = T>> Vector3<T> {
+impl<T: Signed> Vector3<T> {
 	pub fn cross(a: &Self, b: &Self) -> Self {
 		Self {
 			x: a.y * b.z - b.y * a.z,
@@ -40,7 +40,7 @@ impl<T: Num + Neg<Output = T>> Vector3<T> {
 		self.x * self.x + self.y * self.y + self.z * self.z
 	}
 }
-impl<T: Float + Neg<Output = T>> Vector3<T> {
+impl<T: Float> Vector3<T> {
 	pub fn to_homogenous(self) -> Vector4<T> {
 		Vector4::new(self.x, self.y, self.z, T::one())
 	}

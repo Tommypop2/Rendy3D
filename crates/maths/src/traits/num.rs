@@ -18,36 +18,30 @@ pub trait Num:
 	fn one() -> Self;
 	fn zero() -> Self;
 }
+macro_rules! implement_num {
+	($x: ident) => {
+		impl Num for $x {
+			fn one() -> Self {
+				1 as Self
+			}
+			fn zero() -> Self {
+				0 as Self
+			}
+		}
+	};
+}
 
-impl Num for f32 {
-	fn one() -> Self {
-		1.0
-	}
-	fn zero() -> Self {
-		0.0
-	}
-}
-impl Num for f64 {
-	fn one() -> Self {
-		1.0
-	}
-	fn zero() -> Self {
-		0.0
-	}
-}
-impl Num for i32 {
-	fn one() -> Self {
-		1
-	}
-	fn zero() -> Self {
-		0
-	}
-}
-impl Num for i64 {
-	fn one() -> Self {
-		1
-	}
-	fn zero() -> Self {
-		0
-	}
-}
+implement_num!(f32);
+implement_num!(f64);
+
+implement_num!(i8);
+implement_num!(i16);
+implement_num!(i32);
+implement_num!(i64);
+implement_num!(i128);
+
+implement_num!(u8);
+implement_num!(u16);
+implement_num!(u32);
+implement_num!(u64);
+implement_num!(u128);

@@ -1,6 +1,6 @@
-use crate::traits::num::Num;
+use crate::traits::{num::Num, signed::Signed};
 
-pub trait Float: Num {
+pub trait Float: Num + Signed {
 	fn sqrt(self) -> Self;
 	// Trig
 	fn sin(self) -> Self;
@@ -10,49 +10,35 @@ pub trait Float: Num {
 	fn acos(self) -> Self;
 	fn atan(self) -> Self;
 }
-impl Float for f32 {
-	fn sqrt(self) -> Self {
-		Self::sqrt(self)
-	}
-	fn sin(self) -> Self {
-		Self::sin(self)
-	}
-	fn cos(self) -> Self {
-		Self::cos(self)
-	}
-	fn tan(self) -> Self {
-		Self::tan(self)
-	}
-	fn asin(self) -> Self {
-		Self::asin(self)
-	}
-	fn acos(self) -> Self {
-		Self::acos(self)
-	}
-	fn atan(self) -> Self {
-		Self::atan(self)
-	}
+macro_rules! implement_float {
+	($x: ident) => {
+		impl Float for $x {
+			fn sqrt(self) -> Self {
+				Self::sqrt(self)
+			}
+			fn sin(self) -> Self {
+				Self::sin(self)
+			}
+			fn cos(self) -> Self {
+				Self::cos(self)
+			}
+			fn tan(self) -> Self {
+				Self::tan(self)
+			}
+			fn asin(self) -> Self {
+				Self::asin(self)
+			}
+			fn acos(self) -> Self {
+				Self::acos(self)
+			}
+			fn atan(self) -> Self {
+				Self::atan(self)
+			}
+		}
+	};
 }
-impl Float for f64 {
-	fn sqrt(self) -> Self {
-		Self::sqrt(self)
-	}
-	fn sin(self) -> Self {
-		Self::sin(self)
-	}
-	fn cos(self) -> Self {
-		Self::cos(self)
-	}
-	fn tan(self) -> Self {
-		Self::tan(self)
-	}
-	fn asin(self) -> Self {
-		Self::asin(self)
-	}
-	fn acos(self) -> Self {
-		Self::acos(self)
-	}
-	fn atan(self) -> Self {
-		Self::atan(self)
-	}
-}
+
+// implement_float!(f16);
+implement_float!(f32);
+implement_float!(f64);
+// implement_float!(f128);
