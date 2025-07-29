@@ -6,29 +6,26 @@ pub struct Triangle3D {
 	pub vertex1: Point,
 	pub vertex2: Point,
 	pub vertex3: Point,
-	pub normal: Vector3<f64>,
 }
 
 impl Triangle3D {
-	pub fn new(vertex1: Point, vertex2: Point, vertex3: Point, normal: Vector3<f64>) -> Self {
+	pub fn new(vertex1: Point, vertex2: Point, vertex3: Point) -> Self {
 		Self {
 			vertex1,
 			vertex2,
 			vertex3,
-			normal,
 		}
 	}
 	pub fn apply(mut self, matrix: Matrix4<f64>) -> Self {
-		self.vertex1 = Point::from_vector(Vector3::from_homogenous_point(
-			matrix.clone() * self.vertex1.to_homogenous_point(),
+		self.vertex1 = Point::from_vector(Vector3::from_homogenous(
+			matrix.clone() * self.vertex1.to_homogenous(),
 		));
-		self.vertex2 = Point::from_vector(Vector3::from_homogenous_point(
-			matrix.clone() * self.vertex2.to_homogenous_point(),
+		self.vertex2 = Point::from_vector(Vector3::from_homogenous(
+			matrix.clone() * self.vertex2.to_homogenous(),
 		));
-		self.vertex3 = Point::from_vector(Vector3::from_homogenous_point(
-			matrix.clone() * self.vertex3.to_homogenous_point(),
+		self.vertex3 = Point::from_vector(Vector3::from_homogenous(
+			matrix * self.vertex3.to_homogenous(),
 		));
-		self.normal = Vector3::from_homogenous_vector(matrix * self.normal.to_homogenous_vector());
 		self
 	}
 	pub fn vertices(&self) -> [Point; 3] {

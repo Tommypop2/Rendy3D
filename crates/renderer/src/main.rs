@@ -51,7 +51,7 @@ fn main() -> Result<(), Error> {
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
-	let mesh = load_file("./300_polygon_sphere_100mm.stl");
+	let mesh = load_file("./F1_RB16B.stl");
 	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
 	// let pers_mat = Matrix4::unit();
 	let res = event_loop.run(|event, elwt| {
@@ -199,17 +199,17 @@ impl World {
 		// 		)
 		// 		.draw(viewport, screen);
 		// }
-		let transform = perspective_matrix.clone()
+		let transform = perspective_matrix
 			* Matrix4::scale_x(HEIGHT as f64 / WIDTH as f64)
 			* Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
 			* Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64())
 			* Matrix4::scale(0.01);
-		let light_dir = Vector3::new(0.0, 0.0, -1.0);
+		let light_dir = Vector3::new(0.0, 0.0, 1.0);
 		for (i, triangle) in mesh.iter().enumerate() {
 			let transformed = triangle.clone().apply(transform.clone());
-			let n = transformed.normal;
+			let n = transformed.normal();
 			let intensity = n.normalized().dot_with(&light_dir);
 			// Back-face culling :)
 			if intensity < 0.0 {

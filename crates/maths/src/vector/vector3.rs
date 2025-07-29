@@ -41,17 +41,11 @@ impl<T: Signed> Vector3<T> {
 	}
 }
 impl<T: Float> Vector3<T> {
-	pub fn to_homogenous_point(self) -> Vector4<T> {
+	pub fn to_homogenous(self) -> Vector4<T> {
 		Vector4::new(self.x, self.y, self.z, T::one())
 	}
-	pub fn to_homogenous_vector(self) -> Vector4<T> {
-		Vector4::new(self.x, self.y, self.z, T::zero())
-	}
-	pub fn from_homogenous_point(c: Vector4<T>) -> Self {
+	pub fn from_homogenous(c: Vector4<T>) -> Self {
 		Self::new(c.x / c.w, c.y / c.w, c.z / c.w)
-	}
-	pub fn from_homogenous_vector(c: Vector4<T>) -> Self {
-		Self::new(c.x, c.y, c.z)
 	}
 	pub fn magnitude(&self) -> T {
 		self.magnitude_squared().sqrt()
