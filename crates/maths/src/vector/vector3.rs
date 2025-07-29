@@ -56,9 +56,9 @@ impl<T: Float> Vector3<T> {
 	}
 	pub fn normalize(&mut self) {
 		let m = self.magnitude();
-		self.x = self.x / m;
-		self.y = self.y / m;
-		self.z = self.z / m;
+		self.x /= m;
+		self.y /= m;
+		self.z /= m;
 	}
 	pub fn normalized(mut self) -> Self {
 		self.normalize();

@@ -18,7 +18,5 @@ impl Camera {
 		}
 	}
 
-	pub fn render<T: Draw>(&mut self, screen: &mut Screen, triangles: &[Triangle3D]) {
-		
-	}
+	pub fn render<T: Draw>(&mut self, screen: &mut Screen, triangles: &[Triangle3D]) {}
 }
