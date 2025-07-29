@@ -13,7 +13,6 @@ use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
-use crate::graphics::draw::Draw;
 use crate::graphics::perspective::perspective_matrix;
 use crate::graphics::screen::Screen;
 use crate::graphics::shapes_2d::bounding_area::BoundingArea2D;
@@ -52,7 +51,7 @@ fn main() -> Result<(), Error> {
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
-	let mesh = load_file("./GatlingGuineaPig.stl");
+	let mesh = load_file("./F1_RB16B.stl");
 	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
 	// let pers_mat = Matrix4::unit();
 	let res = event_loop.run(|event, elwt| {
