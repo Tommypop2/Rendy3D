@@ -6,7 +6,7 @@ use crate::{
 };
 
 #[derive(Debug, Clone, Copy)]
-pub struct Vector2<T: Mul<Output = T> + Add<Output = T> + Copy> {
+pub struct Vector2<T> {
 	pub x: T,
 	pub y: T,
 }
