@@ -10,11 +10,12 @@ pub struct Vector2<T> {
 	pub x: T,
 	pub y: T,
 }
-
-impl<T: Mul<Output = T> + Add<Output = T> + Copy> Vector2<T> {
-	pub fn new(x: T, y: T) -> Self {
+impl<T> Vector2<T> {
+	pub const fn new(x: T, y: T) -> Self {
 		Self { x, y }
 	}
+}
+impl<T: Mul<Output = T> + Add<Output = T> + Copy> Vector2<T> {
 	pub fn magnitude_squared(&self) -> T {
 		self.x * self.x + self.y * self.y
 	}

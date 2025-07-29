@@ -9,7 +9,7 @@ pub struct Matrix2<T> {
 }
 
 impl<T> Matrix2<T> {
-	pub fn new(x: Vector2<T>, y: Vector2<T>) -> Self {
+	pub const fn new(x: Vector2<T>, y: Vector2<T>) -> Self {
 		Self { x, y }
 	}
 }

@@ -1,8 +1,15 @@
-use std::mem;
+use std::{
+	mem,
+	ops::{Add, Mul, Neg, Sub},
+};
 
 use crate::{
 	Float,
-	vector::vector3::{Vector3, VectorType},
+	matrices::matrix2::Matrix2,
+	vector::{
+		vector2::Vector2,
+		vector3::{Vector3, VectorType},
+	},
 };
 
 #[derive(Default, PartialEq, Debug)]
@@ -80,6 +87,99 @@ impl<T> Matrix3<T> {
 		self
 	}
 }
+impl<T> Matrix3<T>
+where
+	T: Mul<Output = T> + Sub<Output = T> + Clone + Copy + Add<Output = T>,
+{
+	pub fn determinant(&self) -> T {
+		self.x.x
+			* Matrix2::new(
+				Vector2::new(self.y.y, self.y.z),
+				Vector2::new(self.z.y, self.z.z),
+			)
+			.determinant()
+			- self.y.x
+				* Matrix2::new(
+					Vector2::new(self.x.y, self.x.z),
+					Vector2::new(self.z.y, self.z.z),
+				)
+				.determinant()
+			+ self.z.x
+				* Matrix2::new(
+					Vector2::new(self.x.y, self.x.z),
+					Vector2::new(self.y.y, self.y.z),
+				)
+				.determinant()
+	}
+	pub fn minors(&self) -> Self {
+		Self::new(
+			Vector3::new(
+				Matrix2::new(
+					Vector2::new(self.y.y, self.y.z),
+					Vector2::new(self.z.y, self.z.z),
+				)
+				.determinant(),
+				Matrix2::new(
+					Vector2::new(self.y.x, self.z.x),
+					Vector2::new(self.y.z, self.z.z),
+				)
+				.determinant(),
+				Matrix2::new(
+					Vector2::new(self.y.x, self.y.y),
+					Vector2::new(self.z.x, self.z.y),
+				)
+				.determinant(),
+			),
+			Vector3::new(
+				Matrix2::new(
+					Vector2::new(self.x.y, self.x.z),
+					Vector2::new(self.z.y, self.z.z),
+				)
+				.determinant(),
+				Matrix2::new(
+					Vector2::new(self.x.x, self.x.z),
+					Vector2::new(self.z.x, self.z.z),
+				)
+				.determinant(),
+				Matrix2::new(
+					Vector2::new(self.x.x, self.x.y),
+					Vector2::new(self.z.x, self.z.y),
+				)
+				.determinant(),
+			),
+			Vector3::new(
+				Matrix2::new(
+					Vector2::new(self.x.y, self.x.z),
+					Vector2::new(self.y.y, self.y.z),
+				)
+				.determinant(),
+				Matrix2::new(
+					Vector2::new(self.x.x, self.x.z),
+					Vector2::new(self.y.x, self.y.z),
+				)
+				.determinant(),
+				Matrix2::new(
+					Vector2::new(self.x.x, self.x.y),
+					Vector2::new(self.y.x, self.y.y),
+				)
+				.determinant(),
+			),
+		)
+	}
+}
+impl<T> Matrix3<T>
+where
+	T: Mul<Output = T> + Sub<Output = T> + Clone + Copy + Neg<Output = T> + Add<Output = T>,
+{
+	pub fn cofactors(&self) -> Self {
+		let mut minors = self.minors();
+		minors.x.y = -minors.x.y;
+		minors.y.x = -minors.y.x;
+		minors.y.z = -minors.y.z;
+		minors.z.y = -minors.z.y;
+		minors
+	}
+}
 #[cfg(test)]
 mod test {
 	use super::*;
@@ -98,5 +198,46 @@ mod test {
 			Vector3::new(3, 6, 9),
 		);
 		assert_eq!(transposed, expected)
+	}
+
+	#[test]
+	fn minors() {
+		let mat = Matrix3::new(
+			Vector3::new(1, 2, 3),
+			Vector3::new(4, 5, 6),
+			Vector3::new(7, 8, 9),
+		);
+		let minors = mat.minors();
+		let expected = Matrix3::new(
+			Vector3::new(-3, -6, -3),
+			Vector3::new(-6, -12, -6),
+			Vector3::new(-3, -6, -3),
+		);
+		assert_eq!(minors, expected)
+	}
+	#[test]
+	fn cofactors() {
+		let mat = Matrix3::new(
+			Vector3::new(1, 2, 3),
+			Vector3::new(4, 5, 6),
+			Vector3::new(7, 8, 9),
+		);
+		let cofactors = mat.cofactors();
+		let expected = Matrix3::new(
+			Vector3::new(-3, 6, -3),
+			Vector3::new(6, -12, 6),
+			Vector3::new(-3, 6, -3),
+		);
+		assert_eq!(cofactors, expected)
+	}
+	#[test]
+	fn determinant() {
+		let mat = Matrix3::new(
+			Vector3::new(1, 2, 3),
+			Vector3::new(4, 5, 6),
+			Vector3::new(7, 8, 9),
+		);
+		let det = mat.determinant();
+		assert_eq!(det, 0)
 	}
 }
