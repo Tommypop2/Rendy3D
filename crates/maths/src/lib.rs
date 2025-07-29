@@ -1,7 +1,9 @@
+use std::ops::Div;
+
 pub mod matrices;
 pub mod vector;
 
-pub trait Float {
+pub trait Float: Sized + Div<Output = Self> {
 	fn sqrt(self) -> Self;
 	// Trig
 	fn sin(self) -> Self;

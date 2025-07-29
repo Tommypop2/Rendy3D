@@ -3,6 +3,8 @@ use std::{
 	ops::{Add, Mul, Neg, Sub},
 };
 
+use derive_more::Mul;
+
 use crate::{
 	Float,
 	matrices::matrix2::Matrix2,
@@ -12,7 +14,7 @@ use crate::{
 	},
 };
 
-#[derive(Default, PartialEq, Debug)]
+#[derive(Default, PartialEq, Debug, Mul)]
 pub struct Matrix3<T> {
 	// Matrix Columns
 	pub x: Vector3<T>,
@@ -74,6 +76,12 @@ where
 	}
 	pub fn rotate_z(angle: T) -> Self {
 		Self::unit().with_rotation_z(angle)
+	}
+	pub fn invert(&self) -> Self {
+		let det = self.determinant();
+		let cofactors = self.cofactors();
+		let inverted = cofactors.transposed() * (T::one() / det);
+		inverted
 	}
 }
 impl<T> Matrix3<T> {
@@ -180,6 +188,7 @@ where
 		minors
 	}
 }
+
 #[cfg(test)]
 mod test {
 	use super::*;
