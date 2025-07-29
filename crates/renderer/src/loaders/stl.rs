@@ -1,5 +1,7 @@
 use std::{fs::OpenOptions, path::Path};
 
+use maths::vector::vector3::Vector3;
+
 use crate::graphics::shapes_3d::{point::Point, triangle::Triangle3D};
 
 pub fn load_file<P: AsRef<Path>>(path: P) -> Vec<Triangle3D> {
@@ -17,10 +19,12 @@ pub fn load_file<P: AsRef<Path>>(path: P) -> Vec<Triangle3D> {
 		.iter()
 		.map(|indexed_triangle| {
 			let vertex_indices = indexed_triangle.vertices;
+			let normal = indexed_triangle.normal.0;
 			Triangle3D::new(
 				vertices[vertex_indices[0]],
 				vertices[vertex_indices[1]],
 				vertices[vertex_indices[2]],
+				Vector3::new(normal[0] as f64, normal[1] as f64, normal[2] as f64),
 			)
 		})
 		.collect::<Vec<Triangle3D>>()
