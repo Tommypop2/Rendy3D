@@ -2,11 +2,17 @@ use std::ops::Neg;
 
 use crate::traits::num::Num;
 
-pub trait Signed: Num + Neg<Output = Self> {}
+pub trait Signed: Num + Neg<Output = Self> {
+	fn abs(x: Self) -> Self;
+}
 
 macro_rules! implement_signed {
 	($x: ident) => {
-		impl Signed for $x {}
+		impl Signed for $x {
+			fn abs(x: Self) -> Self {
+				x.abs()
+			}
+		}
 	};
 }
 

@@ -1,7 +1,7 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 use crate::{
-	traits::{float::Float, num::Num, signed::Signed},
+	traits::{float::Float, signed::Signed},
 	vector::vector4::Vector4,
 };
 
