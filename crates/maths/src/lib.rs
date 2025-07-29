@@ -3,7 +3,7 @@ use std::ops::Div;
 pub mod matrices;
 pub mod vector;
 
-pub trait Float: Sized + Div<Output = Self> {
+pub trait Float: Sized + Div<Output = Self> + PartialEq {
 	fn sqrt(self) -> Self;
 	// Trig
 	fn sin(self) -> Self;

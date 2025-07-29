@@ -27,6 +27,10 @@ impl<T> Matrix3<T> {
 		Self { x, y, z }
 	}
 }
+#[derive(Debug)]
+pub enum MatrixInversionError {
+	SingularMatrix,
+}
 impl<T> Matrix3<T>
 where
 	T: VectorType + Float,
@@ -77,11 +81,15 @@ where
 	pub fn rotate_z(angle: T) -> Self {
 		Self::unit().with_rotation_z(angle)
 	}
-	pub fn invert(&self) -> Self {
+	pub fn invert(&self) -> Result<Self, MatrixInversionError> {
 		let det = self.determinant();
-		let cofactors = self.cofactors();
-		let inverted = cofactors.transposed() * (T::one() / det);
-		inverted
+		if det == T::zero() {
+			Err(MatrixInversionError::SingularMatrix)
+		} else {
+			let cofactors = self.cofactors();
+			let inverted = cofactors.transposed() * (T::one() / det);
+			Ok(inverted)
+		}
 	}
 }
 impl<T> Matrix3<T> {
@@ -248,5 +256,15 @@ mod test {
 		);
 		let det = mat.determinant();
 		assert_eq!(det, 0)
+	}
+	#[test]
+	fn invert_singular_matrix() {
+		let res = Matrix3::new(
+			Vector3::new(1.0, 2.0, 3.0),
+			Vector3::new(4.0, 5.0, 6.0),
+			Vector3::new(7.0, 8.0, 9.0),
+		)
+		.invert();
+		assert!(res.is_err())
 	}
 }
