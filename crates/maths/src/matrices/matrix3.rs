@@ -1,9 +1,11 @@
+use std::mem;
+
 use crate::{
 	Float,
 	vector::vector3::{Vector3, VectorType},
 };
 
-#[derive(Default)]
+#[derive(Default, PartialEq, Debug)]
 pub struct Matrix3<T> {
 	// Matrix Columns
 	pub x: Vector3<T>,
@@ -65,5 +67,36 @@ where
 	}
 	pub fn rotate_z(angle: T) -> Self {
 		Self::unit().with_rotation_z(angle)
+	}
+}
+impl<T> Matrix3<T> {
+	pub fn transpose(&mut self) {
+		mem::swap(&mut self.x.z, &mut self.z.x);
+		mem::swap(&mut self.x.y, &mut self.y.x);
+		mem::swap(&mut self.y.z, &mut self.z.y);
+	}
+	pub fn transposed(mut self) -> Self {
+		self.transpose();
+		self
+	}
+}
+#[cfg(test)]
+mod test {
+	use super::*;
+
+	#[test]
+	fn transpose() {
+		let mat = Matrix3::new(
+			Vector3::new(1, 2, 3),
+			Vector3::new(4, 5, 6),
+			Vector3::new(7, 8, 9),
+		);
+		let transposed = mat.transposed();
+		let expected = Matrix3::new(
+			Vector3::new(1, 4, 7),
+			Vector3::new(2, 5, 8),
+			Vector3::new(3, 6, 9),
+		);
+		assert_eq!(transposed, expected)
 	}
 }
