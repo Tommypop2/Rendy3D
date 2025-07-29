@@ -1,6 +1,6 @@
 use std::ops::MulAssign;
 
-use crate::vector::vector3::{Vector3, VectorType};
+use crate::vector::vector3::Vector3;
 #[derive(Default, Clone, Debug)]
 pub struct Vector4<T> {
 	pub x: T,
@@ -17,7 +17,7 @@ impl<T> Vector4<T> {
 
 impl<T> From<Vector3<T>> for Vector4<T>
 where
-	T: VectorType + Default,
+	T: Default,
 {
 	fn from(value: Vector3<T>) -> Self {
 		Self::new(value.x, value.y, value.z, Default::default())

@@ -1,12 +1,9 @@
-use std::ops::{Mul, MulAssign};
+use std::ops::{Mul, MulAssign, Neg};
 
 use crate::{
-	Float,
 	matrices::matrix3::Matrix3,
-	vector::{
-		vector3::{Vector3, VectorType},
-		vector4::Vector4,
-	},
+	traits::{float::Float, num::Num},
+	vector::{vector3::Vector3, vector4::Vector4},
 };
 
 #[derive(Default, Clone, Debug)]
@@ -25,7 +22,7 @@ impl<T> Matrix4<T> {
 }
 impl<T> Mul<Matrix4<T>> for Matrix4<T>
 where
-	T: VectorType,
+	T: Num,
 {
 	type Output = Matrix4<T>;
 	fn mul(self, rhs: Matrix4<T>) -> Self::Output {
@@ -38,7 +35,7 @@ where
 }
 impl<T> Mul<Vector4<T>> for Matrix4<T>
 where
-	T: VectorType,
+	T: Num,
 {
 	type Output = Vector4<T>;
 	fn mul(self, rhs: Vector4<T>) -> Self::Output {
@@ -51,7 +48,7 @@ where
 }
 impl<T> Matrix4<T>
 where
-	T: VectorType + Default + Float,
+	T: Default + Float + Neg<Output = T>,
 {
 	pub fn unit() -> Self {
 		Self::new(
@@ -113,7 +110,7 @@ where
 
 impl<T> From<Matrix3<T>> for Matrix4<T>
 where
-	T: VectorType + Float + Default,
+	T: Float + Default,
 {
 	fn from(value: Matrix3<T>) -> Self {
 		Self::new(

@@ -1,19 +1,10 @@
-use std::ops::{Add, AddAssign, Div, Mul, MulAssign, Neg, Sub, SubAssign};
+use std::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-use crate::{Float, vector::vector4::Vector4};
-pub trait VectorType:
-	Mul<Output = Self> + Add<Output = Self> + Sub<Output = Self> + Neg<Output = Self> + Copy + MulAssign
-{
-}
-impl<T> VectorType for T where
-	T: Mul<Output = Self>
-		+ Add<Output = Self>
-		+ Sub<Output = Self>
-		+ Neg<Output = Self>
-		+ Copy
-		+ MulAssign
-{
-}
+use crate::{
+	traits::{float::Float, num::Num},
+	vector::vector4::Vector4,
+};
+
 #[derive(PartialEq, Debug, Default, Clone, Copy)]
 pub struct Vector3<T> {
 	pub x: T,
@@ -28,7 +19,7 @@ impl<T> Vector3<T> {
 		(self.x, self.y, self.z)
 	}
 }
-impl<T: VectorType> Vector3<T> {
+impl<T: Num + Neg<Output = T>> Vector3<T> {
 	pub fn cross(a: &Self, b: &Self) -> Self {
 		Self {
 			x: a.y * b.z - b.y * a.z,
@@ -49,7 +40,7 @@ impl<T: VectorType> Vector3<T> {
 		self.x * self.x + self.y * self.y + self.z * self.z
 	}
 }
-impl<T: VectorType + Float + Div<Output = T>> Vector3<T> {
+impl<T: Float + Neg<Output = T>> Vector3<T> {
 	pub fn to_homogenous(self) -> Vector4<T> {
 		Vector4::new(self.x, self.y, self.z, T::one())
 	}

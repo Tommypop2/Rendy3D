@@ -6,12 +6,9 @@ use std::{
 use derive_more::Mul;
 
 use crate::{
-	Float,
 	matrices::matrix2::Matrix2,
-	vector::{
-		vector2::Vector2,
-		vector3::{Vector3, VectorType},
-	},
+	traits::float::Float,
+	vector::{vector2::Vector2, vector3::Vector3},
 };
 
 #[derive(Default, PartialEq, Debug, Mul)]
@@ -33,7 +30,7 @@ pub enum MatrixInversionError {
 }
 impl<T> Matrix3<T>
 where
-	T: VectorType + Float,
+	T: Float + Neg<Output = T>,
 {
 	pub fn unit() -> Self {
 		Self::new(
