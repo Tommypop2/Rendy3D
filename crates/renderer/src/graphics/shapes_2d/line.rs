@@ -1,20 +1,20 @@
 use crate::graphics::{
-	draw::Draw, screen::Screen, shapes_2d::point::PixelCoordinate, viewport::Viewport,
+	draw::Draw, screen::Screen, shapes_2d::point::AbsoluteScreenCoordinate, viewport::Viewport,
 };
 
 pub struct Line {
-	start: PixelCoordinate,
-	end: PixelCoordinate,
+	start: AbsoluteScreenCoordinate,
+	end: AbsoluteScreenCoordinate,
 }
 impl Line {
-	pub fn new(start: PixelCoordinate, end: PixelCoordinate) -> Self {
+	pub fn new(start: AbsoluteScreenCoordinate, end: AbsoluteScreenCoordinate) -> Self {
 		Self { start, end }
 	}
 	fn draw_line_low(
 		viewport: &mut Viewport,
 		screen: &mut Screen,
-		start: PixelCoordinate,
-		end: PixelCoordinate,
+		start: AbsoluteScreenCoordinate,
+		end: AbsoluteScreenCoordinate,
 	) {
 		let min_z = start.z.min(end.z);
 		let dx = (end.x - start.x) as i32;
@@ -25,7 +25,7 @@ impl Line {
 		let mut d = 2 * dy - dx;
 		let mut y = start.y as i32;
 		for x in start.x..=end.x {
-			PixelCoordinate::new(x, y as usize, min_z).draw(viewport, screen);
+			AbsoluteScreenCoordinate::new(x, y as usize, min_z).draw(viewport, screen);
 			if d > 0 {
 				y += yi;
 				d += 2 * (dy - dx)
@@ -37,8 +37,8 @@ impl Line {
 	fn draw_line_high(
 		viewport: &mut Viewport,
 		screen: &mut Screen,
-		start: PixelCoordinate,
-		end: PixelCoordinate,
+		start: AbsoluteScreenCoordinate,
+		end: AbsoluteScreenCoordinate,
 	) {
 		let min_z = start.z.min(end.z);
 		let (dx, xi) = {
@@ -49,7 +49,7 @@ impl Line {
 		let mut d = 2 * dx - dy;
 		let mut x = start.x as i32;
 		for y in start.y..=end.y {
-			PixelCoordinate::new(x as usize, y, min_z).draw(viewport, screen);
+			AbsoluteScreenCoordinate::new(x as usize, y, min_z).draw(viewport, screen);
 			if d > 0 {
 				x += xi;
 				d += 2 * (dx - dy)
@@ -62,8 +62,8 @@ impl Line {
 		&self,
 		viewport: &mut Viewport,
 		screen: &mut Screen,
-		start: PixelCoordinate,
-		end: PixelCoordinate,
+		start: AbsoluteScreenCoordinate,
+		end: AbsoluteScreenCoordinate,
 	) {
 		if usize::abs_diff(start.y, end.y) < usize::abs_diff(start.x, end.x) {
 			if end.x > start.x {

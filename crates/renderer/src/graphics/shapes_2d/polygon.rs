@@ -1,16 +1,16 @@
 use crate::graphics::{
 	colour::Colour,
 	draw::Draw,
-	shapes_2d::{point::PixelCoordinate, triangle::Triangle2D},
+	shapes_2d::{point::AbsoluteScreenCoordinate, triangle::Triangle2D},
 	viewport::Viewport,
 };
 
 pub struct Polygon<'a> {
-	points: &'a [PixelCoordinate],
+	points: &'a [AbsoluteScreenCoordinate],
 }
 
 impl<'a> Polygon<'a> {
-	pub fn new(points: &'a [PixelCoordinate]) -> Self {
+	pub fn new(points: &'a [AbsoluteScreenCoordinate]) -> Self {
 		Self { points }
 	}
 	pub fn to_triangles(&self) -> Vec<Triangle2D> {

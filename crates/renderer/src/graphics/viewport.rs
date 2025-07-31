@@ -3,12 +3,12 @@ use crate::{
 	graphics::{
 		draw::Draw,
 		screen::Screen,
-		shapes_2d::{bounding_area::BoundingArea2D, point::PixelCoordinate},
+		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 	},
 };
 
 pub struct Viewport {
-	area: BoundingArea2D,
+	pub area: BoundingArea2D,
 }
 impl Default for Viewport {
 	fn default() -> Self {
@@ -40,22 +40,20 @@ impl Viewport {
 	pub fn set_area(&mut self, area: BoundingArea2D) {
 		self.area = area;
 	}
-	pub fn contains_point(&self, point: PixelCoordinate) -> bool {
+	pub fn contains_point(&self, point: AbsoluteScreenCoordinate) -> bool {
 		let area = &self.area;
 		point.x >= area.min_x
 			&& point.x < area.max_x
 			&& point.y >= area.min_y
 			&& point.y < area.max_y
 	}
-	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: PixelCoordinate) {
-		let offset = PixelCoordinate::new(self.area.min_x, self.area.min_y, 0.0);
-		let p = point + offset;
-		if !self.contains_point(p) {
+	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: AbsoluteScreenCoordinate) {
+		if !self.contains_point(point) {
 			return;
 		}
-		screen.draw_point(p);
+		screen.draw_point(point);
 	}
-	pub fn point_below_z_buffer(&self, screen: &Screen, p: PixelCoordinate) -> bool {
+	pub fn point_below_z_buffer(&self, screen: &Screen, p: AbsoluteScreenCoordinate) -> bool {
 		if !self.contains_point(p) {
 			return true;
 		}

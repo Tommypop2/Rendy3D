@@ -1,6 +1,8 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
-use crate::graphics::{draw::Draw, shapes_2d::triangle::Triangle2D, shapes_3d::point::Point};
+use crate::graphics::{
+	draw::Draw, shapes_2d::triangle::Triangle2D, shapes_3d::point::Point, viewport::Viewport,
+};
 #[derive(Clone, Debug)]
 pub struct Triangle3D {
 	pub vertex1: Point,
@@ -40,14 +42,11 @@ impl Triangle3D {
 
 		side1.cross_with(&side2)
 	}
-}
-
-impl From<Triangle3D> for Triangle2D {
-	fn from(value: Triangle3D) -> Self {
-		Self::new(
-			value.vertex1.into(),
-			value.vertex2.into(),
-			value.vertex3.into(),
+	pub fn to_triangle_2d(self, viewport: &Viewport) -> Triangle2D {
+		Triangle2D::new(
+			self.vertex1.to_pixel_coordinate(viewport),
+			self.vertex2.to_pixel_coordinate(viewport),
+			self.vertex3.to_pixel_coordinate(viewport),
 		)
 	}
 }
@@ -58,7 +57,7 @@ impl Draw for Triangle3D {
 		viewport: &mut crate::graphics::viewport::Viewport,
 		screen: &mut crate::graphics::screen::Screen,
 	) {
-		let t: Triangle2D = self.clone().into();
+		let t: Triangle2D = self.clone().to_triangle_2d(viewport);
 		t.draw(viewport, screen);
 	}
 }

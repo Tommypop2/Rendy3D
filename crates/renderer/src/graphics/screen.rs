@@ -5,7 +5,7 @@ use pixels::Pixels;
 
 use crate::{
 	HEIGHT, WIDTH, frame_pixels,
-	graphics::{colour::Colour, shapes_2d::point::PixelCoordinate},
+	graphics::{colour::Colour, shapes_2d::point::AbsoluteScreenCoordinate},
 };
 
 pub struct Screen<'a> {
@@ -44,10 +44,10 @@ impl<'a> Screen<'a> {
 	pub fn set_draw_colour(&mut self, colour: Colour) {
 		self.draw_colour = colour;
 	}
-	pub fn draw_point(&mut self, p: PixelCoordinate) {
+	pub fn draw_point(&mut self, p: AbsoluteScreenCoordinate) {
 		self.frame()[p.y][p.x] = self.draw_colour.clone();
 	}
-	pub fn get_z_in_z_buffer(&self, p: PixelCoordinate) -> f32 {
+	pub fn get_z_in_z_buffer(&self, p: AbsoluteScreenCoordinate) -> f32 {
 		self.z_buffer[p.y][p.x]
 	}
 	pub fn reset_z_buffer(&mut self) {

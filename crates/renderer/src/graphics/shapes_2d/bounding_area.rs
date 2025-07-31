@@ -13,4 +13,10 @@ impl BoundingArea2D {
 			max_y,
 		}
 	}
+	pub fn width(&self) -> usize {
+		self.max_x - self.min_x
+	}
+	pub fn height(&self) -> usize {
+		self.max_y - self.min_y
+	}
 }

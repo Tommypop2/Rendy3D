@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use derive_more::Add;
 
 use crate::{
@@ -6,12 +8,17 @@ use crate::{
 };
 
 #[derive(Clone, Add, Copy)]
-pub struct PixelCoordinate {
+pub struct AbsoluteScreenCoordinate {
 	pub x: usize,
 	pub y: usize,
 	pub z: f32,
 }
-impl PixelCoordinate {
+impl Display for AbsoluteScreenCoordinate {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		writeln!(f, "({}, {}, {})", self.x, self.y, self.z)
+	}
+}
+impl AbsoluteScreenCoordinate {
 	pub fn new(x: usize, y: usize, z: f32) -> Self {
 		Self { x, y, z }
 	}
@@ -20,16 +27,8 @@ impl PixelCoordinate {
 	}
 }
 
-impl From<Point> for PixelCoordinate {
-	fn from(value: Point) -> Self {
-		let offset = PixelCoordinate::new((WIDTH / 2) as usize, (HEIGHT / 2) as usize, 0.0);
-		let x = (offset.x as f64 + value.x * (WIDTH as f64) / 2.0).round() as usize;
-		let y = (offset.y as f64 - value.y * (HEIGHT as f64) / 2.0).round() as usize;
-		Self::new(x, y, value.z as f32)
-	}
-}
 pub static mut MAX_Z: f32 = 0.0;
-impl Draw for PixelCoordinate {
+impl Draw for AbsoluteScreenCoordinate {
 	fn draw(
 		&self,
 		viewport: &mut crate::graphics::viewport::Viewport,

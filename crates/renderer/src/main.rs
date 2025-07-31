@@ -13,9 +13,11 @@ use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
 use crate::graphics::colour::Colour;
+use crate::graphics::mesh::Mesh;
 use crate::graphics::perspective::perspective_matrix;
 use crate::graphics::screen::Screen;
 use crate::graphics::shapes_2d::bounding_area::BoundingArea2D;
+use crate::graphics::shapes_3d::point::Point;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
 use crate::loaders::stl::load_file;
@@ -46,8 +48,20 @@ fn main() -> Result<(), Error> {
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
 	let mut screen = Screen::new(pixels);
-	let mut viewport =
-		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
+	let mut viewport = Viewport::new(BoundingArea2D::new(
+		0,
+		(WIDTH as usize) / 2,
+		0,
+		HEIGHT as usize,
+	))
+	.unwrap();
+	let mut viewport2 = Viewport::new(BoundingArea2D::new(
+		(WIDTH / 2) as usize,
+		WIDTH as usize,
+		0,
+		HEIGHT as usize,
+	))
+	.unwrap();
 	let mut world = World::new();
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
@@ -63,7 +77,13 @@ fn main() -> Result<(), Error> {
 			// Clear buffer
 			screen.clear(Colour::BLACK);
 			let start = Instant::now();
-			world.draw(&mut viewport, &mut screen, &mesh, pers_mat.clone());
+			world.draw(
+				&mut viewport,
+				&mut viewport2,
+				&mut screen,
+				&mesh,
+				pers_mat.clone(),
+			);
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
@@ -128,6 +148,7 @@ impl World {
 	fn draw(
 		&self,
 		viewport: &mut Viewport,
+		viewport2: &mut Viewport,
 		screen: &mut Screen,
 		mesh: &[Triangle3D],
 		perspective_matrix: Matrix4<f64>,
@@ -199,31 +220,21 @@ impl World {
 		// 		)
 		// 		.draw(viewport, screen);
 		// }
-		let transform = perspective_matrix
-			* Matrix4::scale_x(HEIGHT as f64 / WIDTH as f64)
-			* Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
+		let base_transform = Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
 			* Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64())
 			* Matrix4::scale(0.01);
-		let light_dir = Vector3::new(0.0, 0.0, 1.0);
-		for (i, triangle) in mesh.iter().enumerate() {
-			let transformed = triangle.clone().apply(transform.clone());
-			let n = transformed.normal();
-			let intensity = n.normalized().dot_with(&light_dir);
-			// Back-face culling :)
-			if intensity < 0.0 {
-				continue;
-			}
-			let val = (255.0 * intensity) as u8;
-			screen.set_draw_colour(Colour::new(val, val, val, 0xff));
-			// let mut colour = Colour::COLOURS[(i) % Colour::COLOURS.len()].clone();
-			// colour.alpha = val;
-			// screen.set_draw_colour(colour);
-			// let perspectified = transformed.apply(perspective_matrix.clone());
-			// println!("{:?}", perspectified);
-			viewport.draw_shape(screen, transformed)
-		}
+		let transform = perspective_matrix.clone()
+			* Matrix4::scale_x(viewport.area.height() as f64 / viewport.area.width() as f64)
+			* base_transform.clone();
+		let transform2 = perspective_matrix
+			* Matrix4::scale_x(viewport2.area.height() as f64 / viewport2.area.width() as f64)
+			* base_transform.clone();
+
+		// render_mesh(viewport, screen, mesh, transform.clone());
+		render_mesh(viewport, screen, mesh, transform);
+		render_mesh(viewport2, screen, mesh, transform2);
 		// println!("Actual # of triangles drawn: {}", unsafe {
 		// 	TRIANGLE_RENDER_COUNT
 		// });
@@ -231,7 +242,31 @@ impl World {
 		// println!("MAX Z: {}", unsafe { MAX_Z })
 	}
 }
-
+fn render_mesh(
+	viewport: &mut Viewport,
+	screen: &mut Screen,
+	mesh: &[Triangle3D],
+	transform: Matrix4<f64>,
+) {
+	let light_dir = Vector3::new(0.0, 0.0, 1.0);
+	for (i, triangle) in mesh.iter().enumerate() {
+		let transformed = triangle.clone().apply(transform.clone());
+		let n = transformed.normal();
+		let intensity = n.normalized().dot_with(&light_dir);
+		// Back-face culling :)
+		if intensity < 0.0 {
+			continue;
+		}
+		let val = (255.0 * intensity) as u8;
+		screen.set_draw_colour(Colour::new(val, val, val, 0xff));
+		// let mut colour = Colour::COLOURS[(i) % Colour::COLOURS.len()].clone();
+		// colour.alpha = val;
+		// screen.set_draw_colour(colour);
+		// let perspectified = transformed.apply(perspective_matrix.clone());
+		// println!("{:?}", perspectified);
+		viewport.draw_shape(screen, transformed)
+	}
+}
 const fn frame_pixels(frame: &mut [u8]) -> &mut [[Colour; WIDTH as usize]] {
 	// SAFETY: Format for each pixel matches the layout of the `Colour` struct (and is 4 bytes)
 	// mem::transmute doesn't work here as it doesn't adjust the length of the slice, even though it is transmuted into a 2D array (so the length reduces)
