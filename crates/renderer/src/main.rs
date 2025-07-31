@@ -90,12 +90,6 @@ fn main() -> Result<(), Error> {
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
-			// viewport.set_area(BoundingArea::new(
-			// 	frame_num % 40,
-			// 	WIDTH as usize,
-			// 	0,
-			// 	HEIGHT as usize,
-			// ));
 			if frame_num % 1000 == 0 {
 				//
 				let mean = sum as f64 / frame_num as f64;
