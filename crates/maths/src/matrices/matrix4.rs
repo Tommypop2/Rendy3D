@@ -2,7 +2,7 @@ use std::ops::{Mul, MulAssign, Neg};
 
 use crate::{
 	matrices::matrix3::Matrix3,
-	traits::{float::Float, num::Num},
+	traits::{float::Float, num::Num, signed::Signed},
 	vector::{vector3::Vector3, vector4::Vector4},
 };
 
@@ -48,7 +48,7 @@ where
 }
 impl<T> Matrix4<T>
 where
-	T: Default + Float + Neg<Output = T>,
+	T: Num,
 {
 	pub fn unit() -> Self {
 		Self::new(
@@ -58,6 +58,46 @@ where
 			Vector4::new(T::zero(), T::zero(), T::zero(), T::one()),
 		)
 	}
+}
+impl<T> Matrix4<T>
+where
+	T: Signed,
+{
+	pub fn determinant(&self) -> T {
+		self.x.x
+			* Matrix3::new(
+				Vector3::new(self.y.y, self.y.z, self.y.w),
+				Vector3::new(self.z.y, self.z.z, self.z.w),
+				Vector3::new(self.w.y, self.w.z, self.w.w),
+			)
+			.determinant()
+			- self.x.y
+				* Matrix3::new(
+					Vector3::new(self.y.x, self.y.z, self.y.w),
+					Vector3::new(self.z.x, self.z.z, self.z.w),
+					Vector3::new(self.w.x, self.w.z, self.w.w),
+				)
+				.determinant()
+			+ self.x.z
+				* Matrix3::new(
+					Vector3::new(self.y.x, self.y.y, self.y.w),
+					Vector3::new(self.z.x, self.z.y, self.z.w),
+					Vector3::new(self.w.x, self.w.y, self.w.w),
+				)
+				.determinant()
+			- self.x.w
+				* Matrix3::new(
+					Vector3::new(self.y.x, self.y.y, self.y.z),
+					Vector3::new(self.z.x, self.z.y, self.z.z),
+					Vector3::new(self.w.x, self.w.y, self.w.z),
+				)
+				.determinant()
+	}
+}
+impl<T> Matrix4<T>
+where
+	T: Default + Float + Neg<Output = T>,
+{
 	pub fn with_translation(mut self, vector: Vector3<T>) -> Self {
 		let mut vector4: Vector4<T> = vector.into();
 		vector4.w = T::one();
@@ -118,9 +158,8 @@ where
 	pub fn extract_translation(&self) -> Vector3<T> {
 		Vector3::new(self.w.x, self.w.y, self.w.z)
 	}
-	pub fn invert(&self) {
-		
-	}
+
+	pub fn invert(&self) {}
 }
 
 impl<T> From<Matrix3<T>> for Matrix4<T>
@@ -156,5 +195,21 @@ where
 	fn mul(mut self, rhs: T) -> Self::Output {
 		self *= rhs;
 		self
+	}
+}
+
+#[cfg(test)]
+mod test {
+	use super::*;
+
+	#[test]
+	fn determinant() {
+		let mat = Matrix4::new(
+			Vector4::new(1, 5, 9, 13),
+			Vector4::new(2, 6, 10, 14),
+			Vector4::new(3, 7, 11, 15),
+			Vector4::new(4, 8, 12, 16),
+		);
+		assert_eq!(mat.determinant(), 0);
 	}
 }
