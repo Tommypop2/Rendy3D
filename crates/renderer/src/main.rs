@@ -59,7 +59,7 @@ fn main() -> Result<(), Error> {
 		HEIGHT as usize,
 	))
 	.unwrap();
-	let main_camera = Camera::new(viewport, pers_mat.clone());
+	let main_camera = Camera::new(viewport, pers_mat.clone()).with_transformation(Matrix4::rotation_z(0.5));
 	let viewport2 = Viewport::new(BoundingArea2D::new(
 		(WIDTH / 2) as usize,
 		WIDTH as usize,
@@ -147,13 +147,14 @@ impl World {
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
 		let base_transform = Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
-			* Matrix4::rotation_z(x.as_secs_f64())
-			* Matrix4::rotation_y(x.as_secs_f64())
-			* Matrix4::rotation_x(x.as_secs_f64())
+			// * Matrix4::rotation_z(x.as_secs_f64())
+			// * Matrix4::rotation_y(x.as_secs_f64())
+			// * Matrix4::rotation_x(x.as_secs_f64())
 			* Matrix4::scale(0.01);
 		for mesh in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.perspective.clone()
+					* camera.transformation.reverse_rotation_translation()
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();

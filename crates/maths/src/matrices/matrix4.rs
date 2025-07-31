@@ -159,7 +159,14 @@ where
 		Vector3::new(self.w.x, self.w.y, self.w.z)
 	}
 
-	pub fn invert(&self) {}
+	/// Computes a matrix that reverses the combination of translation and rotation represented by this Matrix
+	pub fn reverse_rotation_translation(&self) -> Self {
+		// A combined rotation-translation matrix applies the rotation first, then the translation
+		// So, the inverse needs to undo the translation first, then undo the rotation
+		let reverse_translation = Matrix4::translation(self.extract_translation() * -T::one());
+		let reverse_rotation: Matrix4<T> = self.extract_rotation().transposed().into();
+		reverse_rotation * reverse_translation
+	}
 }
 
 impl<T> From<Matrix3<T>> for Matrix4<T>
