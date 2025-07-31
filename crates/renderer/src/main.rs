@@ -153,73 +153,9 @@ impl World {
 		mesh: &[Triangle3D],
 		perspective_matrix: Matrix4<f64>,
 	) {
-		// screen.clear(Colour::new(0x48, 0xb2, 0xe8, 255));
-		// screen.draw_point(Vector2::new(0, 0), Colour::new(0x48, 0xb2, 0xe8, 255));
-		// screen.draw_line(Vector2::new(0, 0), Vector2::new(100, 200));
-		// for (i, x) in (40..(WIDTH - 40)).step_by(100).enumerate() {
-		// 	for (w, y) in (40..(HEIGHT - 100)).step_by(100).enumerate() {
-		// 		screen.set_draw_colour(Colour::COLOURS[(w + i) % Colour::COLOURS.len()].clone());
-		// 		viewport.draw_shape(
-		// 			screen,
-		// 			Triangle2D::new(
-		// 				PixelCoordinate::new(x as usize + 10, y as usize),
-		// 				PixelCoordinate::new(100 + x as usize, y as usize),
-		// 				PixelCoordinate::new(100 + x as usize, y as usize + 100),
-		// 			),
-		// 		);
-		// 	}
-		// }
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
-		// let triangle_3d = Triangle3D::new(
-		// 	Point::new(0.0, -0.1, 0.0),
-		// 	Point::new(0.3, 0.1, 0.0),
-		// 	Point::new(-0.2, 0.1, 0.0),
-		// )
-		// .apply(Matrix4::rotation(x.as_secs_f64()));
-		// println!("{:?}", Matrix4::scale(100.0));
-		// screen.set_draw_colour(Colour::RED);
-		// viewport.draw_shape(
-		// 	screen,
-		// 	Triangle3D::new(
-		// 		Point::new(0.0, -0.1, 0.0),
-		// 		Point::new(0.3, 0.1, 0.0),
-		// 		Point::new(-0.2, 0.1, 0.0),
-		// 	)
-		// 	.apply(Matrix4::scale(100.0)),
-		// );
-		// screen.set_draw_colour(Colour::PURPLE);
-		// viewport.draw_shape(
-		// 	screen,
-		// 	Triangle3D::new(
-		// 		Point::new(0.2, -0.1, -0.2),
-		// 		Point::new(0.3, 0.1, -0.2),
-		// 		Point::new(-0.2, 0.1, -0.2),
-		// 	)
-		// 	.apply(Matrix4::scale(100.0)),
-		// );
-
-		// Triangle3D::new(
-		// 	Point::new(1.0, -0.1, -0.2),
-		// 	Point::new(0.3, 1.0, -0.2),
-		// 	Point::new(-0.2, -1.0, -0.2),
-		// )
-		// .apply(perspective_matrix * Matrix4::translation(Vector3::new(0.0, 0.0, -10.0)))
-		// .draw(viewport, screen);
-		// let transform = perspective_matrix.clone()
-		// 	* Matrix4::translation(Vector3::new(0.0, 0.0, -10.0))
-		// 	* Matrix4::rotation_z(x.as_secs_f64())
-		// 	* Matrix4::rotation_y(x.as_secs_f64())
-		// 	* Matrix4::rotation_x(x.as_secs_f64());
-		// for triangle in mesh.iter() {
-		// 	triangle
-		// 		.clone()
-		// 		.apply(
-		// 			transform.clone(),
-		// 		)
-		// 		.draw(viewport, screen);
-		// }
 		let base_transform = Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
 			* Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
@@ -232,14 +168,8 @@ impl World {
 			* Matrix4::scale_x(viewport2.area.height() as f64 / viewport2.area.width() as f64)
 			* base_transform.clone();
 
-		// render_mesh(viewport, screen, mesh, transform.clone());
 		render_mesh(viewport, screen, mesh, transform);
 		render_mesh(viewport2, screen, mesh, transform2);
-		// println!("Actual # of triangles drawn: {}", unsafe {
-		// 	TRIANGLE_RENDER_COUNT
-		// });
-		// unsafe { TRIANGLE_RENDER_COUNT = 0 }
-		// println!("MAX Z: {}", unsafe { MAX_Z })
 	}
 }
 fn render_mesh(
