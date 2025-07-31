@@ -12,12 +12,11 @@ use winit::keyboard::KeyCode;
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
 
+use crate::graphics::camera::Camera;
 use crate::graphics::colour::Colour;
-use crate::graphics::mesh::Mesh;
 use crate::graphics::perspective::perspective_matrix;
 use crate::graphics::screen::Screen;
 use crate::graphics::shapes_2d::bounding_area::BoundingArea2D;
-use crate::graphics::shapes_3d::point::Point;
 use crate::graphics::shapes_3d::triangle::Triangle3D;
 use crate::graphics::viewport::Viewport;
 use crate::loaders::stl::load_file;
@@ -26,7 +25,10 @@ pub mod loaders;
 const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
 
-struct World {}
+struct World<'a> {
+	pub cameras: Vec<Camera>,
+	pub screen: Screen<'a>,
+}
 
 fn main() -> Result<(), Error> {
 	env_logger::init();
@@ -47,14 +49,16 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
+	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
 	let mut screen = Screen::new(pixels);
-	let mut viewport = Viewport::new(BoundingArea2D::new(
+	let viewport = Viewport::new(BoundingArea2D::new(
 		0,
 		(WIDTH as usize) / 2,
 		0,
 		HEIGHT as usize,
 	))
 	.unwrap();
+	let mut main_camera = Camera::new(viewport, pers_mat.clone());
 	let mut viewport2 = Viewport::new(BoundingArea2D::new(
 		(WIDTH / 2) as usize,
 		WIDTH as usize,
@@ -62,11 +66,12 @@ fn main() -> Result<(), Error> {
 		HEIGHT as usize,
 	))
 	.unwrap();
-	let mut world = World::new();
+	let mut second_camera = Camera::new(viewport2, pers_mat.clone());
+	let mut world = World::new(screen, vec![main_camera, second_camera]);
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
 	let mesh = load_file("./F1_RB16B.stl");
-	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
+
 	// let pers_mat = Matrix4::unit();
 	let res = event_loop.run(|event, elwt| {
 		if let Event::WindowEvent {
@@ -75,15 +80,9 @@ fn main() -> Result<(), Error> {
 		} = event
 		{
 			// Clear buffer
-			screen.clear(Colour::BLACK);
+			world.screen.clear(Colour::BLACK);
 			let start = Instant::now();
-			world.draw(
-				&mut viewport,
-				&mut viewport2,
-				&mut screen,
-				&mesh,
-				pers_mat.clone(),
-			);
+			world.draw(&mesh);
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
@@ -103,7 +102,7 @@ fn main() -> Result<(), Error> {
 				);
 				println!("This is {} FPS", 1E6 / mean)
 			}
-			if let Err(err) = screen.pixels.render() {
+			if let Err(err) = world.screen.pixels.render() {
 				log_error("pixels.render", err);
 				elwt.exit();
 				return;
@@ -117,7 +116,7 @@ fn main() -> Result<(), Error> {
 			}
 
 			if let Some(size) = input.window_resized() {
-				if let Err(err) = screen.pixels.resize_surface(size.width, size.height) {
+				if let Err(err) = world.screen.pixels.resize_surface(size.width, size.height) {
 					log_error("pixels.resize_surface", err);
 					elwt.exit();
 					return;
@@ -138,21 +137,14 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 	}
 }
 
-impl World {
-	fn new() -> Self {
-		Self {}
+impl<'a> World<'a> {
+	fn new(screen: Screen<'a>, cameras: Vec<Camera>) -> Self {
+		Self { screen, cameras }
 	}
 
 	fn update(&mut self) {}
 
-	fn draw(
-		&self,
-		viewport: &mut Viewport,
-		viewport2: &mut Viewport,
-		screen: &mut Screen,
-		mesh: &[Triangle3D],
-		perspective_matrix: Matrix4<f64>,
-	) {
+	fn draw(&mut self, mesh: &[Triangle3D]) {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
@@ -161,15 +153,13 @@ impl World {
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64())
 			* Matrix4::scale(0.01);
-		let transform = perspective_matrix.clone()
-			* Matrix4::scale_x(viewport.area.height() as f64 / viewport.area.width() as f64)
-			* base_transform.clone();
-		let transform2 = perspective_matrix
-			* Matrix4::scale_x(viewport2.area.height() as f64 / viewport2.area.width() as f64)
-			* base_transform.clone();
-
-		render_mesh(viewport, screen, mesh, transform);
-		render_mesh(viewport2, screen, mesh, transform2);
+		for camera in &mut self.cameras {
+			let transform = camera.perspective.clone()
+				* Matrix4::scale_x(
+					camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
+				) * base_transform.clone();
+			render_mesh(&mut camera.viewport, &mut self.screen, mesh, transform);
+		}
 	}
 }
 fn render_mesh(

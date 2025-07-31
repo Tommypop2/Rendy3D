@@ -5,9 +5,12 @@ use crate::graphics::{
 };
 
 pub struct Camera {
-	viewport: Viewport,
-	perspective: Matrix4<f64>,
-	transformation: Matrix4<f64>,
+	/// Viewport which displays the camera view
+	pub viewport: Viewport,
+	/// Perspective matrix for projecting the objects to the screen
+	pub perspective: Matrix4<f64>,
+	/// Camera transformation
+	pub transformation: Matrix4<f64>,
 }
 impl Camera {
 	pub fn new(viewport: Viewport, perspective: Matrix4<f64>) -> Self {
@@ -17,6 +20,4 @@ impl Camera {
 			transformation: Matrix4::unit(),
 		}
 	}
-
-	pub fn render<T: Draw>(&mut self, screen: &mut Screen, triangles: &[Triangle3D]) {}
 }
