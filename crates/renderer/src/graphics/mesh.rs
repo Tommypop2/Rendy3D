@@ -2,7 +2,7 @@ use crate::graphics::shapes_3d::triangle::Triangle3D;
 
 pub struct Mesh {
 	/// Triangles that make up the shape
-	triangles: Vec<Triangle3D>,
+	pub triangles: Vec<Triangle3D>,
 }
 #[derive(Default)]
 pub struct Dimensions {

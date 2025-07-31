@@ -20,4 +20,8 @@ impl Camera {
 			transformation: Matrix4::unit(),
 		}
 	}
+	pub fn with_transformation(mut self, transformation: Matrix4<f64>) -> Self {
+		self.transformation = transformation;
+		self
+	}
 }
