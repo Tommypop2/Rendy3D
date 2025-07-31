@@ -106,6 +106,21 @@ where
 	pub fn rotation_z(angle: T) -> Self {
 		Matrix3::rotate_z(angle).into()
 	}
+	/// Returns a 3x3 matrix representing the rotation component of this matrix
+	pub fn extract_rotation(&self) -> Matrix3<T> {
+		Matrix3::new(
+			Vector3::new(self.x.x, self.x.y, self.x.z),
+			Vector3::new(self.y.x, self.y.y, self.y.z),
+			Vector3::new(self.z.x, self.z.y, self.z.z),
+		)
+	}
+	/// Returns a vector representing the translation component
+	pub fn extract_translation(&self) -> Vector3<T> {
+		Vector3::new(self.w.x, self.w.y, self.w.z)
+	}
+	pub fn invert(&self) {
+		
+	}
 }
 
 impl<T> From<Matrix3<T>> for Matrix4<T>

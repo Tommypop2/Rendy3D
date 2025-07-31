@@ -1,8 +1,6 @@
 use maths::matrices::matrix4::Matrix4;
 
-use crate::graphics::{
-	draw::Draw, screen::Screen, shapes_3d::triangle::Triangle3D, viewport::Viewport,
-};
+use crate::graphics::viewport::Viewport;
 
 pub struct Camera {
 	/// Viewport which displays the camera view

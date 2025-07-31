@@ -48,6 +48,7 @@ impl Viewport {
 			&& point.y < area.max_y
 	}
 	pub fn draw_point(&mut self, screen: &mut super::screen::Screen, point: AbsoluteScreenCoordinate) {
+		// Don't draw if absolute point is outside of the viewport
 		if !self.contains_point(point) {
 			return;
 		}
