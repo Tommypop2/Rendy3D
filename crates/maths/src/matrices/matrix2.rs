@@ -1,6 +1,6 @@
 use std::ops::{Mul, Sub};
 
-use crate::vector::vector2::Vector2;
+use crate::{traits::num::Num, vector::vector2::Vector2};
 
 #[derive(Clone, Copy)]
 pub struct Matrix2<T> {
@@ -13,7 +13,17 @@ impl<T> Matrix2<T> {
 		Self { x, y }
 	}
 }
-
+impl<T> Matrix2<T>
+where
+	T: Num,
+{
+	pub fn identity() -> Self {
+		Self::new(
+			Vector2::new(T::one(), T::zero()),
+			Vector2::new(T::zero(), T::one()),
+		)
+	}
+}
 impl<T> Matrix2<T>
 where
 	T: Mul<Output = T> + Sub<Output = T> + Clone + Copy,
