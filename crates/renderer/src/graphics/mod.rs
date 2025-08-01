@@ -2,6 +2,7 @@ pub mod camera;
 pub mod colour;
 pub mod draw;
 pub mod mesh;
+pub mod object;
 pub mod perspective;
 pub mod screen;
 pub mod shapes_2d;

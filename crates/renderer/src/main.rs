@@ -15,6 +15,7 @@ use winit_input_helper::WinitInputHelper;
 use crate::graphics::camera::Camera;
 use crate::graphics::colour::Colour;
 use crate::graphics::mesh::Mesh;
+use crate::graphics::object::Object;
 use crate::graphics::perspective::perspective_matrix;
 use crate::graphics::screen::Screen;
 use crate::graphics::shapes_2d::bounding_area::BoundingArea2D;
@@ -28,7 +29,7 @@ const HEIGHT: u32 = 720;
 
 struct World {
 	pub cameras: Vec<Camera>,
-	pub objects: Vec<Mesh>,
+	pub objects: Vec<Object>,
 }
 
 fn main() -> Result<(), Error> {
@@ -52,26 +53,24 @@ fn main() -> Result<(), Error> {
 	};
 	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
 	let mut screen = Screen::new(pixels);
-	let viewport = Viewport::new(BoundingArea2D::new(
-		0,
-		(WIDTH as usize) / 2,
-		0,
-		HEIGHT as usize,
-	))
-	.unwrap();
-	let main_camera = Camera::new(viewport, pers_mat.clone()).with_transformation(Matrix4::rotation_z(0.5));
-	let viewport2 = Viewport::new(BoundingArea2D::new(
-		(WIDTH / 2) as usize,
-		WIDTH as usize,
-		0,
-		HEIGHT as usize,
-	))
-	.unwrap();
-	let second_camera = Camera::new(viewport2, pers_mat.clone());
+	let viewport =
+		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
+	let main_camera = Camera::new(viewport, pers_mat.clone());
+	// let viewport2 = Viewport::new(BoundingArea2D::new(
+	// 	(WIDTH / 2) as usize,
+	// 	WIDTH as usize,
+	// 	0,
+	// 	HEIGHT as usize,
+	// ))
+	// .unwrap();
+	// let second_camera = Camera::new(viewport2, pers_mat.clone());
 	let f1_car = Mesh::new(load_file("./F1_RB16B.stl"));
-	let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
-	let mut scene = World::new(vec![main_camera], vec![f1_car]);
-	let mut scene2 = World::new(vec![second_camera], vec![guinea_pig]);
+	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
+	let mut scene = World::new(
+		vec![main_camera],
+		vec![Object::new(f1_car, Matrix4::unit())],
+	);
+	// let mut scene2 = World::new(vec![second_camera], vec![guinea_pig]);
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
 
@@ -86,7 +85,7 @@ fn main() -> Result<(), Error> {
 			screen.clear(Colour::BLACK);
 			let start = Instant::now();
 			scene.draw(&mut screen);
-			scene2.draw(&mut screen);
+			// scene2.draw(&mut screen);
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
@@ -136,14 +135,14 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 }
 
 impl World {
-	fn new(cameras: Vec<Camera>, objects: Vec<Mesh>) -> Self {
+	fn new(cameras: Vec<Camera>, objects: Vec<Object>) -> Self {
 		Self { objects, cameras }
 	}
 
 	fn update(&mut self) {}
 
 	fn draw(&mut self, screen: &mut Screen) {
-		let x: std::time::Duration = SystemTime::now()
+		let _x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
 		let base_transform = Matrix4::translation(Vector3::new(0.0, 0.0, -1.0))
@@ -151,14 +150,19 @@ impl World {
 			// * Matrix4::rotation_y(x.as_secs_f64())
 			// * Matrix4::rotation_x(x.as_secs_f64())
 			* Matrix4::scale(0.01);
-		for mesh in &self.objects {
+		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.perspective.clone()
 					* camera.transformation.reverse_rotation_translation()
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
-				render_mesh(&mut camera.viewport, screen, &mesh.triangles, transform);
+				render_mesh(
+					&mut camera.viewport,
+					screen,
+					&object.mesh.triangles,
+					transform,
+				);
 			}
 		}
 	}
@@ -170,7 +174,7 @@ fn render_mesh(
 	transform: Matrix4<f64>,
 ) {
 	let light_dir = Vector3::new(0.0, 0.0, 1.0);
-	for (i, triangle) in mesh.iter().enumerate() {
+	for (_i, triangle) in mesh.iter().enumerate() {
 		let transformed = triangle.clone().apply(transform.clone());
 		let n = transformed.normal();
 		let intensity = n.normalized().dot_with(&light_dir);
