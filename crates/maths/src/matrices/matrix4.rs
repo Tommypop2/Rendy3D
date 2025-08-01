@@ -50,7 +50,7 @@ impl<T> Matrix4<T>
 where
 	T: Num,
 {
-	pub fn unit() -> Self {
+	pub fn identity() -> Self {
 		Self::new(
 			Vector4::new(T::one(), T::zero(), T::zero(), T::zero()),
 			Vector4::new(T::zero(), T::one(), T::zero(), T::zero()),
@@ -105,7 +105,7 @@ where
 		self
 	}
 	pub fn translation(vector: Vector3<T>) -> Self {
-		Self::unit().with_translation(vector)
+		Self::identity().with_translation(vector)
 	}
 	// Scale
 	pub fn with_scale_x(mut self, scale: T) -> Self {
@@ -113,21 +113,21 @@ where
 		self
 	}
 	pub fn scale_x(scale: T) -> Self {
-		Self::unit().with_scale_x(scale)
+		Self::identity().with_scale_x(scale)
 	}
 	pub fn with_scale_y(mut self, scale: T) -> Self {
 		self.y.y *= scale;
 		self
 	}
 	pub fn scale_y(scale: T) -> Self {
-		Self::unit().with_scale_y(scale)
+		Self::identity().with_scale_y(scale)
 	}
 	pub fn with_scale_z(mut self, scale: T) -> Self {
 		self.z.z *= scale;
 		self
 	}
 	pub fn scale_z(scale: T) -> Self {
-		Self::unit().with_scale_z(scale)
+		Self::identity().with_scale_z(scale)
 	}
 	pub fn with_scale(self, scale: T) -> Self {
 		self.with_scale_x(scale)
@@ -135,7 +135,7 @@ where
 			.with_scale_z(scale)
 	}
 	pub fn scale(scale: T) -> Self {
-		Self::unit().with_scale(scale)
+		Self::identity().with_scale(scale)
 	}
 	pub fn rotation_x(angle: T) -> Self {
 		Matrix3::rotate_x(angle).into()

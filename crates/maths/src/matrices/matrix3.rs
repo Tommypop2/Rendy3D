@@ -32,7 +32,7 @@ impl<T> Matrix3<T>
 where
 	T: Float + Neg<Output = T>,
 {
-	pub fn unit() -> Self {
+	pub fn identity() -> Self {
 		Self::new(
 			Vector3::new(T::one(), T::zero(), T::zero()),
 			Vector3::new(T::zero(), T::one(), T::zero()),
@@ -50,7 +50,7 @@ where
 		self
 	}
 	pub fn rotate_x(angle: T) -> Self {
-		Self::unit().with_rotation_x(angle)
+		Self::identity().with_rotation_x(angle)
 	}
 	/// Rotate about Y
 	pub fn with_rotation_y(mut self, angle: T) -> Self {
@@ -63,7 +63,7 @@ where
 		self
 	}
 	pub fn rotate_y(angle: T) -> Self {
-		Self::unit().with_rotation_y(angle)
+		Self::identity().with_rotation_y(angle)
 	}
 	/// Rotate about Z
 	pub fn with_rotation_z(mut self, angle: T) -> Self {
@@ -76,7 +76,7 @@ where
 		self
 	}
 	pub fn rotate_z(angle: T) -> Self {
-		Self::unit().with_rotation_z(angle)
+		Self::identity().with_rotation_z(angle)
 	}
 	pub fn invert(&self) -> Result<Self, MatrixInversionError> {
 		let det = self.determinant();

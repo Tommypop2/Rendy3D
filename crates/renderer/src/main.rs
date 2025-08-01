@@ -68,7 +68,7 @@ fn main() -> Result<(), Error> {
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(
 		vec![main_camera],
-		vec![Object::new(f1_car, Matrix4::unit())],
+		vec![Object::new(f1_car, Matrix4::identity())],
 	);
 	// let mut scene2 = World::new(vec![second_camera], vec![guinea_pig]);
 	let mut frame_num: usize = 0;

@@ -15,7 +15,7 @@ impl Camera {
 		Self {
 			viewport,
 			perspective,
-			transformation: Matrix4::unit(),
+			transformation: Matrix4::identity(),
 		}
 	}
 	pub fn with_transformation(mut self, transformation: Matrix4<f64>) -> Self {
