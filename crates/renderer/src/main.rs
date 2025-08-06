@@ -17,7 +17,7 @@ use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::stl::load_file;
 use rendy3d::{HEIGHT, WIDTH};
 use winit::dpi::LogicalSize;
-use winit::event::{Event, WindowEvent};
+use winit::event::{DeviceEvent, Event, WindowEvent};
 use winit::event_loop::EventLoop;
 use winit::keyboard::KeyCode;
 use winit::window::WindowBuilder;
@@ -72,6 +72,13 @@ fn main() -> Result<(), Error> {
 
 	// let pers_mat = Matrix4::unit();
 	let res = event_loop.run(|event, elwt| {
+		if let Event::DeviceEvent {
+			event: DeviceEvent::MouseMotion { delta },
+			device_id,
+		} = event
+		{
+			println!("{:?}", delta);
+		}
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
