@@ -4,7 +4,7 @@ use fixed_capacity_vec::FixedCapacityVec;
 use pixels::Pixels;
 
 use crate::{
-	HEIGHT, WIDTH, frame_pixels,
+	HEIGHT, WIDTH,
 	graphics::{colour::Colour, shapes_2d::point::AbsoluteScreenCoordinate},
 };
 
@@ -59,4 +59,15 @@ impl<'a> Screen<'a> {
 		self.reset_z_buffer();
 		self.frame().as_flattened_mut().fill(colour);
 	}
+}
+
+const fn frame_pixels(frame: &mut [u8]) -> &mut [[Colour; WIDTH as usize]] {
+	// SAFETY: Format for each pixel matches the layout of the `Colour` struct (and is 4 bytes)
+	// mem::transmute doesn't work here as it doesn't adjust the length of the slice, even though it is transmuted into a 2D array (so the length reduces)
+
+	(unsafe {
+		let ptr = frame as *mut [u8];
+		let casted = ptr as *mut [[Colour; WIDTH as usize]; HEIGHT as usize];
+		&mut *casted
+	}) as _
 }

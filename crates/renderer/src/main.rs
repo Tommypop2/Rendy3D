@@ -5,27 +5,23 @@ use log::error;
 use maths::matrices::matrix4::Matrix4;
 use maths::vector::vector3::Vector3;
 use pixels::{Error, Pixels, SurfaceTexture};
+use rendy3d::graphics::camera::Camera;
+use rendy3d::graphics::colour::Colour;
+use rendy3d::graphics::mesh::Mesh;
+use rendy3d::graphics::object::Object;
+use rendy3d::graphics::perspective::perspective_matrix;
+use rendy3d::graphics::screen::Screen;
+use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
+use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
+use rendy3d::graphics::viewport::Viewport;
+use rendy3d::loaders::stl::load_file;
+use rendy3d::{HEIGHT, WIDTH};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::EventLoop;
 use winit::keyboard::KeyCode;
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
-
-use crate::graphics::camera::Camera;
-use crate::graphics::colour::Colour;
-use crate::graphics::mesh::Mesh;
-use crate::graphics::object::Object;
-use crate::graphics::perspective::perspective_matrix;
-use crate::graphics::screen::Screen;
-use crate::graphics::shapes_2d::bounding_area::BoundingArea2D;
-use crate::graphics::shapes_3d::triangle::Triangle3D;
-use crate::graphics::viewport::Viewport;
-use crate::loaders::stl::load_file;
-pub mod graphics;
-pub mod loaders;
-const WIDTH: u32 = 1280;
-const HEIGHT: u32 = 720;
 
 struct World {
 	pub cameras: Vec<Camera>,
@@ -191,14 +187,4 @@ fn render_mesh(
 		// println!("{:?}", perspectified);
 		viewport.draw_shape(screen, transformed)
 	}
-}
-const fn frame_pixels(frame: &mut [u8]) -> &mut [[Colour; WIDTH as usize]] {
-	// SAFETY: Format for each pixel matches the layout of the `Colour` struct (and is 4 bytes)
-	// mem::transmute doesn't work here as it doesn't adjust the length of the slice, even though it is transmuted into a 2D array (so the length reduces)
-
-	(unsafe {
-		let ptr = frame as *mut [u8];
-		let casted = ptr as *mut [[Colour; WIDTH as usize]; HEIGHT as usize];
-		&mut *casted
-	}) as _
 }
