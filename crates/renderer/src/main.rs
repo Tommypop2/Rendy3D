@@ -13,7 +13,6 @@ use rendy3d::graphics::perspective::perspective_matrix;
 use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
-use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::stl::load_file;
 use rendy3d::{HEIGHT, WIDTH};
@@ -78,7 +77,7 @@ fn main() -> Result<(), Error> {
 			device_id,
 		} = event
 		{
-			println!("{:?}", delta);
+			println!("{delta:?}");
 		}
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,

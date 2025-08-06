@@ -1,6 +1,9 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
-use crate::graphics::{screen::Screen, shaders::vertex::VertexShader, shapes_3d::triangle::Triangle3D, viewport::Viewport};
+use crate::graphics::{
+	screen::Screen, shaders::vertex::VertexShader, shapes_3d::triangle::Triangle3D,
+	viewport::Viewport,
+};
 
 pub struct Mesh {
 	/// Triangles that make up the shape
