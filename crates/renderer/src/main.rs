@@ -7,10 +7,11 @@ use maths::vector::vector3::Vector3;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
-use rendy3d::graphics::mesh::Mesh;
+use rendy3d::graphics::mesh::{Mesh, render_mesh};
 use rendy3d::graphics::object::Object;
 use rendy3d::graphics::perspective::perspective_matrix;
 use rendy3d::graphics::screen::Screen;
+use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::viewport::Viewport;
@@ -155,43 +156,27 @@ impl World {
 			* Matrix4::scale(0.01);
 		for object in &self.objects {
 			for camera in &mut self.cameras {
-				let transform = camera.perspective.clone()
-					* camera.transformation.reverse_rotation_translation()
+				let transform = camera.transformation.reverse_rotation_translation()
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
+
 				render_mesh(
 					&mut camera.viewport,
 					screen,
 					&object.mesh.triangles,
 					transform,
+					camera.perspective.clone(),
+					&mut VertexShader::new(
+						Vector3::new(0.0, 0.0, 1.0),
+						|data, index, vertex, normal| {
+							let intensity = normal.dot_with(data);
+							let val = (255.0 * intensity) as u8;
+							Colour::new(val, val, val, 0xff)
+						},
+					),
 				);
 			}
 		}
-	}
-}
-fn render_mesh(
-	viewport: &mut Viewport,
-	screen: &mut Screen,
-	mesh: &[Triangle3D],
-	transform: Matrix4<f64>,
-) {
-	let light_dir = Vector3::new(0.0, 0.0, 1.0);
-	for (_i, triangle) in mesh.iter().enumerate() {
-		let transformed = triangle.clone().apply(transform.clone());
-		let n = transformed.normal();
-		let intensity = n.normalized().dot_with(&light_dir);
-		// Back-face culling :)
-		if intensity < 0.0 {
-			continue;
-		}
-		let val = (255.0 * intensity) as u8;
-		screen.set_draw_colour(Colour::new(val, val, val, 0xff));
-		// let mut colour = Colour::COLOURS[(i) % Colour::COLOURS.len()].clone();
-		// colour.alpha = val;
-		// screen.set_draw_colour(colour);
-		// let perspectified = transformed.apply(perspective_matrix.clone());
-		// println!("{:?}", perspectified);
-		viewport.draw_shape(screen, transformed)
 	}
 }

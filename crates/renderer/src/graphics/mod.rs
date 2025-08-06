@@ -5,6 +5,7 @@ pub mod mesh;
 pub mod object;
 pub mod perspective;
 pub mod screen;
+pub mod shaders;
 pub mod shapes_2d;
 pub mod shapes_3d;
 pub mod viewport;
