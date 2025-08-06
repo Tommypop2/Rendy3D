@@ -22,4 +22,10 @@ impl Camera {
 		self.transformation = transformation;
 		self
 	}
+	pub fn direction() {
+		todo!()
+	}
 }
+
+#[cfg(test)]
+mod test {}
