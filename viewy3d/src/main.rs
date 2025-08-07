@@ -9,7 +9,7 @@ use rendy3d::{
 		mesh::{Mesh, render_mesh},
 		object::Object,
 		perspective::perspective_matrix,
-		screen::Screen,
+		screen::{Screen, frame_pixels},
 		shaders::vertex::VertexShader,
 		shapes_2d::bounding_area::BoundingArea2D,
 		viewport::Viewport,
@@ -85,12 +85,12 @@ fn main() -> Result<(), Error> {
 			.build(&event_loop)
 			.unwrap()
 	};
-	let pixels = {
+	let mut pixels = {
 		let window_size = window.inner_size();
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-	let mut screen = Screen::new(pixels);
+
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let perspective_matrix = perspective_matrix(1.0, 1.0, -20.0, 1.0);
@@ -99,7 +99,9 @@ fn main() -> Result<(), Error> {
 	let f1_car = Mesh::new(load_file("../F1_RB16B.stl"));
 	let mut scene = World::new(vec![camera], vec![Object::new(f1_car, Matrix4::identity())]);
 	let mut control = FirstPersonControl::new(0.001);
+	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
 	let res = event_loop.run(|event, elwt| {
+		let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer);
 		control.handle_event(&event, &mut scene.cameras[0]);
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
@@ -108,7 +110,7 @@ fn main() -> Result<(), Error> {
 		{
 			screen.clear(Colour::BLACK);
 			scene.draw(&mut screen);
-			screen.pixels.render().unwrap();
+			pixels.render().unwrap();
 		}
 
 		if input.update(&event) {

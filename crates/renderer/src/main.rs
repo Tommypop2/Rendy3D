@@ -10,7 +10,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::{Mesh, render_mesh};
 use rendy3d::graphics::object::Object;
 use rendy3d::graphics::perspective::perspective_matrix;
-use rendy3d::graphics::screen::Screen;
+use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_3d::point::Point;
@@ -44,14 +44,14 @@ fn main() -> Result<(), Error> {
 			.unwrap()
 	};
 
-	let pixels = {
+	let mut pixels = {
 		let window_size = window.inner_size();
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
 	// let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
 	let pers_mat = Matrix4::identity();
-	let mut screen = Screen::new(pixels);
+
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let main_camera = Camera::new(viewport, pers_mat.clone())
@@ -64,11 +64,12 @@ fn main() -> Result<(), Error> {
 	// ))
 	// .unwrap();
 	// let second_camera = Camera::new(viewport2, pers_mat.clone());
-	let object = Mesh::new(vec![Triangle3D::new(
-		Point::new(0.0, 0.0, 0.0),
-		Point::new(0.5, 0.0, 0.0),
-		Point::new(0.1, 0.4, 0.0),
-	)]);
+	// let object = Mesh::new(vec![Triangle3D::new(
+	// 	Point::new(0.0, 0.0, 0.0),
+	// 	Point::new(0.5, 0.0, 0.0),
+	// 	Point::new(0.1, 0.4, 0.0),
+	// )]);
+	let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(
 		vec![main_camera],
@@ -79,15 +80,17 @@ fn main() -> Result<(), Error> {
 	let mut sum: u128 = 0;
 
 	// let pers_mat = Matrix4::unit();
+	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
 	let res = event_loop.run(|event, elwt| {
+		let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer);
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
 		} = event
 		{
 			// Clear buffer
-			screen.clear(Colour::BLACK);
 			let start = Instant::now();
+			screen.clear(Colour::BLACK);
 			scene.draw(&mut screen);
 			// scene2.draw(&mut screen);
 			let time_taken = start.elapsed();
@@ -103,7 +106,8 @@ fn main() -> Result<(), Error> {
 				);
 				println!("This is {} FPS", 1E6 / mean)
 			}
-			if let Err(err) = screen.pixels.render() {
+
+			if let Err(err) = pixels.render() {
 				log_error("pixels.render", err);
 				elwt.exit();
 				return;
@@ -117,7 +121,7 @@ fn main() -> Result<(), Error> {
 			}
 
 			if let Some(size) = input.window_resized() {
-				if let Err(err) = screen.pixels.resize_surface(size.width, size.height) {
+				if let Err(err) = pixels.resize_surface(size.width, size.height) {
 					log_error("pixels.resize_surface", err);
 					elwt.exit();
 					return;
@@ -146,18 +150,19 @@ impl World {
 	fn update(&mut self) {}
 
 	fn draw(&mut self, screen: &mut Screen) {
-		let _x: std::time::Duration = SystemTime::now()
+		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
-		// * Matrix4::rotation_z(x.as_secs_f64())
-		// * Matrix4::rotation_y(x.as_secs_f64())
-		// * Matrix4::rotation_x(x.as_secs_f64())
+		let base_transform = Matrix4::rotation_z(x.as_secs_f64())
+			* Matrix4::rotation_y(x.as_secs_f64())
+			* Matrix4::rotation_x(x.as_secs_f64())
+			* Matrix4::scale(0.01);
 		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.view()
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
-					);
+					) * base_transform.clone();
 
 				render_mesh(
 					&mut camera.viewport,

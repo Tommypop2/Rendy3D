@@ -33,7 +33,7 @@ impl Draw for AbsoluteScreenCoordinate {
 	) {
 		// Record Z in Z buffer if point is above Z buffer
 		if !viewport.point_below_z_buffer(screen, *self) {
-			screen.z_buffer[self.y][self.x] = self.z;
+			screen.set_z_in_z_buffer(*self);
 		} else {
 			return;
 		}
