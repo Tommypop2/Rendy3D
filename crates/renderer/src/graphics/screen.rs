@@ -1,8 +1,5 @@
 use core::f32;
 
-use fixed_capacity_vec::FixedCapacityVec;
-use pixels::Pixels;
-
 use crate::{
 	HEIGHT, WIDTH,
 	graphics::{colour::Colour, shapes_2d::point::AbsoluteScreenCoordinate},
