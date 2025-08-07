@@ -3,6 +3,14 @@
 A software renderer written from scratch in Rust.
 It is being built for learning purposes so performance and features are likely not great
 
+## TODO
+
+- [ ] `RenderTarget` trait, so other buffers can be rendered to (e.g stencil buffer)
+- [ ] Support panning and zooming around the viewport
+- [ ] Pixel shaders
+- [ ] Apply vertex shaders efficiently to every vertex
+  - Don't know how to do this yet without wasting work (applying multiple times to the same vertex if it appears in multiple triangles), or allocating memory
+
 ## Useful Resources
 
 - <https://trenki2.github.io/blog/2017/06/06/developing-a-software-renderer-part1/>
