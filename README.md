@@ -10,6 +10,7 @@ It is being built for learning purposes so performance and features are likely n
 - [ ] Pixel shaders
 - [ ] Apply vertex shaders efficiently to every vertex
   - Don't know how to do this yet without wasting work (applying multiple times to the same vertex if it appears in multiple triangles), or allocating memory
+- [ ] Compile as WASM and allow running in the browser
 
 ## Useful Resources
 
