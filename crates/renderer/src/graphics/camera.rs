@@ -18,6 +18,10 @@ impl Camera {
 			transformation: Matrix4::identity(),
 		}
 	}
+	/// Returns the view matrix
+	pub fn view(&self) -> Matrix4<f64> {
+		self.transformation.reverse_rotation_translation()
+	}
 	pub fn with_transformation(mut self, transformation: Matrix4<f64>) -> Self {
 		self.transformation = transformation;
 		self

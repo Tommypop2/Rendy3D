@@ -95,7 +95,7 @@ impl World {
 		// * Matrix4::rotation_x(x.as_secs_f64())
 		for object in &self.objects {
 			for camera in &mut self.cameras {
-				let transform = camera.transformation.reverse_rotation_translation()
+				let transform = camera.view()
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * Matrix4::scale(0.01);
