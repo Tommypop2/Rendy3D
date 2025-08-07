@@ -164,7 +164,7 @@ impl World {
 					screen,
 					&object.mesh.triangles,
 					transform,
-					camera.perspective.clone(),
+					camera.projection.clone(),
 					&mut VertexShader::new(
 						Vector3::new(0.0, 0.0, 1.0),
 						|data, index, vertex, normal| {
