@@ -1497,16 +1497,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
-name = "stl-viewer"
-version = "0.1.0"
-dependencies = [
- "pixels",
- "rendy3d",
- "winit",
- "winit_input_helper",
-]
-
-[[package]]
 name = "stl_io"
 version = "0.8.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1665,6 +1655,16 @@ name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0b928f33d975fc6ad9f86c8f283853ad26bdd5b10b7f1542aa2fa15e2289105a"
+
+[[package]]
+name = "viewy3d"
+version = "0.1.0"
+dependencies = [
+ "pixels",
+ "rendy3d",
+ "winit",
+ "winit_input_helper",
+]
 
 [[package]]
 name = "walkdir"

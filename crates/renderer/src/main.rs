@@ -13,6 +13,8 @@ use rendy3d::graphics::perspective::perspective_matrix;
 use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
+use rendy3d::graphics::shapes_3d::point::Point;
+use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::stl::load_file;
 use rendy3d::{HEIGHT, WIDTH};
@@ -47,7 +49,8 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
+	// let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
+	let pers_mat = Matrix4::identity();
 	let mut screen = Screen::new(pixels);
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
@@ -61,11 +64,15 @@ fn main() -> Result<(), Error> {
 	// ))
 	// .unwrap();
 	// let second_camera = Camera::new(viewport2, pers_mat.clone());
-	let f1_car = Mesh::new(load_file("./F1_RB16B.stl"));
+	let object = Mesh::new(vec![Triangle3D::new(
+		Point::new(0.0, 0.0, 0.0),
+		Point::new(0.5, 0.0, 0.0),
+		Point::new(0.1, 0.4, 0.0),
+	)]);
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(
 		vec![main_camera],
-		vec![Object::new(f1_car, Matrix4::identity())],
+		vec![Object::new(object, Matrix4::identity())],
 	);
 	// let mut scene2 = World::new(vec![second_camera], vec![guinea_pig]);
 	let mut frame_num: usize = 0;
@@ -73,13 +80,6 @@ fn main() -> Result<(), Error> {
 
 	// let pers_mat = Matrix4::unit();
 	let res = event_loop.run(|event, elwt| {
-		if let Event::DeviceEvent {
-			event: DeviceEvent::MouseMotion { delta },
-			device_id,
-		} = event
-		{
-			println!("{delta:?}");
-		}
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
@@ -157,7 +157,7 @@ impl World {
 				let transform = camera.view()
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
-					) * Matrix4::scale(0.01);
+					);
 
 				render_mesh(
 					&mut camera.viewport,
