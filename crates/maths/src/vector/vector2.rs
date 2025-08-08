@@ -1,8 +1,11 @@
-use std::ops::{Add, AddAssign, Mul};
+use std::ops::{Add, AddAssign, Mul, MulAssign};
 
-use crate::{traits::float::Float, vector::vector3::Vector3};
+use crate::{
+	traits::{float::Float, num::Num},
+	vector::vector3::Vector3,
+};
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Vector2<T> {
 	pub x: T,
 	pub y: T,
@@ -49,5 +52,25 @@ impl<T: Mul<Output = T> + Add<Output = T> + Copy> Add<Vector2<T>> for Vector2<T>
 impl<T> From<Vector3<T>> for Vector2<T> {
 	fn from(value: Vector3<T>) -> Self {
 		Self::new(value.x, value.y)
+	}
+}
+
+impl<T> MulAssign<T> for Vector2<T>
+where
+	T: Num,
+{
+	fn mul_assign(&mut self, rhs: T) {
+		self.x *= rhs;
+		self.y *= rhs;
+	}
+}
+impl<T> Mul<T> for Vector2<T>
+where
+	T: Num,
+{
+	type Output = Vector2<T>;
+	fn mul(mut self, rhs: T) -> Self::Output {
+		self *= rhs;
+		self
 	}
 }
