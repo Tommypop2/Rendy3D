@@ -40,12 +40,15 @@ impl<T> Matrix2<T>
 where
 	T: Signed,
 {
-	pub fn inverse(&self) -> Self {
-		let inverse_det = T::one() / self.determinant();
-		let adj = Self::new(
+	pub fn adjugate(&self) -> Self {
+		Self::new(
 			Vector2::new(self.y.y, -self.x.y),
 			Vector2::new(-self.y.x, self.x.x),
-		);
+		)
+	}
+	pub fn inverse(&self) -> Self {
+		let inverse_det = T::one() / self.determinant();
+		let adj = self.adjugate();
 		adj * inverse_det
 	}
 }
@@ -89,4 +92,7 @@ mod test {
 		let expected_inverse = Matrix2::new(Vector2::new(-2.0, 1.5), Vector2::new(1.0, -0.5));
 		assert_eq!(mat.inverse(), expected_inverse)
 	}
+
+	#[test]
+	fn adjugate() {}
 }

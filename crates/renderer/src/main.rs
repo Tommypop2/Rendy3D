@@ -152,10 +152,10 @@ impl World {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
-		// let base_transform = Matrix4::rotation_z(x.as_secs_f64())
-		// 	* Matrix4::rotation_y(x.as_secs_f64())
-		// 	* Matrix4::rotation_x(x.as_secs_f64());
-		let base_transform = Matrix4::identity();
+		let base_transform = Matrix4::rotation_z(x.as_secs_f64())
+			* Matrix4::rotation_y(x.as_secs_f64())
+			* Matrix4::rotation_x(x.as_secs_f64());
+		// let base_transform = Matrix4::identity();
 		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.view()
