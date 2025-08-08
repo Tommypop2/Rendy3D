@@ -77,11 +77,11 @@ impl Draw for Triangle2D {
 		// println!("4");
 		// Now need to fill in the triangle
 		let bounding_area = self.bounding_area();
-		// Iterate over all pixels that could possibly contain the triangle
 		let abc = self.doubled_area();
 		if abc == 0 {
 			return;
 		}
+		// Iterate over all pixels that could possibly contain the triangle
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
 				let p = AbsoluteScreenCoordinate::new(

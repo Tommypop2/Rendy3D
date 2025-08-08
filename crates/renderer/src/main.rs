@@ -12,6 +12,8 @@ use rendy3d::graphics::object::Object;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
+use rendy3d::graphics::shapes_3d::point::Point;
+use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::stl::load_file;
 use rendy3d::{HEIGHT, WIDTH};
@@ -61,12 +63,12 @@ fn main() -> Result<(), Error> {
 	// ))
 	// .unwrap();
 	// let second_camera = Camera::new(viewport2, pers_mat.clone());
-	// let object = Mesh::new(vec![Triangle3D::new(
-	// 	Point::new(0.0, 0.0, 0.0),
-	// 	Point::new(0.5, 0.0, 0.0),
-	// 	Point::new(0.1, 0.4, 0.0),
-	// )]);
-	let object = Mesh::new(load_file("./F1_RB16B.stl"));
+	let object = Mesh::new(vec![Triangle3D::new(
+		Point::new(0.0, 0.0, 0.0),
+		Point::new(0.5, 0.0, 0.0),
+		Point::new(0.1, 0.4, 0.0),
+	)]);
+	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(
 		vec![main_camera],
@@ -150,10 +152,10 @@ impl World {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
-		let base_transform = Matrix4::rotation_z(x.as_secs_f64())
-			* Matrix4::rotation_y(x.as_secs_f64())
-			* Matrix4::rotation_x(x.as_secs_f64())
-			* Matrix4::scale(0.01);
+		// let base_transform = Matrix4::rotation_z(x.as_secs_f64())
+		// 	* Matrix4::rotation_y(x.as_secs_f64())
+		// 	* Matrix4::rotation_x(x.as_secs_f64());
+		let base_transform = Matrix4::identity();
 		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.view()
