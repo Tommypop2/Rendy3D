@@ -1,11 +1,13 @@
 use std::ops::{Add, AddAssign, Mul, MulAssign};
 
+use derive_more::{Add, Sub};
+
 use crate::{
 	traits::{float::Float, num::Num},
 	vector::vector3::Vector3,
 };
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Sub, Add)]
 pub struct Vector2<T> {
 	pub x: T,
 	pub y: T,
@@ -33,16 +35,6 @@ impl<T: Mul<Output = T> + Add<Output = T> + Copy + Float> Vector2<T> {
 impl<T: Mul<Output = T> + Add<Output = T> + Copy> AddAssign<Vector2<T>> for Vector2<T> {
 	fn add_assign(&mut self, rhs: Vector2<T>) {
 		*self = Self {
-			x: self.x + rhs.x,
-			y: self.y + rhs.y,
-		}
-	}
-}
-
-impl<T: Mul<Output = T> + Add<Output = T> + Copy> Add<Vector2<T>> for Vector2<T> {
-	type Output = Vector2<T>;
-	fn add(self, rhs: Vector2<T>) -> Self::Output {
-		Self {
 			x: self.x + rhs.x,
 			y: self.y + rhs.y,
 		}
