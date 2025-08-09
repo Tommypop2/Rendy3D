@@ -1,5 +1,11 @@
-use std::{collections::HashMap, time::SystemTime};
+use std::{
+	collections::HashMap,
+	fmt::Write,
+	path::PathBuf,
+	time::{Duration, Instant, SystemTime},
+};
 
+use argh::FromArgs;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::{
 	HEIGHT, WIDTH,
@@ -11,7 +17,7 @@ use rendy3d::{
 		perspective::perspective_matrix,
 		screen::{Screen, frame_pixels},
 		shaders::vertex::VertexShader,
-		shapes_2d::bounding_area::BoundingArea2D,
+		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 		viewport::Viewport,
 	},
 	loaders::stl::load_file,
@@ -112,7 +118,67 @@ impl FirstPersonControl {
 		}
 	}
 }
+fn draw_char(
+	font: &fontdue::Font,
+	offset: AbsoluteScreenCoordinate,
+	frame_buffer: &mut [[Colour; WIDTH as usize]],
+	ch: char,
+	size: f32,
+) -> fontdue::Metrics {
+	let (metrics, bitmap) = font.rasterize(ch, size);
+	if metrics.width == 0 {
+		return metrics;
+	}
+	let rows = bitmap.chunks(metrics.width);
+	for (row_index, row) in rows.into_iter().enumerate() {
+		for (j, pixel) in frame_buffer[row_index + offset.y][(offset.x)..(offset.x + row.len())]
+			.iter_mut()
+			.enumerate()
+		{
+			*pixel = Colour::new(255, 255, 255, row[j])
+		}
+	}
+	metrics
+}
+fn draw_text(
+	font: &fontdue::Font,
+	mut offset: AbsoluteScreenCoordinate,
+	frame_buffer: &mut [[Colour; WIDTH as usize]],
+	text: &str,
+	size: f32,
+) {
+	for ch in text.chars() {
+		offset.x += draw_char(font, offset, frame_buffer, ch, size).advance_width as usize
+	}
+}
+struct FrameTimeCounter {
+	time_of_last_frame: Instant,
+}
+impl FrameTimeCounter {
+	pub fn new() -> Self {
+		Self {
+			time_of_last_frame: Instant::now(),
+		}
+	}
+	/// Must be called on every frame
+	pub fn frame_time(&mut self) -> Duration {
+		let now = Instant::now();
+		let frame_time = now - self.time_of_last_frame;
+		self.time_of_last_frame = now;
+		frame_time
+	}
+	pub fn fps(frame_time: Duration) -> f32 {
+		1.0 / frame_time.as_secs_f32()
+	}
+}
+#[derive(FromArgs)]
+/// View STL files
+struct Args {
+	#[argh(positional)]
+	file: PathBuf,
+}
 fn main() -> Result<(), Error> {
+	let args: Args = argh::from_env();
 	let event_loop = EventLoop::new().unwrap();
 	let mut input = WinitInputHelper::new();
 	let window = {
@@ -129,26 +195,41 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-
+	pixels.enable_vsync(false);
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let perspective_matrix = perspective_matrix(1.0, 1.0, -20.0, 1.0);
 	let camera = Camera::new(viewport, perspective_matrix.clone())
 		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 1.0)));
-	let f1_car = Mesh::new(load_file("../F1_RB16B.stl"));
+	let f1_car = Mesh::new(load_file(args.file));
 	let mut scene = World::new(vec![camera], vec![Object::new(f1_car, Matrix4::identity())]);
 	let mut control = FirstPersonControl::new(0.001);
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
+	let font = include_bytes!("../../Helvetica.ttf") as &[u8];
+	let font = fontdue::Font::from_bytes(font, fontdue::FontSettings::default()).unwrap();
+	let mut fps_counter = FrameTimeCounter::new();
+	let mut fps_buffer = String::with_capacity(10);
 	let res = event_loop.run(|event, elwt| {
-		let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer);
 		control.handle_event(&event, &mut scene.cameras[0]);
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
 		} = event
 		{
+			let dt = fps_counter.frame_time();
+			let fps = FrameTimeCounter::fps(dt);
+			let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer);
 			screen.clear(Colour::BLACK);
 			scene.draw(&mut screen);
+			fps_buffer.clear();
+			write!(&mut fps_buffer, "FPS: {:.0}", fps).unwrap();
+			draw_text(
+				&font,
+				AbsoluteScreenCoordinate::new(20, 20, 0.0),
+				frame_pixels(pixels.frame_mut()),
+				&fps_buffer,
+				25.0,
+			);
 			pixels.render().unwrap();
 		}
 
@@ -173,10 +254,10 @@ impl World {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
-		let base_transform = Matrix4::scale(0.01)
-			* Matrix4::rotation_z(x.as_secs_f64())
-			* Matrix4::rotation_y(x.as_secs_f64())
-			* Matrix4::rotation_x(x.as_secs_f64());
+		let base_transform = Matrix4::scale(0.01);
+		// * Matrix4::rotation_z(x.as_secs_f64())
+		// * Matrix4::rotation_y(x.as_secs_f64())
+		// * Matrix4::rotation_x(x.as_secs_f64());
 
 		for object in &self.objects {
 			for camera in &mut self.cameras {

@@ -1,3 +1,4 @@
 /target
 *.stl
 flamegraph.svg
+*.ttf

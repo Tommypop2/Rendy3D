@@ -2,9 +2,13 @@
 name = "viewy3d"
 version = "0.1.0"
 edition = "2024"
-
+[[bin]]
+name = "v3d"
+path = "src/main.rs"
 [dependencies]
 rendy3d = { path = "../crates/renderer" }
 winit = "0.29"
 winit_input_helper = "0.16"
 pixels = "0.15.0"
+fontdue = "0.9.3"
+argh = "0.1.13"

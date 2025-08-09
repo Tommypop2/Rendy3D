@@ -1,5 +1,5 @@
 #[repr(C)]
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Copy)]
 pub struct Colour {
 	pub red: u8,
 	pub green: u8,
