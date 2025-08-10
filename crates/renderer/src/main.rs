@@ -11,7 +11,6 @@ use rendy3d::graphics::mesh::{Mesh, render_mesh};
 use rendy3d::graphics::object::Object;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::shaders::Shaders;
-use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
