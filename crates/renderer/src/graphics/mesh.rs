@@ -1,7 +1,10 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	draw::Draw, shaders::vertex::VertexShader, shapes_3d::triangle::Triangle3D, target::Target,
+	draw::Draw,
+	shaders::{shaders::Shaders, vertex::VertexShader},
+	shapes_3d::triangle::Triangle3D,
+	target::Target,
 };
 
 pub struct Mesh {
@@ -37,12 +40,12 @@ impl Mesh {
 	}
 }
 
-pub fn render_mesh<T: Target>(
+pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Pixel = T::Item> + Clone>(
 	target: &mut T,
 	mesh: &[Triangle3D],
 	transform: Matrix4<f64>,
 	perspective: Matrix4<f64>,
-	shader: &mut VertexShader<Vector3<f64>>,
+	shaders: S,
 ) {
 	let camera_dir = Vector3::new(0.0, 0.0, 1.0);
 	for (i, triangle) in mesh.iter().enumerate() {
@@ -54,7 +57,9 @@ pub fn render_mesh<T: Target>(
 			continue;
 		}
 		// Only apply shader to single vertex (as all normals are the same)
-		// screen.set_draw_colour(shader.execute(i, triangle.vertex1, n));
-		transformed.apply(perspective.clone()).draw(target);
+		target.set_draw_colour(shaders.vertex(i, triangle.vertex1, n));
+		transformed
+			.apply(perspective.clone())
+			.draw(target, shaders.clone());
 	}
 }

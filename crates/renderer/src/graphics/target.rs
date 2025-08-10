@@ -11,6 +11,9 @@ pub trait Target {
 	fn clear(&mut self, fill: Self::Item);
 	fn clear_depth(&mut self);
 	fn area(&self) -> BoundingArea2D;
+
+	// Default implementations
+
 	fn draw_point(&mut self, p: AbsoluteScreenCoordinate, colour: Self::Item) {
 		self.set(p.x, p.y, colour);
 	}

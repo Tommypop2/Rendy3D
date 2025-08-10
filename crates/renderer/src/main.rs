@@ -10,6 +10,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::{Mesh, render_mesh};
 use rendy3d::graphics::object::Object;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
+use rendy3d::graphics::shaders::shaders::Shaders;
 use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_3d::point::Point;
@@ -140,7 +141,27 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 		error!("  Caused by: {source}");
 	}
 }
+#[derive(Clone)]
+struct Test;
+impl Shaders for Test {
+	type VsOut = Colour;
 
+	type Pixel = Colour;
+
+	fn vertex(&self, index: usize, vertex: Point, normal: Vector3<f64>) -> Self::VsOut {
+		let res = index % 3;
+		match res {
+			0 => Colour::RED,
+			1 => Colour::GREEN,
+			2 => Colour::BLUE,
+			_ => unreachable!(),
+		}
+	}
+
+	fn fragment(&self, data: Self::VsOut) -> Self::Pixel {
+		data
+	}
+}
 impl World {
 	fn new(cameras: Vec<Camera>, objects: Vec<Object>) -> Self {
 		Self { objects, cameras }
@@ -168,14 +189,7 @@ impl World {
 					&object.mesh.triangles,
 					transform,
 					camera.projection.clone(),
-					&mut VertexShader::new(
-						Vector3::new(0.0, 0.0, 1.0),
-						|data, index, vertex, normal| {
-							let intensity = normal.dot_with(data);
-							let val = (255.0 * intensity) as u8;
-							Colour::new(val, val, val, 0xff)
-						},
-					),
+					Test {},
 				);
 			}
 		}

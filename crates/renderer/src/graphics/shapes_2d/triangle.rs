@@ -1,29 +1,31 @@
-use maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
+use maths::{
+	matrices::matrix2::Matrix2,
+	vector::{vector2::Vector2, vector3::Vector3},
+};
 
+use crate::graphics::interpolate::Interpolate;
 use crate::graphics::{
+	colour::Colour,
 	draw::Draw,
+	shaders::shaders::Shaders,
 	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 	target::Target,
 };
-
-pub struct Triangle2D {
-	vertex1: AbsoluteScreenCoordinate,
-	vertex2: AbsoluteScreenCoordinate,
-	vertex3: AbsoluteScreenCoordinate,
+pub struct Triangle2D<Vertex = AbsoluteScreenCoordinate> {
+	vertex1: Vertex,
+	vertex2: Vertex,
+	vertex3: Vertex,
 }
-
-impl Triangle2D {
-	pub fn new(
-		vertex1: AbsoluteScreenCoordinate,
-		vertex2: AbsoluteScreenCoordinate,
-		vertex3: AbsoluteScreenCoordinate,
-	) -> Self {
+impl<Vertex> Triangle2D<Vertex> {
+	pub fn new(vertex1: Vertex, vertex2: Vertex, vertex3: Vertex) -> Self {
 		Self {
 			vertex1,
 			vertex2,
 			vertex3,
 		}
 	}
+}
+impl Triangle2D<AbsoluteScreenCoordinate> {
 	pub fn signed_doubled_area(&self) -> i32 {
 		let (x1, y1, _) = self.vertex1.as_tuple();
 		let (x2, y2, _) = self.vertex2.as_tuple();
@@ -56,13 +58,15 @@ fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<
 fn is_between_0_and_1(x: f32) -> bool {
 	(0.0..=1.0).contains(&x)
 }
-impl Draw for Triangle2D {
-	fn draw<T: Target>(&self, target: &mut T) {
+
+impl<VsOut> Draw for Triangle2D<(AbsoluteScreenCoordinate, VsOut)> {
+	fn draw<T: Target, S: Shaders + Clone>(&self, target: &mut T, shaders: S) {
 		// println!("1");
 		// Optimisation: If all vertices aren't visible, don't draw
-		if !(target.contains_point(self.vertex1)
-			|| target.contains_point(self.vertex2)
-			|| target.contains_point(self.vertex3))
+		let shape = Triangle2D::new(self.vertex1.0, self.vertex2.0, self.vertex3.0);
+		if !(target.contains_point(shape.vertex1)
+			|| target.contains_point(shape.vertex2)
+			|| target.contains_point(shape.vertex3))
 		{
 			return;
 		}
@@ -86,14 +90,14 @@ impl Draw for Triangle2D {
 		// Line::new(self.vertex3, self.vertex1).draw(viewport, screen);
 		// println!("4");
 		// Now need to fill in the triangle
-		let bounding_area = self.bounding_area();
-		let abc = self.signed_doubled_area();
+		let bounding_area = shape.bounding_area();
+		let abc = shape.signed_doubled_area();
 		if abc == 0 {
 			return;
 		}
-		let v0 = absolute_screen_coordinate_to_2d_vec(self.vertex1);
-		let v1 = absolute_screen_coordinate_to_2d_vec(self.vertex2);
-		let v2 = absolute_screen_coordinate_to_2d_vec(self.vertex3);
+		let v0 = absolute_screen_coordinate_to_2d_vec(shape.vertex1);
+		let v1 = absolute_screen_coordinate_to_2d_vec(shape.vertex2);
+		let v2 = absolute_screen_coordinate_to_2d_vec(shape.vertex3);
 		let mat = Matrix2::new(v1 - v0, v2 - v0).adjugate();
 		let denom = abc as f32;
 		// Iterate over all pixels that could possibly contain the triangle
@@ -105,8 +109,18 @@ impl Draw for Triangle2D {
 				let l2 = 1.0 - l0 - l1;
 
 				if is_between_0_and_1(l0) && is_between_0_and_1(l1) && is_between_0_and_1(l2) {
-					let z = self.vertex1.z * l0 + self.vertex2.z * l1 + self.vertex3.z * l2;
+					// Interpolate Z
+					let z = shape.vertex1.z * l0 + shape.vertex2.z * l1 + shape.vertex3.z * l2;
 					let p = AbsoluteScreenCoordinate::new(x, y, z);
+					let out = S::VsOut::interpolate3(
+						self.vertex1.1,
+						self.vertex2.1,
+						self.vertex3.1,
+						l0,
+						l1,
+						l2,
+					);
+					target.set_draw_colour(out);
 					// Point inside triangle, so draw
 					// viewport.draw_point(screen, p);
 					// target.set_draw_colour(Colour::new(
@@ -115,7 +129,7 @@ impl Draw for Triangle2D {
 					// 	(255.0 * l2) as u8,
 					// 	0xff,
 					// ));
-					p.draw(target);
+					p.draw(target, shaders.clone());
 				}
 			}
 		}

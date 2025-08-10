@@ -1,6 +1,7 @@
 pub mod camera;
 pub mod colour;
 pub mod draw;
+pub mod interpolate;
 pub mod mesh;
 pub mod object;
 pub mod perspective;

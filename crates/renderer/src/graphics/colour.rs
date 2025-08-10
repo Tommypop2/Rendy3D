@@ -1,3 +1,7 @@
+use derive_more::Mul;
+
+use crate::graphics::interpolate::Interpolate;
+
 #[repr(C)]
 #[derive(Clone, Debug, Copy)]
 pub struct Colour {
@@ -39,4 +43,14 @@ impl Colour {
 		Colour::PURPLE,
 		Colour::WHITE,
 	];
+}
+impl Interpolate for Colour {
+	fn interpolate3(a: Self, b: Self, c: Self, x: f32, y: f32, z: f32) -> Self {
+		Colour::new(
+			(a.red as f32 * x + b.red as f32 * y + c.red as f32 * z) as u8,
+			(a.green as f32 * x + b.green as f32 * y + c.green as f32 * z) as u8,
+			(a.blue as f32 * x + b.blue as f32 * y + c.blue as f32 * z) as u8,
+			(a.alpha as f32 * x + b.alpha as f32 * y + c.alpha as f32 * z) as u8,
+		)
+	}
 }

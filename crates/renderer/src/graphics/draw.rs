@@ -1,5 +1,5 @@
-use crate::graphics::target::Target;
+use crate::graphics::{shaders::shaders::Shaders, target::Target};
 
 pub trait Draw {
-	fn draw<T: Target>(&self, target: &mut T);
+	fn draw<T: Target, S: Shaders + Clone>(&self, target: &mut T, shaders: S);
 }

@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use derive_more::Add;
 
-use crate::graphics::{draw::Draw, target::Target};
+use crate::graphics::{draw::Draw, shaders::shaders::Shaders, target::Target};
 
 #[derive(Clone, Add, Copy)]
 pub struct AbsoluteScreenCoordinate {
@@ -26,7 +26,7 @@ impl AbsoluteScreenCoordinate {
 
 pub static mut MAX_Z: f32 = 0.0;
 impl Draw for AbsoluteScreenCoordinate {
-	fn draw<T: Target>(&self, target: &mut T) {
+	fn draw<T: Target, S: Shaders>(&self, target: &mut T, shaders: S) {
 		// Record Z in Z buffer if point is above Z buffer
 		if !target.point_below_z_buffer(*self) {
 			target.set_z_in_z_buffer(*self);
