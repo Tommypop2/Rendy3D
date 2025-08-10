@@ -189,7 +189,7 @@ impl World {
 					&object.mesh.triangles,
 					transform,
 					camera.projection.clone(),
-					Test {},
+					&mut Test,
 				);
 			}
 		}

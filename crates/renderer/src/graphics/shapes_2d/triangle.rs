@@ -2,6 +2,7 @@ use maths::{
 	matrices::matrix2::Matrix2,
 	vector::{vector2::Vector2, vector3::Vector3},
 };
+use winit::dpi::Pixel;
 
 use crate::graphics::interpolate::Interpolate;
 use crate::graphics::{
@@ -59,8 +60,15 @@ fn is_between_0_and_1(x: f32) -> bool {
 	(0.0..=1.0).contains(&x)
 }
 
-impl<VsOut> Draw for Triangle2D<(AbsoluteScreenCoordinate, VsOut)> {
-	fn draw<T: Target, S: Shaders + Clone>(&self, target: &mut T, shaders: S) {
+impl<W> Draw<W> for Triangle2D<(AbsoluteScreenCoordinate, W)>
+where
+	W: Interpolate,
+{
+	fn draw<T: Target, S: Shaders<VsOut = W, Pixel = T::Item> + Clone>(
+		&self,
+		target: &mut T,
+		shaders: &mut S,
+	) {
 		// println!("1");
 		// Optimisation: If all vertices aren't visible, don't draw
 		let shape = Triangle2D::new(self.vertex1.0, self.vertex2.0, self.vertex3.0);
@@ -113,14 +121,15 @@ impl<VsOut> Draw for Triangle2D<(AbsoluteScreenCoordinate, VsOut)> {
 					let z = shape.vertex1.z * l0 + shape.vertex2.z * l1 + shape.vertex3.z * l2;
 					let p = AbsoluteScreenCoordinate::new(x, y, z);
 					let out = S::VsOut::interpolate3(
-						self.vertex1.1,
-						self.vertex2.1,
-						self.vertex3.1,
+						&self.vertex1.1,
+						&self.vertex2.1,
+						&self.vertex3.1,
 						l0,
 						l1,
 						l2,
 					);
-					target.set_draw_colour(out);
+					let colour = shaders.fragment(out);
+					target.set_draw_colour(colour);
 					// Point inside triangle, so draw
 					// viewport.draw_point(screen, p);
 					// target.set_draw_colour(Colour::new(
@@ -129,7 +138,7 @@ impl<VsOut> Draw for Triangle2D<(AbsoluteScreenCoordinate, VsOut)> {
 					// 	(255.0 * l2) as u8,
 					// 	0xff,
 					// ));
-					p.draw(target, shaders.clone());
+					p.draw(target, shaders);
 				}
 			}
 		}

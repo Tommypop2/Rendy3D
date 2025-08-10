@@ -1,5 +1,9 @@
-use crate::graphics::{shaders::shaders::Shaders, target::Target};
+use crate::graphics::{interpolate::Interpolate, shaders::shaders::Shaders, target::Target};
 
-pub trait Draw {
-	fn draw<T: Target, S: Shaders + Clone>(&self, target: &mut T, shaders: S);
+pub trait Draw<VsOut: Interpolate> {
+	fn draw<T: Target, S: Shaders<VsOut = VsOut, Pixel = T::Item> + Clone>(
+		&self,
+		target: &mut T,
+		shaders: &mut S,
+	);
 }

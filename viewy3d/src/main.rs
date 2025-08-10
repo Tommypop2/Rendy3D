@@ -16,7 +16,7 @@ use rendy3d::{
 		object::Object,
 		perspective::perspective_matrix,
 		screen::{Screen, frame_pixels},
-		shaders::vertex::VertexShader,
+		shaders::shaders::Shaders,
 		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 		target::Target,
 		viewport::Viewport,
@@ -244,7 +244,27 @@ fn main() -> Result<(), Error> {
 	});
 	res.map_err(|e| Error::UserDefined(Box::new(e)))
 }
-
+#[derive(Clone)]
+struct CoolShaders {
+	light_direction: Vector3<f64>,
+}
+impl Shaders for CoolShaders {
+	type Pixel = Colour;
+	type VsOut = Colour;
+	fn vertex(
+		&self,
+		index: usize,
+		vertex: rendy3d::graphics::shapes_3d::point::Point,
+		normal: Vector3<f64>,
+	) -> Self::VsOut {
+		let intensity = normal.dot_with(&self.light_direction);
+		let val = (255.0 * intensity) as u8;
+		Colour::new(val, val, val, 0xff)
+	}
+	fn fragment(&self, data: Self::VsOut) -> Self::Pixel {
+		data
+	}
+}
 impl World {
 	fn new(cameras: Vec<Camera>, objects: Vec<Object>) -> Self {
 		Self { objects, cameras }
@@ -271,14 +291,17 @@ impl World {
 					&object.mesh.triangles,
 					transform,
 					camera.projection.clone(),
-					&mut VertexShader::new(
-						Vector3::new(0.0, 0.0, 1.0),
-						|data, index, vertex, normal| {
-							let intensity = normal.dot_with(data);
-							let val = (255.0 * intensity) as u8;
-							Colour::new(val, val, val, 0xff)
-						},
-					),
+					&mut CoolShaders {
+						light_direction: Vector3::new(0.0, 0.0, 1.0),
+					},
+					// &mut VertexShader::new(
+					// 	Vector3::new(0.0, 0.0, 1.0),
+					// 	|data, index, vertex, normal| {
+					// 		let intensity = normal.dot_with(data);
+					// 		let val = (255.0 * intensity) as u8;
+					// 		Colour::new(val, val, val, 0xff)
+					// 	},
+					// ),
 				);
 			}
 		}

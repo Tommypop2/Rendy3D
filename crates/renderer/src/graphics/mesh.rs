@@ -1,10 +1,8 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	draw::Draw,
-	shaders::{shaders::Shaders, vertex::VertexShader},
-	shapes_3d::triangle::Triangle3D,
-	target::Target,
+	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders,
+	shapes_3d::triangle::Triangle3D, target::Target,
 };
 
 pub struct Mesh {
@@ -45,8 +43,10 @@ pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Pixel = T::Item> + Clo
 	mesh: &[Triangle3D],
 	transform: Matrix4<f64>,
 	perspective: Matrix4<f64>,
-	shaders: S,
-) {
+	shaders: &mut S,
+) where
+	<T as Target>::Item: Interpolate,
+{
 	let camera_dir = Vector3::new(0.0, 0.0, 1.0);
 	for (i, triangle) in mesh.iter().enumerate() {
 		let transformed = triangle.clone().apply(transform.clone());
@@ -57,9 +57,9 @@ pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Pixel = T::Item> + Clo
 			continue;
 		}
 		// Only apply shader to single vertex (as all normals are the same)
-		target.set_draw_colour(shaders.vertex(i, triangle.vertex1, n));
 		transformed
 			.apply(perspective.clone())
-			.draw(target, shaders.clone());
+			.to_triangle_2d(target, shaders, n)
+			.draw(target, shaders);
 	}
 }

@@ -2,6 +2,7 @@ use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
 	draw::Draw,
+	interpolate::Interpolate,
 	shaders::shaders::Shaders,
 	shapes_2d::{point::AbsoluteScreenCoordinate, triangle::Triangle2D},
 	shapes_3d::point::Point,
@@ -49,28 +50,33 @@ impl Triangle3D {
 	pub fn to_triangle_2d<T: Target, S: Shaders>(
 		self,
 		target: &T,
-		shaders: S,
+		shaders: &mut S,
+		normal: Vector3<f64>,
 	) -> Triangle2D<(AbsoluteScreenCoordinate, S::VsOut)> {
 		Triangle2D::new(
 			(
 				self.vertex1.to_pixel_coordinate(target.area()),
-				shaders.vertex(0, self.vertex1, Vector3::default()),
+				shaders.vertex(0, self.vertex1, normal),
 			),
 			(
 				self.vertex2.to_pixel_coordinate(target.area()),
-				shaders.vertex(1, self.vertex2, Vector3::default()),
+				shaders.vertex(1, self.vertex2, normal),
 			),
 			(
 				self.vertex3.to_pixel_coordinate(target.area()),
-				shaders.vertex(2, self.vertex3, Vector3::default()),
+				shaders.vertex(2, self.vertex3, normal),
 			),
 		)
 	}
 }
 
-impl Draw for Triangle3D {
-	fn draw<T: Target, S: Shaders + Clone>(&self, target: &mut T, shaders: S) {
-		let t = self.clone().to_triangle_2d(target, shaders.clone());
-		t.draw(target, shaders);
-	}
-}
+// impl<VsOut: Interpolate> Draw<VsOut> for Triangle3D {
+// 	fn draw<T: Target, S: Shaders<VsOut = VsOut, Pixel = T::Item> + Clone>(
+// 		&self,
+// 		target: &mut T,
+// 		shaders: S,
+// 	) {
+// 		let t = self.clone().to_triangle_2d(target, shaders.clone(),);
+// 		t.draw(target, shaders);
+// 	}
+// }
