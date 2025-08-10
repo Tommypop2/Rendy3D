@@ -12,6 +12,7 @@ use rendy3d::graphics::object::Object;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::shaders::Shaders;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
+use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::target::Target;
@@ -157,7 +158,7 @@ impl Shaders for Test {
 		}
 	}
 
-	fn fragment(&self, data: Self::VsOut) -> Self::Pixel {
+	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Pixel {
 		data
 	}
 }

@@ -1,12 +1,10 @@
 use maths::{
 	matrices::matrix2::Matrix2,
-	vector::{vector2::Vector2, vector3::Vector3},
+	vector::vector2::Vector2,
 };
-use winit::dpi::Pixel;
 
 use crate::graphics::interpolate::Interpolate;
 use crate::graphics::{
-	colour::Colour,
 	draw::Draw,
 	shaders::shaders::Shaders,
 	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
@@ -128,7 +126,7 @@ where
 						l1,
 						l2,
 					);
-					let colour = shaders.fragment(out);
+					let colour = shaders.fragment(p, out);
 					target.set_draw_colour(colour);
 					// Point inside triangle, so draw
 					// viewport.draw_point(screen, p);

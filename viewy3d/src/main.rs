@@ -6,6 +6,7 @@ use std::{
 };
 
 use argh::FromArgs;
+use hsv::hsv_to_rgb;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::{
 	HEIGHT, WIDTH,
@@ -261,8 +262,10 @@ impl Shaders for CoolShaders {
 		let val = (255.0 * intensity) as u8;
 		Colour::new(val, val, val, 0xff)
 	}
-	fn fragment(&self, data: Self::VsOut) -> Self::Pixel {
-		data
+	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Pixel {
+		let z_normalised = pos.z / (56.241528 * 2.0) + 0.5;
+		let (r, g, b) = hsv_to_rgb((pos.z * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
+		Colour::new(r, g, b, 255)
 	}
 }
 impl World {

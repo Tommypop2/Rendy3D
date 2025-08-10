@@ -1,5 +1,3 @@
-use derive_more::Mul;
-
 use crate::graphics::interpolate::Interpolate;
 
 #[repr(C)]

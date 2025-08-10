@@ -2,7 +2,9 @@ use std::fmt::Display;
 
 use derive_more::Add;
 
-use crate::graphics::{draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders, target::Target};
+use crate::graphics::{
+	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders, target::Target,
+};
 
 #[derive(Clone, Add, Copy)]
 pub struct AbsoluteScreenCoordinate {

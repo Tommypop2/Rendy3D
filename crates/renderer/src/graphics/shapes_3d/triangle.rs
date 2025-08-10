@@ -1,8 +1,6 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	draw::Draw,
-	interpolate::Interpolate,
 	shaders::shaders::Shaders,
 	shapes_2d::{point::AbsoluteScreenCoordinate, triangle::Triangle2D},
 	shapes_3d::point::Point,
