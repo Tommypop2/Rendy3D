@@ -8,4 +8,5 @@ pub mod screen;
 pub mod shaders;
 pub mod shapes_2d;
 pub mod shapes_3d;
+pub mod target;
 pub mod viewport;

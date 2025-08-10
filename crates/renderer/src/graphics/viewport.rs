@@ -1,10 +1,6 @@
 use crate::{
 	HEIGHT, WIDTH,
-	graphics::{
-		draw::Draw,
-		screen::Screen,
-		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
-	},
+	graphics::{shapes_2d::bounding_area::BoundingArea2D, target::Target},
 };
 
 pub struct Viewport {
@@ -40,33 +36,64 @@ impl Viewport {
 	pub fn set_area(&mut self, area: BoundingArea2D) {
 		self.area = area;
 	}
-	pub fn contains_point(&self, point: AbsoluteScreenCoordinate) -> bool {
-		let area = &self.area;
-		point.x >= area.min_x
-			&& point.x < area.max_x
-			&& point.y >= area.min_y
-			&& point.y < area.max_y
+	pub fn target<'a, T: Target>(&'a mut self, parent: &'a mut T) -> ViewportTarget<'a, T> {
+		ViewportTarget::new(parent, &self.area)
 	}
-	pub fn draw_point(
-		&mut self,
-		screen: &mut super::screen::Screen,
-		point: AbsoluteScreenCoordinate,
-	) {
-		// Don't draw if absolute point is outside of the viewport
-		if !self.contains_point(point) {
-			return;
+}
+
+pub struct ViewportTarget<'a, T: Target> {
+	area: &'a BoundingArea2D,
+	parent_target: &'a mut T,
+}
+impl<'a, T> ViewportTarget<'a, T>
+where
+	T: Target,
+{
+	pub fn new(parent: &'a mut T, area: &'a BoundingArea2D) -> Self {
+		Self {
+			area,
+			parent_target: parent,
 		}
-		screen.draw_point(point);
 	}
-	pub fn point_below_z_buffer(&self, screen: &Screen, p: AbsoluteScreenCoordinate) -> bool {
-		if !self.contains_point(p) {
-			return true;
-		}
-		let (_, _, z) = p.as_tuple();
-		let buffered_z = screen.get_z_in_z_buffer(p);
-		z < buffered_z && f32::abs(z - buffered_z) >= 0.001
+}
+impl<'a, T> Target for ViewportTarget<'a, T>
+where
+	T: Target,
+{
+	type Item = T::Item;
+
+	fn set(&mut self, x: usize, y: usize, value: Self::Item) {
+		self.parent_target.set(x, y, value);
 	}
-	pub fn draw_shape<T: Draw>(&mut self, screen: &mut super::screen::Screen, shape: T) {
-		shape.draw(self, screen);
+
+	fn get(&self, x: usize, y: usize) -> Self::Item {
+		self.parent_target.get(x, y)
+	}
+
+	fn set_depth(&mut self, x: usize, y: usize, value: f32) {
+		self.parent_target.set_depth(x, y, value);
+	}
+
+	fn get_depth(&self, x: usize, y: usize) -> f32 {
+		self.parent_target.get_depth(x, y)
+	}
+
+	fn clear(&mut self, fill: Self::Item) {
+		self.parent_target.clear(fill);
+	}
+
+	fn clear_depth(&mut self) {
+		self.parent_target.clear_depth();
+	}
+
+	fn area(&self) -> BoundingArea2D {
+		self.area.clone()
+	}
+
+	fn draw_colour(&self) -> Self::Item {
+		self.parent_target.draw_colour()
+	}
+	fn set_draw_colour(&mut self, v: Self::Item) {
+		self.parent_target.set_draw_colour(v);
 	}
 }

@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct BoundingArea2D {
 	pub min_x: usize,
 	pub max_x: usize,

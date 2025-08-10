@@ -1,7 +1,7 @@
 use derive_more::{Add, Deref, DerefMut, Sub};
 use maths::vector::vector3::Vector3;
 
-use crate::graphics::{shapes_2d::point::AbsoluteScreenCoordinate, viewport::Viewport};
+use crate::graphics::shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
 
 /// Coordinates between -1 and 1
 #[derive(Deref, DerefMut, Clone, Add, Copy, Sub, Debug)]
@@ -14,12 +14,12 @@ impl Point {
 	pub fn from_vector(v: Vector3<f64>) -> Self {
 		Self(v)
 	}
-	pub fn to_pixel_coordinate(self, viewport: &Viewport) -> AbsoluteScreenCoordinate {
-		let width = viewport.area.width();
-		let height = viewport.area.height();
+	pub fn to_pixel_coordinate(self, target_area: BoundingArea2D) -> AbsoluteScreenCoordinate {
+		let width = target_area.width();
+		let height = target_area.height();
 		let offset = AbsoluteScreenCoordinate::new(
-			viewport.area.min_x + (width / 2),
-			viewport.area.min_y + (height / 2),
+			target_area.min_x + (width / 2),
+			target_area.min_y + (height / 2),
 			0.0,
 		);
 		let x = (offset.x as f64 + self.x * (width as f64) / 2.0).round() as usize;

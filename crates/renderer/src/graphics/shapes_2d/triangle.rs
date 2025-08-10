@@ -1,11 +1,9 @@
 use maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
 
 use crate::graphics::{
-	colour::Colour,
 	draw::Draw,
-	screen::Screen,
 	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
-	viewport::Viewport,
+	target::Target,
 };
 
 pub struct Triangle2D {
@@ -56,21 +54,21 @@ fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<
 	Vector2::new(p.x as i16, p.y as i16)
 }
 fn is_between_0_and_1(x: f32) -> bool {
-	x >= 0.0 && x <= 1.0
+	(0.0..=1.0).contains(&x)
 }
 impl Draw for Triangle2D {
-	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen) {
+	fn draw<T: Target>(&self, target: &mut T) {
 		// println!("1");
 		// Optimisation: If all vertices aren't visible, don't draw
-		if !(viewport.contains_point(self.vertex1)
-			|| viewport.contains_point(self.vertex2)
-			|| viewport.contains_point(self.vertex3))
+		if !(target.contains_point(self.vertex1)
+			|| target.contains_point(self.vertex2)
+			|| target.contains_point(self.vertex3))
 		{
 			return;
 		}
 		// println!("2");
 		// If all vertices are below the current pixels in the Z buffer, also don't draw
-		// Can't do this optimisation as some triangles may still be visible, even with 
+		// Can't do this optimisation as some triangles may still be visible, even with
 		// all vertices below the Z buffer
 		// if viewport.point_below_z_buffer(screen, self.vertex1)
 		// 	&& viewport.point_below_z_buffer(screen, self.vertex2)
@@ -111,13 +109,13 @@ impl Draw for Triangle2D {
 					let p = AbsoluteScreenCoordinate::new(x, y, z);
 					// Point inside triangle, so draw
 					// viewport.draw_point(screen, p);
-					screen.set_draw_colour(Colour::new(
-						(255.0 * l0) as u8,
-						(255.0 * l1) as u8,
-						(255.0 * l2) as u8,
-						0xff,
-					));
-					p.draw(viewport, screen);
+					// target.set_draw_colour(Colour::new(
+					// 	(255.0 * l0) as u8,
+					// 	(255.0 * l1) as u8,
+					// 	(255.0 * l2) as u8,
+					// 	0xff,
+					// ));
+					p.draw(target);
 				}
 			}
 		}

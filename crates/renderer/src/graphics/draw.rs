@@ -1,5 +1,5 @@
-use crate::graphics::{screen::Screen, viewport::Viewport};
+use crate::graphics::target::Target;
 
 pub trait Draw {
-	fn draw(&self, viewport: &mut Viewport, screen: &mut Screen);
+	fn draw<T: Target>(&self, target: &mut T);
 }

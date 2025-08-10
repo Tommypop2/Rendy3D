@@ -18,6 +18,7 @@ use rendy3d::{
 		screen::{Screen, frame_pixels},
 		shaders::vertex::VertexShader,
 		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
+		target::Target,
 		viewport::Viewport,
 	},
 	loaders::stl::load_file,
@@ -28,7 +29,6 @@ use winit::{
 	event::{DeviceEvent, ElementState, Event, MouseButton, RawKeyEvent, WindowEvent},
 	event_loop::EventLoop,
 	keyboard::{KeyCode, PhysicalKey},
-	platform::scancode::PhysicalKeyExtScancode,
 	window::WindowBuilder,
 };
 use winit_input_helper::WinitInputHelper;
@@ -222,7 +222,7 @@ fn main() -> Result<(), Error> {
 			screen.clear(Colour::BLACK);
 			scene.draw(&mut screen);
 			fps_buffer.clear();
-			write!(&mut fps_buffer, "FPS: {:.0}", fps).unwrap();
+			write!(&mut fps_buffer, "FPS: {fps:.0}").unwrap();
 			draw_text(
 				&font,
 				AbsoluteScreenCoordinate::new(20, 20, 0.0),
@@ -267,8 +267,7 @@ impl World {
 					* base_transform.clone();
 
 				render_mesh(
-					&mut camera.viewport,
-					screen,
+					&mut camera.viewport.target(screen),
 					&object.mesh.triangles,
 					transform,
 					camera.projection.clone(),

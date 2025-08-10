@@ -1,4 +1,4 @@
-use std::ops::{Div, Mul, Neg, Sub};
+use std::ops::{Mul, Sub};
 
 use crate::{
 	traits::{num::Num, signed::Signed},

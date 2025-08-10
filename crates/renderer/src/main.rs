@@ -14,8 +14,8 @@ use rendy3d::graphics::shaders::vertex::VertexShader;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
+use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
-use rendy3d::loaders::stl::load_file;
 use rendy3d::{HEIGHT, WIDTH};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
@@ -164,8 +164,7 @@ impl World {
 					) * base_transform.clone();
 
 				render_mesh(
-					&mut camera.viewport,
-					screen,
+					&mut camera.viewport.target(screen),
 					&object.mesh.triangles,
 					transform,
 					camera.projection.clone(),

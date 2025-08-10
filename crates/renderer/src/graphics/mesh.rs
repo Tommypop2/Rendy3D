@@ -1,8 +1,7 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	screen::Screen, shaders::vertex::VertexShader, shapes_3d::triangle::Triangle3D,
-	viewport::Viewport,
+	draw::Draw, shaders::vertex::VertexShader, shapes_3d::triangle::Triangle3D, target::Target,
 };
 
 pub struct Mesh {
@@ -38,9 +37,8 @@ impl Mesh {
 	}
 }
 
-pub fn render_mesh(
-	viewport: &mut Viewport,
-	screen: &mut Screen,
+pub fn render_mesh<T: Target>(
+	target: &mut T,
 	mesh: &[Triangle3D],
 	transform: Matrix4<f64>,
 	perspective: Matrix4<f64>,
@@ -56,7 +54,7 @@ pub fn render_mesh(
 			continue;
 		}
 		// Only apply shader to single vertex (as all normals are the same)
-		screen.set_draw_colour(shader.execute(i, triangle.vertex1, n));
-		viewport.draw_shape(screen, transformed.apply(perspective.clone()))
+		// screen.set_draw_colour(shader.execute(i, triangle.vertex1, n));
+		transformed.apply(perspective.clone()).draw(target);
 	}
 }
