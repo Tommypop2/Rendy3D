@@ -54,6 +54,7 @@ pub static mut TRIANGLE_RENDER_COUNT: usize = 0;
 fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<i16> {
 	Vector2::new(p.x as i16, p.y as i16)
 }
+#[inline]
 fn is_between_0_and_1(x: f32) -> bool {
 	(0.0..=1.0).contains(&x)
 }

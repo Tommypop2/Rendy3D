@@ -1,23 +1,20 @@
-use crate::{
-	HEIGHT, WIDTH,
-	graphics::{shapes_2d::bounding_area::BoundingArea2D, target::Target},
-};
+use crate::graphics::{shapes_2d::bounding_area::BoundingArea2D, target::Target};
 
 pub struct Viewport {
 	pub area: BoundingArea2D,
 }
-impl Default for Viewport {
-	fn default() -> Self {
-		Self {
-			area: BoundingArea2D {
-				min_x: 0,
-				max_x: WIDTH as usize,
-				min_y: 0,
-				max_y: HEIGHT as usize,
-			},
-		}
-	}
-}
+// impl Default for Viewport {
+// 	fn default() -> Self {
+// 		Self {
+// 			area: BoundingArea2D {
+// 				min_x: 0,
+// 				max_x: WIDTH as usize,
+// 				min_y: 0,
+// 				max_y: HEIGHT as usize,
+// 			},
+// 		}
+// 	}
+// }
 #[derive(Debug)]
 pub enum ViewportCreationError {
 	MaxXGreaterThanScreenSize,
@@ -25,12 +22,12 @@ pub enum ViewportCreationError {
 }
 impl Viewport {
 	pub fn new(area: BoundingArea2D) -> Result<Self, ViewportCreationError> {
-		if area.max_x > WIDTH as usize {
-			return Err(ViewportCreationError::MaxXGreaterThanScreenSize);
-		}
-		if area.max_y > HEIGHT as usize {
-			return Err(ViewportCreationError::MaxYGreaterThanScreenSize);
-		}
+		// if area.max_x > WIDTH as usize {
+		// 	return Err(ViewportCreationError::MaxXGreaterThanScreenSize);
+		// }
+		// if area.max_y > HEIGHT as usize {
+		// 	return Err(ViewportCreationError::MaxYGreaterThanScreenSize);
+		// }
 		Ok(Self { area })
 	}
 	pub fn set_area(&mut self, area: BoundingArea2D) {

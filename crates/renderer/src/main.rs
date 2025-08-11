@@ -17,14 +17,14 @@ use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
-use rendy3d::{HEIGHT, WIDTH};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::EventLoop;
 use winit::keyboard::KeyCode;
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
-
+const WIDTH: usize = 1280;
+const HEIGHT: usize = 720;
 struct World {
 	pub cameras: Vec<Camera>,
 	pub objects: Vec<Object>,
@@ -82,7 +82,7 @@ fn main() -> Result<(), Error> {
 	// let pers_mat = Matrix4::unit();
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
 	let res = event_loop.run(|event, elwt| {
-		let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer);
+		let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer, WIDTH as usize, HEIGHT as usize);
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
