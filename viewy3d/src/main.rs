@@ -9,7 +9,6 @@ use argh::FromArgs;
 use hsv::hsv_to_rgb;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::{
-	HEIGHT, WIDTH,
 	graphics::{
 		camera::Camera,
 		colour::Colour,
@@ -33,7 +32,8 @@ use winit::{
 	window::WindowBuilder,
 };
 use winit_input_helper::WinitInputHelper;
-
+const WIDTH: u32 = 1280;
+const HEIGHT: u32 = 720;
 struct World {
 	pub cameras: Vec<Camera>,
 	pub objects: Vec<Object>,
@@ -122,7 +122,7 @@ impl FirstPersonControl {
 fn draw_char(
 	font: &fontdue::Font,
 	offset: AbsoluteScreenCoordinate,
-	frame_buffer: &mut [[Colour; WIDTH as usize]],
+	frame_buffer: &mut [Colour],
 	ch: char,
 	size: f32,
 ) -> fontdue::Metrics {
@@ -132,7 +132,8 @@ fn draw_char(
 	}
 	let rows = bitmap.chunks(metrics.width);
 	for (row_index, row) in rows.into_iter().enumerate() {
-		for (j, pixel) in frame_buffer[row_index + offset.y][(offset.x)..(offset.x + row.len())]
+		let height_offset = (row_index + offset.y) * WIDTH as usize;
+		for (j, pixel) in frame_buffer[(height_offset + offset.x)..(height_offset + offset.x + row.len())]
 			.iter_mut()
 			.enumerate()
 		{
@@ -144,7 +145,7 @@ fn draw_char(
 fn draw_text(
 	font: &fontdue::Font,
 	mut offset: AbsoluteScreenCoordinate,
-	frame_buffer: &mut [[Colour; WIDTH as usize]],
+	frame_buffer: &mut [Colour],
 	text: &str,
 	size: f32,
 ) {
@@ -219,7 +220,7 @@ fn main() -> Result<(), Error> {
 		{
 			let dt = fps_counter.frame_time();
 			let fps = FrameTimeCounter::fps(dt);
-			let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer);
+			let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer, WIDTH as usize, HEIGHT as usize);
 			screen.clear(Colour::BLACK);
 			scene.draw(&mut screen);
 			fps_buffer.clear();

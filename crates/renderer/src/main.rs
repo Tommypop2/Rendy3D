@@ -23,8 +23,8 @@ use winit::event_loop::EventLoop;
 use winit::keyboard::KeyCode;
 use winit::window::WindowBuilder;
 use winit_input_helper::WinitInputHelper;
-const WIDTH: usize = 1280;
-const HEIGHT: usize = 720;
+const WIDTH: u32 = 1280;
+const HEIGHT: u32 = 720;
 struct World {
 	pub cameras: Vec<Camera>,
 	pub objects: Vec<Object>,
