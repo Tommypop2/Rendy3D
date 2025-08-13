@@ -1,6 +1,6 @@
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, screen::Screen, shaders::shaders::Shaders,
-	shapes_2d::point::AbsoluteScreenCoordinate, target::Target, viewport::Viewport,
+	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders,
+	shapes_2d::point::AbsoluteScreenCoordinate, target::Target,
 };
 
 pub struct Line {

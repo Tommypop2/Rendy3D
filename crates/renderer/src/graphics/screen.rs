@@ -25,11 +25,11 @@ impl<'a> Target for Screen<'a> {
 	}
 
 	fn set_depth(&mut self, x: usize, y: usize, value: f32) {
-		self.z_buffer[y * self.width as usize + x] = value
+		self.z_buffer[y * self.width + x] = value
 	}
 
 	fn get_depth(&self, x: usize, y: usize) -> f32 {
-		self.z_buffer[y * self.width as usize + x]
+		self.z_buffer[y * self.width + x]
 	}
 
 	fn clear(&mut self, fill: Self::Item) {

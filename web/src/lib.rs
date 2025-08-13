@@ -1,7 +1,7 @@
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::render_mesh;
 // Derived from softbuffer `winit` example
-use rendy3d::graphics::screen::{Screen, frame_pixels};
+use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shaders::shaders::Shaders;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;

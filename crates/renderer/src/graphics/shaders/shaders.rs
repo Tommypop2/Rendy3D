@@ -1,8 +1,7 @@
 use maths::vector::vector3::Vector3;
 
 use crate::graphics::{
-	interpolate::Interpolate, shapes_2d::point::AbsoluteScreenCoordinate,
-	shapes_3d::point::Point,
+	interpolate::Interpolate, shapes_2d::point::AbsoluteScreenCoordinate, shapes_3d::point::Point,
 };
 
 pub trait Shaders {
