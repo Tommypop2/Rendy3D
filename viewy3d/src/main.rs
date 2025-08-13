@@ -1,7 +1,7 @@
-use std::{fmt::Write, path::PathBuf};
+use std::{fmt::Write, num::NonZeroU32, path::PathBuf, rc::Rc};
 
 use argh::FromArgs;
-use pixels::{Error, Pixels, SurfaceTexture};
+use pixels::Error;
 use rendy3d::{
 	graphics::{
 		camera::Camera,
@@ -9,7 +9,7 @@ use rendy3d::{
 		mesh::Mesh,
 		object::Object,
 		perspective::perspective_matrix,
-		screen::{Screen, frame_pixels},
+		screen::Screen,
 		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 		target::Target,
 		viewport::Viewport,
@@ -22,6 +22,7 @@ use winit::{
 	event::{Event, WindowEvent},
 	event_loop::EventLoop,
 	keyboard::KeyCode,
+	raw_window_handle::{HasDisplayHandle, HasWindowHandle},
 	window::WindowBuilder,
 };
 use winit_input_helper::WinitInputHelper;
@@ -44,11 +45,21 @@ struct Args {
 	#[argh(positional)]
 	file: PathBuf,
 }
+fn pixels_from_surface<D, W>(surface: &mut softbuffer::Surface<D, W>) -> &mut [Colour]
+where
+	D: HasDisplayHandle,
+	W: HasWindowHandle,
+{
+	let mut buffer: softbuffer::Buffer<'_, D, W> = surface.buffer_mut().unwrap();
+	let pixels = &mut *buffer as *mut [u32];
+
+	(unsafe { &mut *(pixels as *mut [Colour]) }) as _
+}
 fn main() -> Result<(), Error> {
 	let args: Args = argh::from_env();
 	let event_loop = EventLoop::new().unwrap();
 	let mut input = WinitInputHelper::new();
-	let window = {
+	let window = Rc::new({
 		let size = LogicalSize::new(WIDTH as f64, HEIGHT as f64);
 		WindowBuilder::new()
 			.with_title("Viewy3D")
@@ -56,13 +67,9 @@ fn main() -> Result<(), Error> {
 			.with_min_inner_size(size)
 			.build(&event_loop)
 			.unwrap()
-	};
-	let mut pixels = {
-		let window_size = window.inner_size();
-		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
-		Pixels::new(WIDTH, HEIGHT, surface_texture)?
-	};
-	pixels.enable_vsync(false);
+	});
+	let context = softbuffer::Context::new(window.clone()).unwrap();
+	let mut surface = softbuffer::Surface::new(&context, window.clone()).unwrap();
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let perspective_matrix = perspective_matrix(1.0, 1.0, -20.0, 1.0);
@@ -76,8 +83,24 @@ fn main() -> Result<(), Error> {
 	let font = fontdue::Font::from_bytes(font, fontdue::FontSettings::default()).unwrap();
 	let mut fps_counter = FrameTimeCounter::new();
 	let mut fps_buffer = String::with_capacity(10);
+
 	let res = event_loop.run(|event, elwt| {
 		control.handle_event(&event, &mut scene.cameras[0]);
+		if let Event::WindowEvent {
+			event: WindowEvent::Resized(size),
+			..
+		} = event
+		{
+			let width = size.width;
+			let height = size.height;
+			unsafe {
+				surface.resize(
+					NonZeroU32::new_unchecked(width),
+					NonZeroU32::new_unchecked(height),
+				)
+			}
+			.unwrap()
+		}
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
@@ -85,12 +108,11 @@ fn main() -> Result<(), Error> {
 		{
 			let dt = fps_counter.frame_time();
 			let fps = FrameTimeCounter::fps(dt);
-			let mut screen = Screen::new(
-				frame_pixels(pixels.frame_mut()),
-				&mut z_buffer,
-				WIDTH as usize,
-				HEIGHT as usize,
-			);
+			let mut buffer = surface.buffer_mut().unwrap();
+			let pixels = &mut *buffer as *mut [u32];
+			let frame_buffer = unsafe { &mut *(pixels as *mut [Colour]) };
+			let mut screen =
+				Screen::new(frame_buffer, &mut z_buffer, WIDTH as usize, HEIGHT as usize);
 			screen.clear(Colour::BLACK);
 			scene.draw(&mut screen);
 			fps_buffer.clear();
@@ -98,12 +120,12 @@ fn main() -> Result<(), Error> {
 			draw_text(
 				&font,
 				AbsoluteScreenCoordinate::new(20, 20, 0.0),
-				frame_pixels(pixels.frame_mut()),
+				frame_buffer,
 				&fps_buffer,
 				25.0,
 				WIDTH as usize,
 			);
-			pixels.render().unwrap();
+			buffer.present().unwrap();
 		}
 
 		if input.update(&event) {

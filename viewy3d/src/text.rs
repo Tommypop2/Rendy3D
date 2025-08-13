@@ -20,7 +20,8 @@ pub fn draw_char(
 			.iter_mut()
 			.enumerate()
 		{
-			*pixel = Colour::new(255, 255, 255, row[j])
+			let v = row[j];
+			*pixel = Colour::new(v, v, v, 255)
 		}
 	}
 	metrics
