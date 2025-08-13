@@ -6,7 +6,7 @@ use crate::graphics::{
 	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders, target::Target,
 };
 
-#[derive(Clone, Add, Copy)]
+#[derive(Clone, Add, Copy, Debug)]
 pub struct AbsoluteScreenCoordinate {
 	pub x: usize,
 	pub y: usize,

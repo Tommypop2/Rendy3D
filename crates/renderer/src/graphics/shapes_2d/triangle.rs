@@ -10,6 +10,7 @@ use crate::graphics::{
 	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 	target::Target,
 };
+#[derive(Debug)]
 pub struct Triangle2D<Vertex = AbsoluteScreenCoordinate> {
 	vertex1: Vertex,
 	vertex2: Vertex,
@@ -51,8 +52,9 @@ impl Triangle2D<AbsoluteScreenCoordinate> {
 	}
 }
 pub static mut TRIANGLE_RENDER_COUNT: usize = 0;
-fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<i16> {
-	Vector2::new(p.x as i16, p.y as i16)
+
+fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<i32> {
+	Vector2::new(p.x as i32, p.y as i32)
 }
 #[inline]
 fn is_between_0_and_1(x: f32) -> bool {
@@ -110,7 +112,7 @@ where
 		// Iterate over all pixels that could possibly contain the triangle
 		for y in bounding_area.min_y..=bounding_area.max_y {
 			for x in bounding_area.min_x..=bounding_area.max_x {
-				let Vector2 { x: l0, y: l1 } = mat * (Vector2::new(x as i16, y as i16) - v0);
+				let Vector2 { x: l0, y: l1 } = mat * (Vector2::new(x as i32, y as i32) - v0);
 				let l0 = l0 as f32 / denom;
 				let l1 = l1 as f32 / denom;
 				let l2 = 1.0 - l0 - l1;

@@ -82,7 +82,12 @@ fn main() -> Result<(), Error> {
 	// let pers_mat = Matrix4::unit();
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
 	let res = event_loop.run(|event, elwt| {
-		let mut screen = Screen::new(frame_pixels(pixels.frame_mut()), &mut z_buffer, WIDTH as usize, HEIGHT as usize);
+		let mut screen = Screen::new(
+			frame_pixels(pixels.frame_mut()),
+			&mut z_buffer,
+			WIDTH as usize,
+			HEIGHT as usize,
+		);
 		if let Event::WindowEvent {
 			event: WindowEvent::RedrawRequested,
 			..
