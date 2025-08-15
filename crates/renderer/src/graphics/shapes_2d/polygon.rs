@@ -20,13 +20,3 @@ impl<'a> Polygon<'a> {
 		triangles
 	}
 }
-
-// impl<'a> Draw for Polygon<'a> {
-// 	fn draw(&self, viewport: &mut Viewport, screen: &mut crate::graphics::screen::Screen) {
-// 		let triangles = self.to_triangles();
-// 		for (i, triangle) in triangles.iter().enumerate() {
-// 			screen.set_draw_colour(Colour::COLOURS[i % Colour::COLOURS.len()].clone());
-// 			triangle.draw(viewport, screen);
-// 		}
-// 	}
-// }
