@@ -56,7 +56,6 @@ pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Pixel = T::Item> + Clo
 		if intensity < 0.0 {
 			continue;
 		}
-		// Only apply shader to single vertex (as all normals are the same)
 		transformed
 			.apply(perspective.clone())
 			.to_triangle_2d(target, shaders, n)

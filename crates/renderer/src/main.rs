@@ -64,11 +64,18 @@ fn main() -> Result<(), Error> {
 	// ))
 	// .unwrap();
 	// let second_camera = Camera::new(viewport2, pers_mat.clone());
-	let object = Mesh::new(vec![Triangle3D::new(
-		Point::new(0.0, 0.0, 0.0),
-		Point::new(0.5, 0.0, 0.0),
-		Point::new(0.1, 0.4, 0.0),
-	)]);
+	let object = Mesh::new(vec![
+		Triangle3D::new(
+			Point::new(0.0, 0.0, 0.0),
+			Point::new(0.5, 0.0, 0.0),
+			Point::new(0.1, 0.4, 0.0),
+		),
+		Triangle3D::new(
+			Point::new(0.1, 0.4, 0.0),
+			Point::new(0.5, 0.0, 0.0),
+			Point::new(0.8, 0.4, 0.0),
+		),
+	]);
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(
