@@ -114,6 +114,7 @@ where
 				let l1 = l1 as f32 / denom;
 				let l2 = 1.0 - l0 - l1;
 
+				// Check if point is inside triangle
 				if is_between_0_and_1(l0) && is_between_0_and_1(l1) && is_between_0_and_1(l2) {
 					// Interpolate Z
 					let z = shape.vertex1.z * l0 + shape.vertex2.z * l1 + shape.vertex3.z * l2;
@@ -128,14 +129,6 @@ where
 					);
 					let colour = shaders.fragment(p, out);
 					target.set_draw_colour(colour);
-					// Point inside triangle, so draw
-					// viewport.draw_point(screen, p);
-					// target.set_draw_colour(Colour::new(
-					// 	(255.0 * l0) as u8,
-					// 	(255.0 * l1) as u8,
-					// 	(255.0 * l2) as u8,
-					// 	0xff,
-					// ));
 					p.draw(target, shaders);
 				}
 			}

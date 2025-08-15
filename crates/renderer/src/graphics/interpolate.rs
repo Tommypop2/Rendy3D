@@ -3,6 +3,18 @@ pub trait Interpolate {
 	fn interpolate3(a: &Self, b: &Self, c: &Self, x: f32, y: f32, z: f32) -> Self;
 }
 
+impl Interpolate for f32 {
+	fn interpolate3(a: &Self, b: &Self, c: &Self, x: f32, y: f32, z: f32) -> Self {
+		a * x + b * y + c * z
+	}
+}
+
+impl Interpolate for () {
+	fn interpolate3(_: &Self, _: &Self, _: &Self, _: f32, _: f32, _: f32) -> Self {
+		()
+	}
+}
+
 impl<T, U> Interpolate for (T, U)
 where
 	T: Interpolate,
