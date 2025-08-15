@@ -2253,7 +2253,7 @@ dependencies = [
  "pixels",
  "rendy3d",
  "softbuffer",
- "winit 0.29.15",
+ "winit 0.30.12",
  "winit_input_helper",
 ]
 

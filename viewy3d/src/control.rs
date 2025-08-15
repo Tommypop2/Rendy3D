@@ -5,7 +5,7 @@ use rendy3d::{
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
 use winit::{
-	event::{DeviceEvent, ElementState, Event, MouseButton, RawKeyEvent, WindowEvent},
+	event::{DeviceEvent, ElementState, MouseButton, RawKeyEvent, WindowEvent},
 	keyboard::{KeyCode, PhysicalKey},
 };
 
@@ -22,7 +22,48 @@ impl FirstPersonControl {
 			keys_pressed: HashMap::new(),
 		}
 	}
-	pub fn handle_event(&mut self, event: &Event<()>, camera: &mut Camera) {
+	pub fn handle_window_event(&mut self, event: &WindowEvent) {
+		if let WindowEvent::MouseInput {
+			device_id: _,
+			state,
+			button: MouseButton::Left,
+		} = event
+		{
+			self.click_pressed = match state {
+				ElementState::Pressed => true,
+				ElementState::Released => false,
+			}
+		}
+	}
+	pub fn handle_device_event(&mut self, event: &DeviceEvent, camera: &mut Camera) {
+		match event {
+			DeviceEvent::MouseMotion { delta } => {
+				if !self.click_pressed {
+					return;
+				}
+				let dx = delta.0 * self.speed;
+				let dy = delta.1 * self.speed;
+				// Ideally, this wouldn't be done here. Instead, it should be done in `step`
+				camera.transformation = camera.transformation.clone()
+					* Matrix4::rotation_y(dy)
+					* Matrix4::rotation_z(dx)
+			}
+			DeviceEvent::Key(RawKeyEvent {
+				physical_key: PhysicalKey::Code(code),
+				state,
+			}) => {
+				self.keys_pressed.insert(
+					*code,
+					match state {
+						ElementState::Pressed => true,
+						ElementState::Released => false,
+					},
+				);
+			}
+			_ => {}
+		}
+	}
+	pub fn step(&mut self, camera: &mut Camera) {
 		for (code, pressed) in self.keys_pressed.iter() {
 			if !*pressed {
 				continue;
@@ -41,52 +82,6 @@ impl FirstPersonControl {
 				}
 			};
 			camera.transformation = camera.transformation.clone() * transform;
-		}
-		if let Event::WindowEvent {
-			window_id: _,
-			event:
-				WindowEvent::MouseInput {
-					device_id: _,
-					state,
-					button: MouseButton::Left,
-				},
-		} = event
-		{
-			self.click_pressed = match state {
-				ElementState::Pressed => true,
-				ElementState::Released => false,
-			}
-		}
-		if let Event::DeviceEvent {
-			event,
-			device_id: _,
-		} = event
-		{
-			match event {
-				DeviceEvent::MouseMotion { delta } => {
-					if !self.click_pressed {
-						return;
-					}
-					let dx = delta.0 * self.speed;
-					let dy = delta.1 * self.speed;
-					camera.transformation = camera.transformation.clone()
-						* Matrix4::rotation_y(dy)
-						* Matrix4::rotation_z(dx)
-				}
-				DeviceEvent::Key(RawKeyEvent {
-					physical_key: PhysicalKey::Code(code),
-					state,
-				}) => {
-					self.keys_pressed.insert(
-						*code,
-						match state {
-							ElementState::Pressed => true,
-							ElementState::Released => false,
-						},
-					);
-				}
-				_ => {}
-			}
 		}
 	}
 }
