@@ -14,6 +14,9 @@ impl Point {
 	pub fn from_vector(v: Vector3<f64>) -> Self {
 		Self(v)
 	}
+	pub fn to_vector(self) -> Vector3<f64> {
+		Vector3::new(self.x, self.y, self.z)
+	}
 	pub fn to_pixel_coordinate(self, target_area: BoundingArea2D) -> AbsoluteScreenCoordinate {
 		let width = target_area.width();
 		let height = target_area.height();

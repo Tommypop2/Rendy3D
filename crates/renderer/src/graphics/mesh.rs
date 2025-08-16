@@ -56,9 +56,9 @@ pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Pixel = T::Item> + Clo
 		if intensity < 0.0 {
 			continue;
 		}
-		transformed
-			.apply(perspective.clone())
-			.to_triangle_2d(target, shaders, n)
-			.draw(target, shaders);
+		// transformed
+		// 	.apply(perspective.clone())
+		// 	.to_triangle_2d(target, shaders, n)
+		// 	.draw(target, shaders);
 	}
 }

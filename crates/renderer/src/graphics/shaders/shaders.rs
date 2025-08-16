@@ -8,7 +8,9 @@ pub trait Shaders {
 	/// Output of vertex shader
 	type VsOut: Interpolate;
 	type Pixel;
-	fn vertex(&self, index: usize, vertex: Point, normal: Vector3<f64>) -> Self::VsOut;
+	type Vertex;
+
+	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut;
 
 	fn fragment(&self, position: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Pixel;
 }

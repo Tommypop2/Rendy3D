@@ -7,16 +7,19 @@ use maths::vector::vector3::Vector3;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
-use rendy3d::graphics::mesh::{Mesh, render_mesh};
+use rendy3d::graphics::draw::Draw;
+use rendy3d::graphics::mesh::render_mesh;
 use rendy3d::graphics::object::Object;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::shaders::Shaders;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
+use rendy3d::graphics::shapes_2d::triangle::Triangle2D;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
+use rendy3d::loaders::obj::{Mesh, TexturedVertex, load_obj};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::EventLoop;
@@ -27,7 +30,7 @@ const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
 struct World {
 	pub cameras: Vec<Camera>,
-	pub objects: Vec<Object>,
+	pub objects: Vec<Mesh>,
 }
 
 fn main() -> Result<(), Error> {
@@ -64,24 +67,22 @@ fn main() -> Result<(), Error> {
 	// ))
 	// .unwrap();
 	// let second_camera = Camera::new(viewport2, pers_mat.clone());
-	let object = Mesh::new(vec![
-		Triangle3D::new(
-			Point::new(0.0, 0.0, 0.0),
-			Point::new(0.5, 0.0, 0.0),
-			Point::new(0.1, 0.4, 0.0),
-		),
-		Triangle3D::new(
-			Point::new(0.1, 0.4, 0.0),
-			Point::new(0.5, 0.0, 0.0),
-			Point::new(0.8, 0.4, 0.0),
-		),
-	]);
+	// let object = Mesh::new(vec![
+	// 	Triangle3D::new(
+	// 		Point::new(0.0, 0.0, 0.0),
+	// 		Point::new(0.5, 0.0, 0.0),
+	// 		Point::new(0.1, 0.4, 0.0),
+	// 	),
+	// 	Triangle3D::new(
+	// 		Point::new(0.1, 0.4, 0.0),
+	// 		Point::new(0.5, 0.0, 0.0),
+	// 		Point::new(0.8, 0.4, 0.0),
+	// 	),
+	// ]);
+	let object = load_obj("./barrel_03_4k.obj").unwrap();
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
-	let mut scene = World::new(
-		vec![main_camera],
-		vec![Object::new(object, Matrix4::identity())],
-	);
+	let mut scene = World::new(vec![main_camera], vec![object]);
 	// let mut scene2 = World::new(vec![second_camera], vec![guinea_pig]);
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
@@ -157,10 +158,10 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 struct Test;
 impl Shaders for Test {
 	type VsOut = Colour;
-
+	type Vertex = TexturedVertex;
 	type Pixel = Colour;
 
-	fn vertex(&self, index: usize, vertex: Point, normal: Vector3<f64>) -> Self::VsOut {
+	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut {
 		let res = index % 3;
 		match res {
 			0 => Colour::RED,
@@ -175,7 +176,7 @@ impl Shaders for Test {
 	}
 }
 impl World {
-	fn new(cameras: Vec<Camera>, objects: Vec<Object>) -> Self {
+	fn new(cameras: Vec<Camera>, objects: Vec<Mesh>) -> Self {
 		Self { objects, cameras }
 	}
 
@@ -196,13 +197,76 @@ impl World {
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
 
-				render_mesh(
-					&mut camera.viewport.target(screen),
-					&object.mesh.triangles,
-					transform,
-					camera.projection.clone(),
-					&mut Test,
-				);
+				// render_mesh(
+				// 	&mut camera.viewport.target(screen),
+				// 	&object.mesh.triangles,
+				// 	transform,
+				// 	camera.projection.clone(),
+				// 	&mut Test,
+				// );
+				let target = &mut camera.viewport.target(screen);
+
+				let shaders = &mut Test;
+
+				let camera_dir = Vector3::new(0.0, 0.0, 1.0);
+				for chunk in object.indices.chunks_exact(3) {
+					let i1 = chunk[0];
+					let i2 = chunk[1];
+					let i3 = chunk[2];
+					let mut v1 = object.vertices[i1 as usize];
+					let mut v2 = object.vertices[i2 as usize];
+					let mut v3 = object.vertices[i3 as usize];
+					let triangle = Triangle3D::new(
+						Point::from_vector(v1.position.map_components(|x| x as f64)),
+						Point::from_vector(v2.position.map_components(|x| x as f64)),
+						Point::from_vector(v3.position.map_components(|x| x as f64)),
+					);
+					// Render triangle
+					let transformed = triangle.clone().apply(transform.clone());
+					let n = transformed.normal().normalized();
+					let intensity = n.dot_with(&camera_dir);
+					// Back-face culling :)
+					if intensity < 0.0 {
+						continue;
+					}
+					let projected = transformed.apply(camera.projection.clone());
+					v1.position = projected.vertex1.to_vector().map_components(|x| x as f32);
+					v2.position = projected.vertex2.to_vector().map_components(|x| x as f32);
+					v3.position = projected.vertex3.to_vector().map_components(|x| x as f32);
+					// Triangle2D::new(vertex1, vertex2, vertex3).draw(target, shaders);
+					Triangle2D::new(
+						(
+							projected.vertex1.to_pixel_coordinate(target.area()),
+							shaders.vertex(0, v1),
+						),
+						(
+							projected.vertex2.to_pixel_coordinate(target.area()),
+							shaders.vertex(1, v2),
+						),
+						(
+							projected.vertex3.to_pixel_coordinate(target.area()),
+							shaders.vertex(2, v3),
+						),
+					)
+					.draw(target, shaders);
+					// transformed
+					// 	.apply(camera.projection.clone())
+					// 	.to_triangle_2d(target, shaders, n)
+					// 	.draw(target, shaders);
+				}
+				// for (i, triangle) in mesh.iter().enumerate() {
+				// 	let transformed = triangle.clone().apply(transform.clone());
+				// 	let n = transformed.normal().normalized();
+				// 	let intensity = n.dot_with(&camera_dir);
+				// 	// Back-face culling :)
+				// 	if intensity < 0.0 {
+				// 		continue;
+				// 	}
+				// 	transformed
+				// 		.apply(camera.projection.clone())
+				// 		.to_triangle_2d(target, shaders, n)
+				// 		.draw(target, shaders);
+				// }
 			}
 		}
 	}

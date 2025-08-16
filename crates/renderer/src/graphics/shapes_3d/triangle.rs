@@ -45,27 +45,27 @@ impl Triangle3D {
 
 		side1.cross_with(&side2)
 	}
-	pub fn to_triangle_2d<T: Target, S: Shaders>(
-		self,
-		target: &T,
-		shaders: &mut S,
-		normal: Vector3<f64>,
-	) -> Triangle2D<(AbsoluteScreenCoordinate, S::VsOut)> {
-		Triangle2D::new(
-			(
-				self.vertex1.to_pixel_coordinate(target.area()),
-				shaders.vertex(0, self.vertex1, normal),
-			),
-			(
-				self.vertex2.to_pixel_coordinate(target.area()),
-				shaders.vertex(1, self.vertex2, normal),
-			),
-			(
-				self.vertex3.to_pixel_coordinate(target.area()),
-				shaders.vertex(2, self.vertex3, normal),
-			),
-		)
-	}
+	// pub fn to_triangle_2d<T: Target, S: Shaders>(
+	// 	self,
+	// 	target: &T,
+	// 	shaders: &mut S,
+	// 	normal: Vector3<f64>,
+	// ) -> Triangle2D<(AbsoluteScreenCoordinate, S::VsOut)> {
+	// 	Triangle2D::new(
+	// 		(
+	// 			self.vertex1.to_pixel_coordinate(target.area()),
+	// 			shaders.vertex(0, self.vertex1),
+	// 		),
+	// 		(
+	// 			self.vertex2.to_pixel_coordinate(target.area()),
+	// 			shaders.vertex(1, self.vertex2),
+	// 		),
+	// 		(
+	// 			self.vertex3.to_pixel_coordinate(target.area()),
+	// 			shaders.vertex(2, self.vertex3),
+	// 		),
+	// 	)
+	// }
 }
 
 // impl<VsOut: Interpolate> Draw<VsOut> for Triangle3D {
