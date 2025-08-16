@@ -18,6 +18,18 @@ impl<T> Vector3<T> {
 	pub fn as_tuple(self) -> (T, T, T) {
 		(self.x, self.y, self.z)
 	}
+	pub fn map_components<U>(self, function: fn(value: T) -> U) -> Vector3<U> {
+		Vector3::new(function(self.x), function(self.y), function(self.z))
+	}
+}
+
+impl<T> From<[T; 3]> for Vector3<T>
+where
+	T: Clone,
+{
+	fn from(value: [T; 3]) -> Self {
+		Self::new(value[0].clone(), value[1].clone(), value[2].clone())
+	}
 }
 impl<T: Signed> Vector3<T> {
 	pub fn cross(a: &Self, b: &Self) -> Self {
