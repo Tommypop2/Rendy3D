@@ -38,7 +38,7 @@ impl Mesh {
 	}
 }
 
-pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Pixel = T::Item> + Clone>(
+pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Fragment = T::Item> + Clone>(
 	target: &mut T,
 	mesh: &[Triangle3D],
 	transform: Matrix4<f64>,

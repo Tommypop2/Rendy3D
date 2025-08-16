@@ -171,7 +171,7 @@ struct Test;
 impl Shaders for Test {
 	type VsOut = Colour;
 
-	type Pixel = Colour;
+	type Fragment = Colour;
 
 	fn vertex(&self, index: usize, vertex: Point, normal: Vector3<f64>) -> Self::VsOut {
 		let res = index % 3;
@@ -183,7 +183,7 @@ impl Shaders for Test {
 		}
 	}
 
-	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Pixel {
+	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		data
 	}
 }

@@ -62,7 +62,7 @@ impl<W> Draw<W> for Triangle<(AbsoluteScreenCoordinate, W)>
 where
 	W: Interpolate,
 {
-	fn draw<T: Target, S: Shaders<VsOut = W, Pixel = T::Item> + Clone>(
+	fn draw<T: Target, S: Shaders<VsOut = W, Fragment = T::Item> + Clone>(
 		&self,
 		target: &mut T,
 		shaders: &mut S,

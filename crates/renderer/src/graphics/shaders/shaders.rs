@@ -3,10 +3,10 @@ use crate::graphics::{interpolate::Interpolate, shapes_2d::point::AbsoluteScreen
 pub trait Shaders {
 	/// Output of vertex shader
 	type VsOut: Interpolate;
-	type Pixel;
+	type Fragment;
 	type Vertex;
 
 	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut;
 
-	fn fragment(&self, position: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Pixel;
+	fn fragment(&self, position: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment;
 }

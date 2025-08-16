@@ -53,7 +53,7 @@ struct CoolShaders {
 	light_direction: Vector3<f64>,
 }
 impl Shaders for CoolShaders {
-	type Pixel = Colour;
+	type Fragment = Colour;
 	type VsOut = Colour;
 	fn vertex(
 		&self,
@@ -65,7 +65,7 @@ impl Shaders for CoolShaders {
 		let val = (255.0 * intensity) as u8;
 		Colour::new(val, val, val, 0xff)
 	}
-	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Pixel {
+	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		let z_normalised = pos.z / (56.241528 * 2.0) + 0.5;
 		let (r, g, b) = hsv_to_rgb((pos.z * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
 		Colour::new(r, g, b, 255)
