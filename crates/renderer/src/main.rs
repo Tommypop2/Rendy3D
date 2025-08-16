@@ -151,24 +151,33 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 	}
 }
 #[derive(Clone)]
-struct Test;
+struct Test {
+	light_direction: Vector3<f64>,
+}
 impl Shaders for Test {
-	type VsOut = Colour;
+	type VsOut = Vector3<f64>;
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 
 	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut {
-		let res = index % 3;
-		match res {
-			0 => Colour::RED,
-			1 => Colour::GREEN,
-			2 => Colour::BLUE,
-			_ => unreachable!(),
-		}
+		// let intensity = vertex.normal.dot_with(&self.light_direction);
+		// let val = (255.0 * intensity) as u8;
+		// Colour::new(val, val, val, 0xff)
+		vertex.normal
+		// let res = index % 3;
+		// match res {
+		// 	0 => Colour::RED,
+		// 	1 => Colour::GREEN,
+		// 	2 => Colour::BLUE,
+		// 	_ => unreachable!(),
+		// }
 	}
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
-		data
+		let intensity = data.dot_with(&self.light_direction);
+		let val = (255.0 * intensity) as u8;
+		Colour::new(val, val, val, 0xff)
+		// data
 	}
 }
 impl World {
@@ -202,7 +211,9 @@ impl World {
 				// );
 				let target = &mut camera.viewport.target(screen);
 
-				let shaders = &mut Test;
+				let shaders = &mut Test {
+					light_direction: Vector3::new(0.0, 0.0, 1.0),
+				};
 
 				let camera_dir = Vector3::new(0.0, 0.0, 1.0);
 				for chunk in object.indices.chunks_exact(3) {
@@ -212,12 +223,12 @@ impl World {
 					let v1 = object.vertices[i1 as usize];
 					let v2 = object.vertices[i2 as usize];
 					let v3 = object.vertices[i3 as usize];
+					let triangle = Triangle::new(v1, v2, v3);
 					// let triangle = Triangle3D::new(
 					// 	Point::from_vector(v1.position.map_components(|x| x as f64)),
 					// 	Point::from_vector(v2.position.map_components(|x| x as f64)),
 					// 	Point::from_vector(v3.position.map_components(|x| x as f64)),
 					// );
-					let triangle = Triangle::new(v1, v2, v3);
 					// Render triangle
 					let transformed = triangle.apply(transform.clone());
 					// let n = transformed.normal().normalized();

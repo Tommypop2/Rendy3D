@@ -1,3 +1,7 @@
+use std::ops::{Add, Mul};
+
+use maths::vector::vector3::Vector3;
+
 /// Represents types that can be interpolated
 pub trait Interpolate {
 	fn interpolate3(a: &Self, b: &Self, c: &Self, x: f32, y: f32, z: f32) -> Self;
@@ -37,6 +41,24 @@ where
 			T::interpolate3(&a.0, &b.0, &c.0, x, y, z),
 			U::interpolate3(&a.1, &b.1, &c.1, x, y, z),
 			V::interpolate3(&a.2, &b.2, &c.2, x, y, z),
+		)
+	}
+}
+
+// Implement for Vector types
+
+impl<T> Interpolate for Vector3<T>
+where
+	T: From<f32> + Mul<T, Output = T> + Add<T, Output = T> + Copy,
+{
+	fn interpolate3(a: &Self, b: &Self, c: &Self, x: f32, y: f32, z: f32) -> Self {
+		let x = x.into();
+		let y = y.into();
+		let z = z.into();
+		Self::new(
+			a.x * x + b.x * y + c.x * z,
+			a.y * x + b.y * y + c.y * z,
+			a.z * x + b.z * y + c.z * z,
 		)
 	}
 }

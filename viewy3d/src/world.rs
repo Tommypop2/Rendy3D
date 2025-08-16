@@ -55,6 +55,7 @@ struct CoolShaders {
 impl Shaders for CoolShaders {
 	type Fragment = Colour;
 	type VsOut = Colour;
+	type Vertex = Point;
 	fn vertex(
 		&self,
 		index: usize,
