@@ -8,15 +8,11 @@ use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::draw::Draw;
-use rendy3d::graphics::mesh::render_mesh;
-use rendy3d::graphics::object::Object;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::shaders::Shaders;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_2d::triangle::Triangle;
-use rendy3d::graphics::shapes_3d::point::Point;
-use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::obj::{Mesh, TexturedVertex, load_obj};
@@ -58,7 +54,7 @@ fn main() -> Result<(), Error> {
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let main_camera = Camera::new(viewport, pers_mat.clone())
-		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 1.0)));
+		.with_transformation(Matrix4::translation(Vector3::new(0.0, 1.0, 1.0)));
 	// let viewport2 = Viewport::new(BoundingArea2D::new(
 	// 	(WIDTH / 2) as usize,
 	// 	WIDTH as usize,
@@ -213,38 +209,45 @@ impl World {
 					let i1 = chunk[0];
 					let i2 = chunk[1];
 					let i3 = chunk[2];
-					let mut v1 = object.vertices[i1 as usize];
-					let mut v2 = object.vertices[i2 as usize];
-					let mut v3 = object.vertices[i3 as usize];
-					let triangle = Triangle3D::new(
-						Point::from_vector(v1.position.map_components(|x| x as f64)),
-						Point::from_vector(v2.position.map_components(|x| x as f64)),
-						Point::from_vector(v3.position.map_components(|x| x as f64)),
-					);
+					let v1 = object.vertices[i1 as usize];
+					let v2 = object.vertices[i2 as usize];
+					let v3 = object.vertices[i3 as usize];
+					// let triangle = Triangle3D::new(
+					// 	Point::from_vector(v1.position.map_components(|x| x as f64)),
+					// 	Point::from_vector(v2.position.map_components(|x| x as f64)),
+					// 	Point::from_vector(v3.position.map_components(|x| x as f64)),
+					// );
+					let triangle = Triangle::new(v1, v2, v3);
 					// Render triangle
-					let transformed = triangle.clone().apply(transform.clone());
-					let n = transformed.normal().normalized();
-					let intensity = n.dot_with(&camera_dir);
+					let transformed = triangle.apply(transform.clone());
+					// let n = transformed.normal().normalized();
+					// let intensity = n.dot_with(&camera_dir);
 					// Back-face culling :)
-					if intensity < 0.0 {
-						continue;
-					}
+					// if intensity < 0.0 {
+					// continue;
+					// }
 					let projected = transformed.apply(camera.projection.clone());
-					v1.position = projected.vertex1.to_vector().map_components(|x| x as f32);
-					v2.position = projected.vertex2.to_vector().map_components(|x| x as f32);
-					v3.position = projected.vertex3.to_vector().map_components(|x| x as f32);
 					// Triangle2D::new(vertex1, vertex2, vertex3).draw(target, shaders);
 					Triangle::new(
 						(
-							projected.vertex1.to_pixel_coordinate(target.area()),
+							projected
+								.vertex1
+								.position
+								.to_pixel_coordinate(target.area()),
 							shaders.vertex(0, v1),
 						),
 						(
-							projected.vertex2.to_pixel_coordinate(target.area()),
+							projected
+								.vertex2
+								.position
+								.to_pixel_coordinate(target.area()),
 							shaders.vertex(1, v2),
 						),
 						(
-							projected.vertex3.to_pixel_coordinate(target.area()),
+							projected
+								.vertex3
+								.position
+								.to_pixel_coordinate(target.area()),
 							shaders.vertex(2, v3),
 						),
 					)

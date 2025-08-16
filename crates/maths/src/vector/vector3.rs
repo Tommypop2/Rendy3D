@@ -23,12 +23,16 @@ impl<T> Vector3<T> {
 	}
 }
 
-impl<T> From<[T; 3]> for Vector3<T>
+impl<T, U> From<[T; 3]> for Vector3<U>
 where
-	T: Clone,
+	T: Clone + Into<U>,
 {
 	fn from(value: [T; 3]) -> Self {
-		Self::new(value[0].clone(), value[1].clone(), value[2].clone())
+		Self::new(
+			value[0].clone().into(),
+			value[1].clone().into(),
+			value[2].clone().into(),
+		)
 	}
 }
 impl<T: Signed> Vector3<T> {

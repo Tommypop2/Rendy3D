@@ -1,8 +1,8 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders,
-	shapes_3d::triangle::Triangle3D, target::Target,
+	interpolate::Interpolate, shaders::shaders::Shaders, shapes_3d::triangle::Triangle3D,
+	target::Target,
 };
 
 pub struct Mesh {

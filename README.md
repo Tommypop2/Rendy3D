@@ -20,3 +20,4 @@ It is being built for learning purposes so performance and features are likely n
 - <https://github.com/ssloy/tinyrenderer/wiki/Lesson-0:-getting-started>
 - <https://lisyarus.github.io/blog/posts/implementing-a-tiny-cpu-rasterizer-part-1.html>
 - <https://www.gabrielgambetta.com/computer-graphics-from-scratch>
+- <https://terathon.com/blog/transforming-normals.html>

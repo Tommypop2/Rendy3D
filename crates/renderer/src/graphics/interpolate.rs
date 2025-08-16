@@ -10,9 +10,7 @@ impl Interpolate for f32 {
 }
 
 impl Interpolate for () {
-	fn interpolate3(_: &Self, _: &Self, _: &Self, _: f32, _: f32, _: f32) -> Self {
-		()
-	}
+	fn interpolate3(_: &Self, _: &Self, _: &Self, _: f32, _: f32, _: f32) -> Self {}
 }
 
 impl<T, U> Interpolate for (T, U)
