@@ -14,7 +14,7 @@ use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::shaders::Shaders;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
-use rendy3d::graphics::shapes_2d::triangle::Triangle2D;
+use rendy3d::graphics::shapes_2d::triangle::Triangle;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::target::Target;
@@ -234,7 +234,7 @@ impl World {
 					v2.position = projected.vertex2.to_vector().map_components(|x| x as f32);
 					v3.position = projected.vertex3.to_vector().map_components(|x| x as f32);
 					// Triangle2D::new(vertex1, vertex2, vertex3).draw(target, shaders);
-					Triangle2D::new(
+					Triangle::new(
 						(
 							projected.vertex1.to_pixel_coordinate(target.area()),
 							shaders.vertex(0, v1),

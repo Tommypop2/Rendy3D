@@ -24,7 +24,7 @@ impl Mesh {
 	}
 	pub fn dimensions(&self) {
 		todo!();
-		let first = self.triangles[0].clone();
+		// let first = self.triangles[0].clone();
 		// let initial = Dimensions {
 		// 	min_x: first
 		// }

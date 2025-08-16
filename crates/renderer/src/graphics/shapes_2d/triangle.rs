@@ -7,13 +7,13 @@ use crate::graphics::{
 	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 	target::Target,
 };
-#[derive(Debug)]
-pub struct Triangle2D<Vertex = AbsoluteScreenCoordinate> {
-	vertex1: Vertex,
-	vertex2: Vertex,
-	vertex3: Vertex,
+#[derive(Debug, Clone)]
+pub struct Triangle<Vertex = AbsoluteScreenCoordinate> {
+	pub vertex1: Vertex,
+	pub vertex2: Vertex,
+	pub vertex3: Vertex,
 }
-impl<Vertex> Triangle2D<Vertex> {
+impl<Vertex> Triangle<Vertex> {
 	pub fn new(vertex1: Vertex, vertex2: Vertex, vertex3: Vertex) -> Self {
 		Self {
 			vertex1,
@@ -22,7 +22,7 @@ impl<Vertex> Triangle2D<Vertex> {
 		}
 	}
 }
-impl Triangle2D<AbsoluteScreenCoordinate> {
+impl Triangle<AbsoluteScreenCoordinate> {
 	pub fn signed_doubled_area(&self) -> i32 {
 		let (x1, y1, _) = self.vertex1.as_tuple();
 		let (x2, y2, _) = self.vertex2.as_tuple();
@@ -58,7 +58,7 @@ fn is_between_0_and_1(x: f32) -> bool {
 	(0.0..=1.0).contains(&x)
 }
 
-impl<W> Draw<W> for Triangle2D<(AbsoluteScreenCoordinate, W)>
+impl<W> Draw<W> for Triangle<(AbsoluteScreenCoordinate, W)>
 where
 	W: Interpolate,
 {
@@ -69,7 +69,7 @@ where
 	) {
 		// println!("1");
 		// Optimisation: If all vertices aren't visible, don't draw
-		let shape = Triangle2D::new(self.vertex1.0, self.vertex2.0, self.vertex3.0);
+		let shape = Triangle::new(self.vertex1.0, self.vertex2.0, self.vertex3.0);
 		if !(target.contains_point(shape.vertex1)
 			|| target.contains_point(shape.vertex2)
 			|| target.contains_point(shape.vertex3))
