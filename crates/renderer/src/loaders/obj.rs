@@ -5,7 +5,10 @@ use std::{
 	path::Path,
 };
 
-use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
+use maths::{
+	matrices::matrix4::Matrix4,
+	vector::{vector2::Vector2, vector3::Vector3},
+};
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 
 use crate::graphics::shapes_3d::point::Point;
@@ -14,7 +17,7 @@ use crate::graphics::shapes_3d::point::Point;
 pub struct TexturedVertex {
 	pub position: Point,
 	pub normal: Vector3<f64>,
-	pub texture: Vector3<f64>,
+	pub texture: Vector2<f64>,
 }
 impl Mul<Matrix4<f64>> for TexturedVertex {
 	type Output = Self;
@@ -35,10 +38,13 @@ impl MulAssign<Matrix4<f64>> for TexturedVertex {
 }
 impl From<TexturedVertex_OBJ> for TexturedVertex {
 	fn from(value: TexturedVertex_OBJ) -> Self {
+		let t = value.texture;
+		// Z value should always be 0!
+		debug_assert_eq!(t[2], 0.0);
 		Self {
 			position: Point::from_vector(value.position.into()),
 			normal: value.normal.into(),
-			texture: value.texture.into(),
+			texture: Vector2::new(t[0] as f64, t[1] as f64),
 		}
 	}
 }
