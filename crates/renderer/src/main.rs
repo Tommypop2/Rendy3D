@@ -3,17 +3,20 @@ use std::time::{Instant, SystemTime};
 use error_iter::ErrorIter as _;
 use log::error;
 use maths::matrices::matrix4::Matrix4;
+use maths::vector::vector2::Vector2;
 use maths::vector::vector3::Vector3;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::draw::Draw;
+use rendy3d::graphics::interpolate::Interpolate;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shaders::shaders::Shaders;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_2d::triangle::Triangle;
 use rendy3d::graphics::target::Target;
+use rendy3d::graphics::texture::Texture;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::obj::{Mesh, TexturedVertex, load_obj};
 use winit::dpi::LogicalSize;
@@ -82,7 +85,10 @@ fn main() -> Result<(), Error> {
 	// let mut scene2 = World::new(vec![second_camera], vec![guinea_pig]);
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
-
+	let mut shaders = Test {
+		light_direction: Vector3::new(0.0, 0.0, 1.0),
+		texture: Texture::from_path("barrel_03_diff_4k.jpg"),
+	};
 	// let pers_mat = Matrix4::unit();
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
 	let res = event_loop.run(|event, elwt| {
@@ -100,7 +106,7 @@ fn main() -> Result<(), Error> {
 			// Clear buffer
 			let start = Instant::now();
 			screen.clear(Colour::BLACK);
-			scene.draw(&mut screen);
+			scene.draw(&mut screen, &mut shaders);
 			// scene2.draw(&mut screen);
 			let time_taken = start.elapsed();
 			frame_num += 1;
@@ -150,12 +156,12 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 		error!("  Caused by: {source}");
 	}
 }
-#[derive(Clone)]
 struct Test {
 	light_direction: Vector3<f64>,
+	texture: Texture,
 }
 impl Shaders for Test {
-	type VsOut = Vector3<f64>;
+	type VsOut = Vector2<f64>;
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 
@@ -163,7 +169,7 @@ impl Shaders for Test {
 		// let intensity = vertex.normal.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
-		vertex.normal
+		vertex.texture
 		// let res = index % 3;
 		// match res {
 		// 	0 => Colour::RED,
@@ -174,9 +180,10 @@ impl Shaders for Test {
 	}
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
-		let intensity = data.dot_with(&self.light_direction);
-		let val = (255.0 * intensity) as u8;
-		Colour::new(val, val, val, 0xff)
+		// let intensity = data.dot_with(&self.light_direction);
+		// let val = (255.0 * intensity) as u8;
+		// Colour::new(val, val, val, 0xff)
+		self.texture.get_pixel(data.x as f32, data.y as f32)
 		// data
 	}
 }
@@ -187,7 +194,11 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw(&mut self, screen: &mut Screen) {
+	fn draw<U: Interpolate, T: Shaders<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>>(
+		&mut self,
+		screen: &mut Screen,
+		shaders: &mut T,
+	) {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
@@ -210,10 +221,6 @@ impl World {
 				// 	&mut Test,
 				// );
 				let target = &mut camera.viewport.target(screen);
-
-				let shaders = &mut Test {
-					light_direction: Vector3::new(0.0, 0.0, 1.0),
-				};
 
 				let camera_dir = Vector3::new(0.0, 0.0, 1.0);
 				for chunk in object.indices.chunks_exact(3) {

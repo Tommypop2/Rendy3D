@@ -4,7 +4,7 @@ use hsv::hsv_to_rgb;
 use rendy3d::{
 	graphics::{
 		camera::Camera, colour::Colour, mesh::render_mesh, object::Object, screen::Screen,
-		shaders::shaders::Shaders, shapes_2d::point::AbsoluteScreenCoordinate,
+		shaders::shaders::Shaders, shapes_2d::point::AbsoluteScreenCoordinate, shapes_3d::point::Point,
 	},
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
