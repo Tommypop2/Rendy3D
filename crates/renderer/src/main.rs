@@ -195,8 +195,7 @@ impl Pipeline for Test {
 			(base_colour.green as f64 * intensity) as u8,
 			(base_colour.blue as f64 * intensity) as u8,
 			(base_colour.alpha as f64 * intensity) as u8,
-		);
-		base_colour
+		)
 		// data
 	}
 }
