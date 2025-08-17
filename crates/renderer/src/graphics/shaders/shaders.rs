@@ -1,6 +1,6 @@
 use crate::graphics::{interpolate::Interpolate, shapes_2d::point::AbsoluteScreenCoordinate};
 
-pub trait Shaders {
+pub trait Pipeline {
 	/// Output of vertex shader
 	type VsOut: Interpolate;
 	type Fragment;

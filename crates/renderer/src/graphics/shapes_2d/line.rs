@@ -1,5 +1,5 @@
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders,
+	draw::Draw, interpolate::Interpolate, shaders::shaders::Pipeline,
 	shapes_2d::point::AbsoluteScreenCoordinate, target::Target,
 };
 
@@ -11,7 +11,7 @@ impl Line {
 	pub fn new(start: AbsoluteScreenCoordinate, end: AbsoluteScreenCoordinate) -> Self {
 		Self { start, end }
 	}
-	fn draw_line_low<T: Target, U: Interpolate, S: Shaders<VsOut = U, Fragment = T::Item>>(
+	fn draw_line_low<T: Target, U: Interpolate, S: Pipeline<VsOut = U, Fragment = T::Item>>(
 		target: &mut T,
 		shaders: &mut S,
 		start: AbsoluteScreenCoordinate,
@@ -35,7 +35,7 @@ impl Line {
 			}
 		}
 	}
-	fn draw_line_high<T: Target, U: Interpolate, S: Shaders<VsOut = U, Fragment = T::Item>>(
+	fn draw_line_high<T: Target, U: Interpolate, S: Pipeline<VsOut = U, Fragment = T::Item>>(
 		target: &mut T,
 		shaders: &mut S,
 		start: AbsoluteScreenCoordinate,
@@ -59,7 +59,7 @@ impl Line {
 			}
 		}
 	}
-	pub fn draw_line<T: Target, U: Interpolate, S: Shaders<VsOut = U, Fragment = T::Item>>(
+	pub fn draw_line<T: Target, U: Interpolate, S: Pipeline<VsOut = U, Fragment = T::Item>>(
 		&self,
 		target: &mut T,
 		shaders: &mut S,
@@ -80,7 +80,7 @@ impl Line {
 	}
 }
 impl<VsOut: Interpolate> Draw<VsOut> for Line {
-	fn draw<T: Target, S: Shaders<VsOut = VsOut, Fragment = T::Item>>(
+	fn draw<T: Target, S: Pipeline<VsOut = VsOut, Fragment = T::Item>>(
 		&self,
 		target: &mut T,
 		shaders: &mut S,

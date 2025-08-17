@@ -1,7 +1,7 @@
-use crate::graphics::{interpolate::Interpolate, shaders::shaders::Shaders, target::Target};
+use crate::graphics::{interpolate::Interpolate, shaders::shaders::Pipeline, target::Target};
 
 pub trait Draw<VsOut: Interpolate> {
-	fn draw<T: Target, S: Shaders<VsOut = VsOut, Fragment = T::Item>>(
+	fn draw<T: Target, S: Pipeline<VsOut = VsOut, Fragment = T::Item>>(
 		&self,
 		target: &mut T,
 		shaders: &mut S,

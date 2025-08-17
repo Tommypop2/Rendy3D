@@ -1,7 +1,7 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders, shapes_2d::triangle::Triangle, shapes_3d::{point::Point, triangle::Triangle3D}, target::Target
+	draw::Draw, interpolate::Interpolate, shaders::shaders::Pipeline, shapes_2d::triangle::Triangle, shapes_3d::{point::Point, triangle::Triangle3D}, target::Target
 };
 
 pub struct Mesh {
@@ -39,7 +39,7 @@ impl Mesh {
 
 pub fn render_mesh<
 	T: Target,
-	S: Shaders<VsOut = T::Item, Fragment = T::Item, Vertex = Point> + Clone,
+	S: Pipeline<VsOut = T::Item, Fragment = T::Item, Vertex = Point> + Clone,
 >(
 	target: &mut T,
 	mesh: &[Triangle3D],

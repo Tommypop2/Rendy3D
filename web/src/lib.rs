@@ -2,7 +2,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::render_mesh;
 // Derived from softbuffer `winit` example
 use rendy3d::graphics::screen::Screen;
-use rendy3d::graphics::shaders::shaders::Shaders;
+use rendy3d::graphics::shaders::shaders::Pipeline;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_3d::point::Point;
@@ -168,7 +168,7 @@ fn main() {
 }
 #[derive(Clone)]
 struct Test;
-impl Shaders for Test {
+impl Pipeline for Test {
 	type VsOut = Colour;
 	type Vertex = Point;
 	type Fragment = Colour;

@@ -11,7 +11,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::draw::Draw;
 use rendy3d::graphics::interpolate::Interpolate;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
-use rendy3d::graphics::shaders::shaders::Shaders;
+use rendy3d::graphics::shaders::shaders::Pipeline;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_2d::triangle::Triangle;
@@ -160,7 +160,7 @@ struct Test {
 	light_direction: Vector3<f64>,
 	texture: Texture,
 }
-impl Shaders for Test {
+impl Pipeline for Test {
 	type VsOut = Vector2<f64>;
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
@@ -194,7 +194,7 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw<U: Interpolate, T: Shaders<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>>(
+	fn draw<U: Interpolate, T: Pipeline<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>>(
 		&mut self,
 		screen: &mut Screen,
 		shaders: &mut T,

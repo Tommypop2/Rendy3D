@@ -3,7 +3,7 @@ use maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
 use crate::graphics::interpolate::Interpolate;
 use crate::graphics::{
 	draw::Draw,
-	shaders::shaders::Shaders,
+	shaders::shaders::Pipeline,
 	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 	target::Target,
 };
@@ -69,7 +69,7 @@ impl<W> Draw<W> for Triangle<(AbsoluteScreenCoordinate, W)>
 where
 	W: Interpolate,
 {
-	fn draw<T: Target, S: Shaders<VsOut = W, Fragment = T::Item>>(
+	fn draw<T: Target, S: Pipeline<VsOut = W, Fragment = T::Item>>(
 		&self,
 		target: &mut T,
 		shaders: &mut S,
