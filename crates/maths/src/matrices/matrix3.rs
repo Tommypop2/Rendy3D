@@ -7,7 +7,7 @@ use derive_more::Mul;
 
 use crate::{
 	matrices::matrix2::Matrix2,
-	traits::float::Float,
+	traits::{float::Float, num::Num},
 	vector::{vector2::Vector2, vector3::Vector3},
 };
 
@@ -193,7 +193,18 @@ where
 		minors
 	}
 }
-
+impl<T> Mul<Vector3<T>> for Matrix3<T>
+where
+	T: Num,
+{
+	type Output = Vector3<T>;
+	fn mul(self, rhs: Vector3<T>) -> Self::Output {
+		let x = self.x.x * rhs.x + self.y.x * rhs.y + self.z.x * rhs.z;
+		let y = self.x.y * rhs.x + self.y.y * rhs.y + self.z.y * rhs.z;
+		let z = self.x.z * rhs.x + self.y.z * rhs.y + self.z.z * rhs.z;
+		Vector3::new(x, y, z)
+	}
+}
 #[cfg(test)]
 mod test {
 	use super::*;

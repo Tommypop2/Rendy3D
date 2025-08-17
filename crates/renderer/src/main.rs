@@ -10,8 +10,8 @@ use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::draw::Draw;
 use rendy3d::graphics::interpolate::Interpolate;
-use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
+use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_2d::triangle::Triangle;
@@ -161,15 +161,17 @@ struct Test {
 	texture: Texture,
 }
 impl Pipeline for Test {
-	type VsOut = Vector2<f64>;
+	type VsOut = (Vector2<f64>, f64);
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 
 	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut {
-		// let intensity = vertex.normal.dot_with(&self.light_direction);
+		let intensity = vertex.normal.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
-		vertex.texture
+
+		// TODO: Don't interpolate texture coordinates linearly
+		(vertex.texture, intensity)
 		// let res = index % 3;
 		// match res {
 		// 	0 => Colour::RED,
@@ -183,7 +185,18 @@ impl Pipeline for Test {
 		// let intensity = data.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
-		self.texture.get_pixel(data.x as f32, data.y as f32)
+		let texture_coordinates = data.0;
+		let base_colour = self
+			.texture
+			.get_pixel(texture_coordinates.x as f32, texture_coordinates.y as f32);
+		let intensity = data.1;
+		Colour::new(
+			(base_colour.red as f64 * intensity) as u8,
+			(base_colour.green as f64 * intensity) as u8,
+			(base_colour.blue as f64 * intensity) as u8,
+			(base_colour.alpha as f64 * intensity) as u8,
+		);
+		base_colour
 		// data
 	}
 }
@@ -205,6 +218,7 @@ impl World {
 		let base_transform = Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64());
+		// * Matrix4::scale(3.0);
 		// let base_transform = Matrix4::identity();
 		for object in &self.objects {
 			for camera in &mut self.cameras {
@@ -243,7 +257,7 @@ impl World {
 					// if intensity < 0.0 {
 					// continue;
 					// }
-					let projected = transformed.apply(camera.projection.clone());
+					let projected = transformed.clone().apply(camera.projection.clone());
 					// Triangle2D::new(vertex1, vertex2, vertex3).draw(target, shaders);
 					Triangle::new(
 						(
@@ -251,21 +265,21 @@ impl World {
 								.vertex1
 								.position
 								.to_pixel_coordinate(target.area()),
-							shaders.vertex(0, v1),
+							shaders.vertex(0, transformed.vertex1),
 						),
 						(
 							projected
 								.vertex2
 								.position
 								.to_pixel_coordinate(target.area()),
-							shaders.vertex(1, v2),
+							shaders.vertex(1, transformed.vertex2),
 						),
 						(
 							projected
 								.vertex3
 								.position
 								.to_pixel_coordinate(target.area()),
-							shaders.vertex(2, v3),
+							shaders.vertex(2, transformed.vertex3),
 						),
 					)
 					.draw(target, shaders);
