@@ -1,7 +1,7 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, shaders::shaders::Pipeline, shapes_2d::triangle::Triangle, shapes_3d::{point::Point, triangle::Triangle3D}, target::Target
+	draw::Draw, interpolate::Interpolate, pipeline::pipeline::Pipeline, shapes_2d::triangle::Triangle, shapes_3d::{point::Point, triangle::Triangle3D}, target::Target
 };
 
 pub struct Mesh {

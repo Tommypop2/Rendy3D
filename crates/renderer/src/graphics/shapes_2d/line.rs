@@ -1,5 +1,5 @@
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, shaders::shaders::Pipeline,
+	draw::Draw, interpolate::Interpolate, pipeline::pipeline::Pipeline,
 	shapes_2d::point::AbsoluteScreenCoordinate, target::Target,
 };
 

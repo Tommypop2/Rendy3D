@@ -3,7 +3,7 @@ use std::fmt::Display;
 use derive_more::Add;
 
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, shaders::shaders::Pipeline, target::Target,
+	draw::Draw, interpolate::Interpolate, pipeline::pipeline::Pipeline, target::Target,
 };
 
 #[derive(Clone, Add, Copy, Debug)]

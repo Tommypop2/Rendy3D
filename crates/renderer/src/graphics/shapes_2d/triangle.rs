@@ -3,7 +3,7 @@ use maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
 use crate::graphics::interpolate::Interpolate;
 use crate::graphics::{
 	draw::Draw,
-	shaders::shaders::Pipeline,
+	pipeline::pipeline::Pipeline,
 	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 	target::Target,
 };
