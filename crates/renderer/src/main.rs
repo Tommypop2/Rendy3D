@@ -57,7 +57,7 @@ fn main() -> Result<(), Error> {
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let main_camera = Camera::new(viewport, pers_mat.clone())
-		.with_transformation(Matrix4::translation(Vector3::new(0.0, 1.0, 1.0)));
+		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 1.0)));
 	// let viewport2 = Viewport::new(BoundingArea2D::new(
 	// 	(WIDTH / 2) as usize,
 	// 	WIDTH as usize,
@@ -202,10 +202,10 @@ impl World {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
-		// let base_transform = Matrix4::rotation_z(x.as_secs_f64())
-		// 	* Matrix4::rotation_y(x.as_secs_f64())
-		// 	* Matrix4::rotation_x(x.as_secs_f64());
-		let base_transform = Matrix4::identity();
+		let base_transform = Matrix4::rotation_z(x.as_secs_f64())
+			* Matrix4::rotation_y(x.as_secs_f64())
+			* Matrix4::rotation_x(x.as_secs_f64());
+		// let base_transform = Matrix4::identity();
 		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.view()
@@ -222,7 +222,6 @@ impl World {
 				// );
 				let target = &mut camera.viewport.target(screen);
 
-				let camera_dir = Vector3::new(0.0, 0.0, 1.0);
 				for chunk in object.indices.chunks_exact(3) {
 					let i1 = chunk[0];
 					let i2 = chunk[1];

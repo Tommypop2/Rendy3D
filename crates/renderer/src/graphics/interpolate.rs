@@ -12,7 +12,11 @@ impl Interpolate for f32 {
 		a * x + b * y + c * z
 	}
 }
-
+impl Interpolate for f64 {
+	fn interpolate3(a: &Self, b: &Self, c: &Self, x: f32, y: f32, z: f32) -> Self {
+		a * x as f64 + b * y as f64 + c * z as f64
+	}
+}
 impl Interpolate for () {
 	fn interpolate3(_: &Self, _: &Self, _: &Self, _: f32, _: f32, _: f32) -> Self {}
 }
