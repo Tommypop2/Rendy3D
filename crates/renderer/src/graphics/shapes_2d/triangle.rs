@@ -21,6 +21,13 @@ impl<Vertex> Triangle<Vertex> {
 			vertex3,
 		}
 	}
+	pub fn map_vertices<T, U: Fn(Vertex) -> T>(self, map_fn: U) -> Triangle<T> {
+		Triangle::new(
+			map_fn(self.vertex1),
+			map_fn(self.vertex2),
+			map_fn(self.vertex3),
+		)
+	}
 }
 impl Triangle<AbsoluteScreenCoordinate> {
 	pub fn signed_doubled_area(&self) -> i32 {

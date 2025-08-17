@@ -1,8 +1,7 @@
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{
-	interpolate::Interpolate, shaders::shaders::Shaders, shapes_3d::triangle::Triangle3D,
-	target::Target,
+	draw::Draw, interpolate::Interpolate, shaders::shaders::Shaders, shapes_2d::triangle::Triangle, shapes_3d::{point::Point, triangle::Triangle3D}, target::Target
 };
 
 pub struct Mesh {
@@ -38,7 +37,10 @@ impl Mesh {
 	}
 }
 
-pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Fragment = T::Item> + Clone>(
+pub fn render_mesh<
+	T: Target,
+	S: Shaders<VsOut = T::Item, Fragment = T::Item, Vertex = Point> + Clone,
+>(
 	target: &mut T,
 	mesh: &[Triangle3D],
 	transform: Matrix4<f64>,
@@ -56,6 +58,10 @@ pub fn render_mesh<T: Target, S: Shaders<VsOut = T::Item, Fragment = T::Item> + 
 		if intensity < 0.0 {
 			continue;
 		}
+		let projected = transformed.clone().apply(perspective.clone());
+		let shaded = projected
+			.map_vertices(|p| (p.to_pixel_coordinate(target.area()), shaders.vertex(i, p)));
+		shaded.draw(target, shaders);
 		// transformed
 		// 	.apply(perspective.clone())
 		// 	.to_triangle_2d(target, shaders, n)

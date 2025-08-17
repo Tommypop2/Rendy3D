@@ -170,10 +170,10 @@ fn main() {
 struct Test;
 impl Shaders for Test {
 	type VsOut = Colour;
-
+	type Vertex = Point;
 	type Fragment = Colour;
 
-	fn vertex(&self, index: usize, vertex: Point, normal: Vector3<f64>) -> Self::VsOut {
+	fn vertex(&self, index: usize, vertex: Point) -> Self::VsOut {
 		let res = index % 3;
 		match res {
 			0 => Colour::RED,

@@ -4,7 +4,8 @@ use hsv::hsv_to_rgb;
 use rendy3d::{
 	graphics::{
 		camera::Camera, colour::Colour, mesh::render_mesh, object::Object, screen::Screen,
-		shaders::shaders::Shaders, shapes_2d::point::AbsoluteScreenCoordinate, shapes_3d::point::Point,
+		shaders::shaders::Shaders, shapes_2d::point::AbsoluteScreenCoordinate,
+		shapes_3d::point::Point,
 	},
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
@@ -56,19 +57,15 @@ impl Shaders for CoolShaders {
 	type Fragment = Colour;
 	type VsOut = Colour;
 	type Vertex = Point;
-	fn vertex(
-		&self,
-		index: usize,
-		vertex: rendy3d::graphics::shapes_3d::point::Point,
-		normal: Vector3<f64>,
-	) -> Self::VsOut {
-		let intensity = normal.dot_with(&self.light_direction);
-		let val = (255.0 * intensity) as u8;
-		Colour::new(val, val, val, 0xff)
+	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut {
+		// let intensity = normal.dot_with(&self.light_direction);
+		// let val = (255.0 * intensity) as u8;
+		// Colour::new(val, val, val, 0xff)
+		Colour::WHITE
 	}
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
-		let z_normalised = pos.z / (56.241528 * 2.0) + 0.5;
 		let (r, g, b) = hsv_to_rgb((pos.z * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
 		Colour::new(r, g, b, 255)
+		// data
 	}
 }
