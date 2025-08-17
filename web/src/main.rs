@@ -1,8 +1,8 @@
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::render_mesh;
 // Derived from softbuffer `winit` example
-use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
+use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_3d::point::Point;
@@ -185,6 +185,9 @@ impl Pipeline for Test {
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		data
+	}
+	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
+		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullClockwise
 	}
 }
 pub(crate) fn entry(event_loop: EventLoop<()>) {

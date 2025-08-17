@@ -2,8 +2,8 @@
 name = "web"
 version = "0.1.0"
 edition = "2024"
-[lib]
-crate-type = ["cdylib", "rlib"]
+# [lib]
+# crate-type = ["cdylib", "rlib"]
 [dependencies]
 softbuffer = "0.4.6"
 winit = "0.30.12"

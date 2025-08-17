@@ -1,6 +1,7 @@
 use maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
 
 use crate::graphics::interpolate::Interpolate;
+use crate::graphics::pipeline::back_face_culling::BackFaceCulling;
 use crate::graphics::{
 	draw::Draw,
 	pipeline::pipeline::Pipeline,
@@ -105,7 +106,11 @@ where
 		// Now need to fill in the triangle
 		let bounding_area = shape.bounding_area();
 		let abc = shape.signed_doubled_area();
-		if abc == 0 {
+		if match S::backface_culling() {
+			BackFaceCulling::CullClockwise => abc >= 0,
+			BackFaceCulling::CullAnticlockwise => abc <= 0,
+			BackFaceCulling::None => abc == 0,
+		} {
 			return;
 		}
 		let v0 = absolute_screen_coordinate_to_2d_vec(shape.vertex1);

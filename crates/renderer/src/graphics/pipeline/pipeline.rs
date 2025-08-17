@@ -1,4 +1,7 @@
-use crate::graphics::{interpolate::Interpolate, shapes_2d::point::AbsoluteScreenCoordinate};
+use crate::graphics::{
+	interpolate::Interpolate, pipeline::back_face_culling::BackFaceCulling,
+	shapes_2d::point::AbsoluteScreenCoordinate,
+};
 
 pub trait Pipeline {
 	/// Output of vertex shader
@@ -6,7 +9,14 @@ pub trait Pipeline {
 	type Fragment;
 	type Vertex;
 
+	/// Vertex shader
 	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut;
 
+	/// Fragment shader
 	fn fragment(&self, position: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment;
+
+	/// How triangles should be culled
+	fn backface_culling() -> BackFaceCulling {
+		BackFaceCulling::None
+	}
 }
