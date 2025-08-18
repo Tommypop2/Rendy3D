@@ -13,6 +13,10 @@ It is being built for learning purposes so performance and features are likely n
 - [ ] Compile as WASM and allow running in the browser
 - [ ] Support Texturing
 
+## Future Ideas
+
+Implement some sort of `Query` system in the shader, where the vertex shader input can be anything that can be derived from the input model. This would reduce the amount of data stored in most cases so cache performance would (maybe) be improved
+
 ## Useful Resources
 
 - <https://trenki2.github.io/blog/2017/06/06/developing-a-software-renderer-part1/>
