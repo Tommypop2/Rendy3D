@@ -25,3 +25,4 @@ Implement some sort of `Query` system in the shader, where the vertex shader inp
 - <https://lisyarus.github.io/blog/posts/implementing-a-tiny-cpu-rasterizer-part-1.html>
 - <https://www.gabrielgambetta.com/computer-graphics-from-scratch>
 - <https://terathon.com/blog/transforming-normals.html>
+- <https://andrewkchan.dev/posts/perspective-interpolation.html>

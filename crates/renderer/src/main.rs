@@ -78,7 +78,7 @@ fn main() -> Result<(), Error> {
 	// 		Point::new(0.8, 0.4, 0.0),
 	// 	),
 	// ]);
-	let object = load_obj("./barrel_03_4k.obj").unwrap();
+	let object = load_obj("./obj-tests/barrel_03_4k.obj").unwrap();
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(vec![main_camera], vec![object]);
@@ -87,7 +87,7 @@ fn main() -> Result<(), Error> {
 	let mut sum: u128 = 0;
 	let mut shaders = Test {
 		light_direction: Vector3::new(0.0, 0.0, 1.0),
-		texture: Texture::from_path("barrel_03_diff_4k.jpg"),
+		texture: Texture::from_path("obj-tests/barrel_03_diff_4k.jpg"),
 	};
 	// let pers_mat = Matrix4::unit();
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
