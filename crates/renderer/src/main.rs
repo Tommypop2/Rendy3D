@@ -171,6 +171,9 @@ impl Pipeline for Test {
 		// Colour::new(val, val, val, 0xff)
 
 		// TODO: Don't interpolate texture coordinates linearly
+		// println!("Vertex z: {z}");
+		// let z = vertex.position.z;
+		// let z_reciprocal = 1.0 / z;
 		(vertex.texture, intensity)
 		// let res = index % 3;
 		// match res {
@@ -185,6 +188,9 @@ impl Pipeline for Test {
 		// let intensity = data.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
+		// let z_reciprocal = data.2;
+		// let z = 1.0 / z_reciprocal;
+		// println!("Interpolated z: {z}");
 		let texture_coordinates = data.0;
 		let base_colour = self
 			.texture
@@ -196,7 +202,16 @@ impl Pipeline for Test {
 			(base_colour.blue as f64 * intensity) as u8,
 			(base_colour.alpha as f64 * intensity) as u8,
 		)
+		// let (r, g, b) = hsv_to_rgb(
+		// 	((z + 1.0) * 360.0).clamp(0.0, 360.0) as f64 * 0.75,
+		// 	1.0,
+		// 	1.0,
+		// );
+		// Colour::new(r, g, b, 255)
 		// data
+	}
+	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
+		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullClockwise
 	}
 }
 impl World {
