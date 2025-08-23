@@ -19,7 +19,9 @@ impl Texture {
 		let (width, height) = self.base.dimensions();
 		let x = (width as f32 * u) as u32;
 		let y = (height as f32 * v) as u32;
-		self.base.get_pixel(x % width, y % height).into()
+		self.base
+			.get_pixel(x % width, height - 1 - (y % height))
+			.into()
 	}
 }
 impl From<Rgba<u8>> for Colour {
