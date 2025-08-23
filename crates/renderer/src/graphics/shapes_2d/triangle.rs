@@ -129,15 +129,15 @@ where
 				// Check if point is inside triangle
 				if is_between_0_and_1(l0) && is_between_0_and_1(l1) && is_between_0_and_1(l2) {
 					// Interpolate Z
-					let z = shape.vertex1.z * l0 + shape.vertex2.z * l1 + shape.vertex3.z * l2;
+					let z = shape.vertex1.z * l2 + shape.vertex2.z * l0 + shape.vertex3.z * l1;
 					let p = AbsoluteScreenCoordinate::new(x, y, z);
 					let out = S::VsOut::interpolate3(
 						&self.vertex1.1,
 						&self.vertex2.1,
 						&self.vertex3.1,
+						l2,
 						l0,
 						l1,
-						l2,
 					);
 					let colour = shaders.fragment(p, out);
 					target.set_draw_colour(colour);
