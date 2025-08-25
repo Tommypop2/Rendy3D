@@ -1,12 +1,16 @@
+use hsv::hsv_to_rgb;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::render_mesh;
+use rendy3d::graphics::perspective::perspective_matrix;
 // Derived from softbuffer `winit` example
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
 use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
+use rendy3d::graphics::shapes_2d::triangle::Triangle;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
+use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector3::Vector3;
@@ -14,6 +18,7 @@ use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::num::NonZeroU32;
 use std::rc::Rc;
+use std::time::SystemTime;
 use winit::event::{Event, KeyEvent, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::keyboard::{Key, NamedKey};
@@ -176,20 +181,19 @@ impl Pipeline for Test {
 	type Fragment = Colour;
 
 	fn vertex(&self, index: usize, vertex: Point) -> Self::VsOut {
-		let res = index % 3;
-		match res {
-			0 => Colour::RED,
-			1 => Colour::GREEN,
-			2 => Colour::BLUE,
-			_ => unreachable!(),
-		}
+		Colour::BLACK
 	}
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
-		data
-	}
+		let (r, g, b) = hsv_to_rgb(
+			((pos.z - 1.7)/0.6 * 360.0).clamp(0.0, 360.0) as f64,
+			1.0,
+			1.0,
+		);
+		Colour::new(r, g, b, 255)
+	} 
 	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
-		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullClockwise
+		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullAnticlockwise
 	}
 }
 pub fn entry(event_loop: EventLoop<()>) {
@@ -246,6 +250,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 						width.get() as usize,
 						height.get() as usize,
 					);
+					screen.clear(Colour::BLACK);
 					let mut viewport = Viewport::new(BoundingArea2D::new(
 						0,
 						width.get() as usize,
@@ -254,20 +259,50 @@ pub fn entry(event_loop: EventLoop<()>) {
 					))
 					.unwrap();
 					let mut target = viewport.target(&mut screen);
+					let a = Point::new(1.0, 1.0, 1.0);
+					let b = Point::new(-1.0, 1.0, 1.0);
+					let c = Point::new(1.0, -1.0, 1.0);
+					let d = Point::new(1.0, -1.0, -1.0);
+					let e = Point::new(-1.0, -1.0, 1.0);
+					let f = Point::new(-1.0, -1.0, -1.0);
+					let g = Point::new(-1.0, 1.0, -1.0);
+					let h = Point::new(1.0, 1.0, -1.0);
 					render_mesh(
 						&mut target,
-						&[Triangle3D::new(
-							Point::new(0.0, 0.0, 0.2),
-							Point::new(1.0, -0.4, 0.5),
-							Point::new(0.2, 0.3, -0.3),
-						)],
-						Matrix4::identity(),
-						Matrix4::identity(),
+						&[
+							Triangle::new(a, b, c),
+							Triangle::new(c, b, e),
+							Triangle::new(a, h, g),
+							Triangle::new(b, a, g),
+							Triangle::new(f, b, g),
+							Triangle::new(e, b, f),
+							Triangle::new(a, c, d),
+							Triangle::new(h, a, d),
+							Triangle::new(c, e, d),
+							Triangle::new(e, f, d),
+							Triangle::new(g, h, d),
+							Triangle::new(f, g, d),
+						],
+						{
+							// let x: std::time::Duration = SystemTime::now()
+							// 	.duration_since(SystemTime::UNIX_EPOCH)
+							// 	.unwrap();
+							let x = 1.0;
+							let base_transform = Matrix4::scale_x(
+						height.get() as f64 / width.get() as f64,
+					) * Matrix4::translation(Vector3::new(0.0, 0.0, 2.0))
+								* Matrix4::rotation_z(x)
+								* Matrix4::rotation_y(x)
+								* Matrix4::rotation_x(x)
+								* Matrix4::scale(0.3);
+							base_transform
+						},
+						perspective_matrix(1.0, 1.0, -20.0, 1.0),
 						&mut Test {},
 					);
 					buffer.present().unwrap();
 					window.request_redraw();
-				}
+				};
 			}
 			Event::WindowEvent {
 				event:

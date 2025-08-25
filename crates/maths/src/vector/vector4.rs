@@ -10,7 +10,7 @@ pub struct Vector4<T> {
 }
 
 impl<T> Vector4<T> {
-	pub fn new(x: T, y: T, z: T, w: T) -> Self {
+	pub const fn new(x: T, y: T, z: T, w: T) -> Self {
 		Self { x, y, z, w }
 	}
 }

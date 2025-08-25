@@ -8,7 +8,7 @@ use crate::graphics::shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteS
 pub struct Point(Vector3<f64>);
 
 impl Point {
-	pub fn new(x: f64, y: f64, z: f64) -> Self {
+	pub const fn new(x: f64, y: f64, z: f64) -> Self {
 		Self(Vector3::new(x, y, z))
 	}
 	pub fn from_vector(v: Vector3<f64>) -> Self {
