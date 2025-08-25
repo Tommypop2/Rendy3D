@@ -209,7 +209,6 @@ impl Pipeline for Test {
 			1.0,
 		);
 		Colour::new(r, g, b, 255)
-		// data
 	}
 	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
 		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullClockwise
@@ -233,22 +232,12 @@ impl World {
 		let base_transform = Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64());
-		// * Matrix4::scale(3.0);
-		// let base_transform = Matrix4::identity();
 		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.view()
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
-
-				// render_mesh(
-				// 	&mut camera.viewport.target(screen),
-				// 	&object.mesh.triangles,
-				// 	transform,
-				// 	camera.projection.clone(),
-				// 	&mut Test,
-				// );
 				let target = &mut camera.viewport.target(screen);
 
 				for chunk in object.indices.chunks_exact(3) {
@@ -259,21 +248,8 @@ impl World {
 					let v2 = object.vertices[i2 as usize];
 					let v3 = object.vertices[i3 as usize];
 					let triangle = Triangle::new(v1, v2, v3);
-					// let triangle = Triangle3D::new(
-					// 	Point::from_vector(v1.position.map_components(|x| x as f64)),
-					// 	Point::from_vector(v2.position.map_components(|x| x as f64)),
-					// 	Point::from_vector(v3.position.map_components(|x| x as f64)),
-					// );
-					// Render triangle
 					let transformed = triangle.apply(transform.clone());
-					// let n = transformed.normal().normalized();
-					// let intensity = n.dot_with(&camera_dir);
-					// Back-face culling :)
-					// if intensity < 0.0 {
-					// continue;
-					// }
 					let projected = transformed.clone().apply(camera.projection.clone());
-					// Triangle2D::new(vertex1, vertex2, vertex3).draw(target, shaders);
 					Triangle::new(
 						(
 							projected
@@ -298,24 +274,7 @@ impl World {
 						),
 					)
 					.draw(target, shaders);
-					// transformed
-					// 	.apply(camera.projection.clone())
-					// 	.to_triangle_2d(target, shaders, n)
-					// 	.draw(target, shaders);
 				}
-				// for (i, triangle) in mesh.iter().enumerate() {
-				// 	let transformed = triangle.clone().apply(transform.clone());
-				// 	let n = transformed.normal().normalized();
-				// 	let intensity = n.dot_with(&camera_dir);
-				// 	// Back-face culling :)
-				// 	if intensity < 0.0 {
-				// 		continue;
-				// 	}
-				// 	transformed
-				// 		.apply(camera.projection.clone())
-				// 		.to_triangle_2d(target, shaders, n)
-				// 		.draw(target, shaders);
-				// }
 			}
 		}
 	}
