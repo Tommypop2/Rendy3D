@@ -10,6 +10,7 @@ use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector3::Vector3;
+use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::num::NonZeroU32;
 use std::rc::Rc;
@@ -30,7 +31,10 @@ pub(crate) fn run_app(event_loop: EventLoop<()>, mut app: impl ApplicationHandle
 	#[cfg(any(target_arch = "wasm32", target_arch = "wasm64"))]
 	winit::platform::web::EventLoopExtWebSys::spawn_app(event_loop, app);
 }
-
+#[cfg(target_arch = "wasm32")]
+thread_local! {
+	static WINDOW: RefCell<Option<HtmlCanvasElement>> = RefCell::new(None);
+}
 /// Create a window from a set of window attributes.
 #[allow(dead_code)]
 pub(crate) fn make_window(
@@ -39,7 +43,8 @@ pub(crate) fn make_window(
 ) -> Rc<Window> {
 	let attributes = f(WindowAttributes::default());
 	#[cfg(target_arch = "wasm32")]
-	let attributes = winit::platform::web::WindowAttributesExtWebSys::with_append(attributes, true);
+	let attributes =
+		winit::platform::web::WindowAttributesExtWebSys::with_canvas(attributes, WINDOW.take());
 	let window = elwt.create_window(attributes);
 	Rc::new(window.unwrap())
 }
@@ -284,4 +289,19 @@ pub fn entry(event_loop: EventLoop<()>) {
 	});
 
 	run_app(event_loop, app);
+}
+
+pub fn start() {
+	use winit::event_loop::EventLoop;
+
+	entry(EventLoop::new().unwrap())
+}
+#[cfg(target_arch = "wasm32")]
+use web_sys::HtmlCanvasElement;
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen::prelude::wasm_bindgen]
+pub fn start_web(window: Option<HtmlCanvasElement>) {
+	// Set window to window given
+	WINDOW.replace(window);
+	start();
 }

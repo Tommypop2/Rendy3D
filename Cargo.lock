@@ -3173,6 +3173,8 @@ version = "0.1.0"
 dependencies = [
  "rendy3d",
  "softbuffer",
+ "wasm-bindgen",
+ "web-sys",
  "winit 0.30.12",
 ]
 
