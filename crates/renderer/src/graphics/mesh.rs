@@ -49,15 +49,8 @@ pub fn render_mesh<
 ) where
 	<T as Target>::Item: Interpolate,
 {
-	let camera_dir = Vector3::new(0.0, 0.0, 1.0);
 	for (i, triangle) in mesh.iter().enumerate() {
 		let transformed = triangle.clone().apply(transform.clone());
-		let n = transformed.normal().normalized();
-		let intensity = n.dot_with(&camera_dir);
-		// Back-face culling :)
-		if intensity < 0.0 {
-			continue;
-		}
 		let projected = transformed.clone().apply(perspective.clone());
 		let shaded = projected
 			.map_vertices(|p| (p.to_pixel_coordinate(target.area()), shaders.vertex(i, p)));
