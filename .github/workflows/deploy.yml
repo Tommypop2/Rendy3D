@@ -53,7 +53,7 @@ jobs:
         with:
           node-version: 22
           cache: "pnpm"
-          cache-dependency-path: "./web/pnpm-lock.yaml"
+          cache-dependency-path: "./website/pnpm-lock.yaml"
       - name: Install dependencies
         run: cd web && pnpm install
       - name: Generate WASM
@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: "./web/dist"
+          path: "./website/dist"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
