@@ -55,11 +55,11 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: "./website/pnpm-lock.yaml"
       - name: Install dependencies
-        run: cd web && pnpm install
+        run: cd website && pnpm install
       - name: Generate WASM
-        run: cd web && pnpm build-wasm
+        run: cd website && pnpm build-wasm
       - name: Build site
-        run: cd web && pnpm build
+        run: cd website && pnpm build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
