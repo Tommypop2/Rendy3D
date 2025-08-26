@@ -19,6 +19,7 @@ use std::marker::PhantomData;
 use std::num::NonZeroU32;
 use std::rc::Rc;
 use std::time::SystemTime;
+use web_sys::Performance;
 use winit::event::{Event, KeyEvent, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::keyboard::{Key, NamedKey};
@@ -186,12 +187,12 @@ impl Pipeline for Test {
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		let (r, g, b) = hsv_to_rgb(
-			((pos.z - 1.7)/0.6 * 360.0).clamp(0.0, 360.0) as f64,
+			360.0 - ((pos.z - 1.6) / 0.6 * 360.0).clamp(0.0, 360.0) as f64,
 			1.0,
 			1.0,
 		);
 		Colour::new(r, g, b, 255)
-	} 
+	}
 	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
 		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullAnticlockwise
 	}
@@ -203,11 +204,19 @@ pub fn entry(event_loop: EventLoop<()>) {
 
 			let context = softbuffer::Context::new(window.clone()).unwrap();
 
-			(window, context)
+			#[cfg(target_arch = "wasm32")]
+			{
+				let w = web_sys::window().expect("there should be a window");
+				let performance = w.performance().unwrap();
+
+				return (window, context, WasmTime { performance });
+			}
+			#[cfg(not(target_arch = "wasm32"))]
+			return (window, context, StdTime {});
 		},
-		|_elwt, (window, context)| softbuffer::Surface::new(context, window.clone()).unwrap(),
+		|_elwt, (window, context, time)| softbuffer::Surface::new(context, window.clone()).unwrap(),
 	)
-	.with_event_handler(|(window, _context), surface, event, elwt| {
+	.with_event_handler(|(window, _context, time), surface, event, elwt| {
 		elwt.set_control_flow(ControlFlow::Wait);
 
 		match event {
@@ -287,14 +296,12 @@ pub fn entry(event_loop: EventLoop<()>) {
 							// let x: std::time::Duration = SystemTime::now()
 							// 	.duration_since(SystemTime::UNIX_EPOCH)
 							// 	.unwrap();
-							let x = 1.0;
-							let base_transform = Matrix4::scale_x(
-						height.get() as f64 / width.get() as f64,
-					) * Matrix4::translation(Vector3::new(0.0, 0.0, 2.0))
-								* Matrix4::rotation_z(x)
-								* Matrix4::rotation_y(x)
-								* Matrix4::rotation_x(x)
-								* Matrix4::scale(0.3);
+							let x = time.secs();
+							let base_transform =
+								Matrix4::scale_x(height.get() as f64 / width.get() as f64)
+									* Matrix4::translation(Vector3::new(0.0, 0.0, 2.0))
+									* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
+									* Matrix4::rotation_x(x) * Matrix4::scale(0.3);
 							base_transform
 						},
 						perspective_matrix(1.0, 1.0, -20.0, 1.0),
@@ -339,4 +346,26 @@ pub fn start_web(window: Option<HtmlCanvasElement>) {
 	// Set window to window given
 	WINDOW.replace(window);
 	start();
+}
+
+trait Timer {
+	fn secs(&self) -> f64;
+}
+struct StdTime {}
+impl Timer for StdTime {
+	fn secs(&self) -> f64 {
+		SystemTime::now()
+			.duration_since(SystemTime::UNIX_EPOCH)
+			.unwrap()
+			.as_secs_f64()
+	}
+}
+
+struct WasmTime {
+	performance: Performance,
+}
+impl Timer for WasmTime {
+	fn secs(&self) -> f64 {
+		self.performance.now() / 1000.0
+	}
 }

@@ -13,5 +13,5 @@ softbuffer = "0.4.6"
 winit = "0.30.12"
 rendy3d = { path = "../crates/renderer" }
 wasm-bindgen = "0.2.100"
-web-sys = "0.3.77"
+web-sys = { version = "0.3.77", features = ["Performance", "Window"] }
 hsv = "0.1.1"
