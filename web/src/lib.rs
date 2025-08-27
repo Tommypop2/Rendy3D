@@ -187,7 +187,7 @@ impl Pipeline for Test {
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		let (r, g, b) = hsv_to_rgb(
-			360.0 - ((pos.z - 1.6) / 0.6 * 360.0).clamp(0.0, 360.0) as f64,
+			360.0 - ((pos.z - 1.7) / 0.6 * 360.0).clamp(0.0, 360.0) as f64,
 			1.0,
 			1.0,
 		);
@@ -301,7 +301,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 								Matrix4::scale_x(height.get() as f64 / width.get() as f64)
 									* Matrix4::translation(Vector3::new(0.0, 0.0, 2.0))
 									* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
-									* Matrix4::rotation_x(x) * Matrix4::scale(0.3);
+									* Matrix4::rotation_x(x) * Matrix4::scale(0.4);
 							base_transform
 						},
 						perspective_matrix(1.0, 1.0, -20.0, 1.0),
