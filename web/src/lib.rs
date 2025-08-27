@@ -21,7 +21,8 @@ use web_sys::Performance;
 use winit::event::{Event, KeyEvent, WindowEvent};
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::keyboard::{Key, NamedKey};
-
+#[cfg(target_arch = "wasm32")]
+use std::cell::RefCell;
 use winit::application::ApplicationHandler;
 use winit::event_loop::ActiveEventLoop;
 use winit::window::{Window, WindowAttributes, WindowId};
