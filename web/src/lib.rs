@@ -9,12 +9,10 @@ use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_2d::triangle::Triangle;
 use rendy3d::graphics::shapes_3d::point::Point;
-use rendy3d::graphics::shapes_3d::triangle::Triangle3D;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector3::Vector3;
-use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::num::NonZeroU32;
 use std::rc::Rc;
@@ -297,12 +295,11 @@ pub fn entry(event_loop: EventLoop<()>) {
 							// 	.duration_since(SystemTime::UNIX_EPOCH)
 							// 	.unwrap();
 							let x = time.secs();
-							let base_transform =
-								Matrix4::scale_x(height.get() as f64 / width.get() as f64)
-									* Matrix4::translation(Vector3::new(0.0, 0.0, 2.0))
-									* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
-									* Matrix4::rotation_x(x) * Matrix4::scale(0.4);
-							base_transform
+
+							Matrix4::scale_x(height.get() as f64 / width.get() as f64)
+								* Matrix4::translation(Vector3::new(0.0, 0.0, 2.0))
+								* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
+								* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
 						},
 						perspective_matrix(1.0, 1.0, -20.0, 1.0),
 						&mut Test {},

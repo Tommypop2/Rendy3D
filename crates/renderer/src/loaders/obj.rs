@@ -33,7 +33,6 @@ impl MulAssign<Matrix4<f64>> for TexturedVertex {
 		));
 		// TODO: technically use inverse-transpose here but just the rotation should be fine for now :)
 		self.normal = rhs.extract_rotation() * self.normal;
-		self.texture = self.texture;
 	}
 }
 impl From<TexturedVertex_OBJ> for TexturedVertex {
