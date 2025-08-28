@@ -3,6 +3,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::render_mesh;
 use rendy3d::graphics::perspective::perspective_matrix;
 // Derived from softbuffer `winit` example
+use log::{debug, info};
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
 use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
@@ -13,18 +14,19 @@ use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector3::Vector3;
+#[cfg(target_arch = "wasm32")]
+use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::num::NonZeroU32;
 use std::rc::Rc;
 use std::time::SystemTime;
 use web_sys::Performance;
+use winit::application::ApplicationHandler;
+use winit::dpi::LogicalSize;
 use winit::event::{Event, KeyEvent, WindowEvent};
+use winit::event_loop::ActiveEventLoop;
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::keyboard::{Key, NamedKey};
-#[cfg(target_arch = "wasm32")]
-use std::cell::RefCell;
-use winit::application::ApplicationHandler;
-use winit::event_loop::ActiveEventLoop;
 use winit::window::{Window, WindowAttributes, WindowId};
 
 /// Run a Winit application.
@@ -48,10 +50,13 @@ pub(crate) fn make_window(
 ) -> Rc<Window> {
 	let attributes = f(WindowAttributes::default());
 	#[cfg(target_arch = "wasm32")]
-	let attributes =
-		winit::platform::web::WindowAttributesExtWebSys::with_canvas(attributes, WINDOW.take());
-	let window = elwt.create_window(attributes);
-	Rc::new(window.unwrap())
+	let attributes = {
+		use winit::platform::web::WindowAttributesExtWebSys;
+		winit::platform::web::WindowAttributesExtWebSys::with_canvas(attributes, WINDOW.take())
+			.with_append(true)
+	};
+	let window = elwt.create_window(attributes).unwrap();
+	Rc::new(window)
 }
 
 /// Easily constructable winit application.
@@ -200,11 +205,14 @@ pub fn entry(event_loop: EventLoop<()>) {
 	let app = WinitAppBuilder::with_init(
 		|elwt| {
 			let window = make_window(elwt, |w| w);
-
 			let context = softbuffer::Context::new(window.clone()).unwrap();
 
 			#[cfg(target_arch = "wasm32")]
 			{
+				use winit::dpi::PhysicalSize;
+
+				window.set_min_inner_size(Some(PhysicalSize::new(1280, 720)));
+				window.set_max_inner_size(Some(PhysicalSize::new(1280, 720)));
 				let w = web_sys::window().expect("there should be a window");
 				let performance = w.performance().unwrap();
 
@@ -223,6 +231,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 				window_id,
 				event: WindowEvent::Resized(size),
 			} if window_id == window.id() => {
+				debug!("{:?}", event);
 				let Some(surface) = surface else {
 					eprintln!("Resized fired before Resumed or after Suspended");
 					return;
@@ -341,6 +350,10 @@ use web_sys::HtmlCanvasElement;
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen::prelude::wasm_bindgen]
 pub fn start_web(window: Option<HtmlCanvasElement>) {
+	use log::Level;
+	console_log::init_with_level(Level::Debug);
+
+	info!("It works!");
 	// Set window to window given
 	WINDOW.replace(window);
 	start();
