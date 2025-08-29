@@ -3,7 +3,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::render_mesh;
 use rendy3d::graphics::perspective::perspective_matrix;
 // Derived from softbuffer `winit` example
-use log::{debug, info};
+use log::debug;
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
 use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
@@ -22,7 +22,6 @@ use std::rc::Rc;
 use std::time::SystemTime;
 use web_sys::Performance;
 use winit::application::ApplicationHandler;
-use winit::dpi::LogicalSize;
 use winit::event::{Event, KeyEvent, WindowEvent};
 use winit::event_loop::ActiveEventLoop;
 use winit::event_loop::{ControlFlow, EventLoop};
@@ -231,7 +230,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 				window_id,
 				event: WindowEvent::Resized(size),
 			} if window_id == window.id() => {
-				debug!("{:?}", event);
+				debug!("{event:?}");
 				let Some(surface) = surface else {
 					eprintln!("Resized fired before Resumed or after Suspended");
 					return;
