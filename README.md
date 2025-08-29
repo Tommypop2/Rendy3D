@@ -10,8 +10,8 @@ It is being built for learning purposes so performance and features are likely n
 - [x] Pixel shaders
 - [x] Apply vertex shaders efficiently(\* still applied multiple times) to every vertex
   - Don't know how to do this yet without wasting work (applying multiple times to the same vertex if it appears in multiple triangles), or allocating memory
-- [ ] Compile as WASM and allow running in the browser
-- [ ] Support Texturing
+- [x] Compile as WASM and allow running in the browser
+- [x] Support Texturing (\* perspective correct texturing still doesn't work)
 
 ## Future Ideas
 
