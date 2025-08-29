@@ -350,6 +350,7 @@ use web_sys::HtmlCanvasElement;
 #[wasm_bindgen::prelude::wasm_bindgen]
 pub fn start_web(window: Option<HtmlCanvasElement>) {
 	use log::Level;
+	use log::info;
 	console_log::init_with_level(Level::Debug);
 
 	info!("It works!");
