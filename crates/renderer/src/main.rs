@@ -10,7 +10,7 @@ use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::draw::Draw;
-use rendy3d::graphics::interpolate::Interpolate;
+use rendy3d::graphics::interpolate::{Interpolate, PerspectiveCorrectInterpolate};
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
@@ -162,7 +162,7 @@ struct Test {
 	texture: Texture,
 }
 impl Pipeline for Test {
-	type VsOut = (Vector2<f64>, f64, f64);
+	type VsOut = (PerspectiveCorrectInterpolate<Vector2<f64>>, f64);
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 
@@ -174,8 +174,10 @@ impl Pipeline for Test {
 		// TODO: Don't interpolate texture coordinates linearly
 		// println!("Vertex z: {z}");
 		let z = vertex.position.z;
-		let z_reciprocal = 1.0 / z;
-		(vertex.texture * z_reciprocal, intensity, z_reciprocal)
+		(
+			PerspectiveCorrectInterpolate::new(vertex.texture, z),
+			intensity,
+		)
 		// let res = index % 3;
 		// match res {
 		// 	0 => Colour::RED,
@@ -189,10 +191,8 @@ impl Pipeline for Test {
 		// let intensity = data.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
-		let z_reciprocal = data.2;
-		let z = 1.0 / z_reciprocal;
 		// println!("Interpolated z: {z}");
-		let texture_coordinates = data.0 * z;
+		let texture_coordinates = data.0.get();
 		let base_colour = self
 			.texture
 			.get_pixel(texture_coordinates.x as f32, texture_coordinates.y as f32);
