@@ -85,7 +85,7 @@ fn main() -> Result<(), Error> {
 	// let mut scene2 = World::new(vec![second_camera], vec![guinea_pig]);
 	let mut frame_num: usize = 0;
 	let mut sum: u128 = 0;
-	let mut shaders = Test {
+	let mut pipeline = Test {
 		light_direction: Vector3::new(0.0, 0.0, 1.0),
 		texture: Texture::from_path("obj-tests/checkered-cube.png"),
 	};
@@ -106,7 +106,7 @@ fn main() -> Result<(), Error> {
 			// Clear buffer
 			let start = Instant::now();
 			screen.clear(Colour::BLACK);
-			scene.draw(&mut screen, &mut shaders);
+			scene.draw(&mut screen, &mut pipeline);
 			// scene2.draw(&mut screen);
 			let time_taken = start.elapsed();
 			frame_num += 1;
@@ -214,7 +214,7 @@ impl World {
 	fn draw<U: Interpolate, T: Pipeline<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>>(
 		&mut self,
 		screen: &mut Screen,
-		shaders: &mut T,
+		pipeline: &mut T,
 	) {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
@@ -230,7 +230,7 @@ impl World {
 					) * base_transform.clone();
 				let target: &mut rendy3d::graphics::viewport::ViewportTarget<'_, Screen<'_>> =
 					&mut camera.viewport.target(screen);
-				object.render(shaders, target, transform, camera.projection.clone());
+				object.render(pipeline, target, transform, camera.projection.clone());
 			}
 		}
 	}

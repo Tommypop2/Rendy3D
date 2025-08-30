@@ -28,7 +28,7 @@ impl AbsoluteScreenCoordinate {
 
 pub static mut MAX_Z: f32 = 0.0;
 impl<VsOut: Interpolate> Draw<VsOut> for AbsoluteScreenCoordinate {
-	fn draw<T: Target, S: Pipeline>(&self, target: &mut T, shaders: &mut S) {
+	fn draw<T: Target, P: Pipeline>(&self, target: &mut T, _pipeline: &mut P) {
 		// Record Z in Z buffer if point is above Z buffer
 		if !target.point_below_z_buffer(*self) {
 			target.set_z_in_z_buffer(*self);

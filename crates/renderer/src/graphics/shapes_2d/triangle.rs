@@ -70,10 +70,10 @@ impl<W> Draw<W> for Triangle<(AbsoluteScreenCoordinate, W)>
 where
 	W: Interpolate,
 {
-	fn draw<T: Target, S: Pipeline<VsOut = W, Fragment = T::Item>>(
+	fn draw<T: Target, P: Pipeline<VsOut = W, Fragment = T::Item>>(
 		&self,
 		target: &mut T,
-		shaders: &mut S,
+		pipeline: &mut P,
 	) {
 		// println!("1");
 		// Optimisation: If all vertices aren't visible, don't draw
@@ -106,7 +106,7 @@ where
 		// Now need to fill in the triangle
 		let bounding_area = shape.bounding_area();
 		let abc = shape.signed_doubled_area();
-		if match S::backface_culling() {
+		if match P::backface_culling() {
 			BackFaceCulling::CullClockwise => abc >= 0,
 			BackFaceCulling::CullAnticlockwise => abc <= 0,
 			BackFaceCulling::None => abc == 0,
@@ -131,7 +131,7 @@ where
 					// Interpolate Z
 					let z = shape.vertex1.z * l2 + shape.vertex2.z * l0 + shape.vertex3.z * l1;
 					let p = AbsoluteScreenCoordinate::new(x, y, z);
-					let out = S::VsOut::interpolate3(
+					let out = P::VsOut::interpolate3(
 						&self.vertex1.1,
 						&self.vertex2.1,
 						&self.vertex3.1,
@@ -139,9 +139,9 @@ where
 						l0,
 						l1,
 					);
-					let colour = shaders.fragment(p, out);
+					let colour = pipeline.fragment(p, out);
 					target.set_draw_colour(colour);
-					p.draw(target, shaders);
+					p.draw(target, pipeline);
 				}
 			}
 		}

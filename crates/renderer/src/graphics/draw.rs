@@ -1,9 +1,9 @@
 use crate::graphics::{interpolate::Interpolate, pipeline::pipeline::Pipeline, target::Target};
 
 pub trait Draw<VsOut: Interpolate> {
-	fn draw<T: Target, S: Pipeline<VsOut = VsOut, Fragment = T::Item>>(
+	fn draw<T: Target, P: Pipeline<VsOut = VsOut, Fragment = T::Item>>(
 		&self,
 		target: &mut T,
-		shaders: &mut S,
+		pipeline: &mut P,
 	);
 }

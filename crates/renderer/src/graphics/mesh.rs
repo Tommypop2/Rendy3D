@@ -43,13 +43,13 @@ impl Mesh {
 
 pub fn render_mesh<
 	T: Target,
-	S: Pipeline<VsOut = T::Item, Fragment = T::Item, Vertex = Point> + Clone,
+	P: Pipeline<VsOut = T::Item, Fragment = T::Item, Vertex = Point> + Clone,
 >(
 	target: &mut T,
 	mesh: &[Triangle3D],
 	transform: Matrix4<f64>,
 	perspective: Matrix4<f64>,
-	shaders: &mut S,
+	pipeline: &mut P,
 ) where
 	<T as Target>::Item: Interpolate,
 {
@@ -57,8 +57,8 @@ pub fn render_mesh<
 		let transformed = triangle.clone().apply(transform.clone());
 		let projected = transformed.clone().apply(perspective.clone());
 		let shaded = projected
-			.map_vertices(|p| (p.to_pixel_coordinate(target.area()), shaders.vertex(i, p)));
-		shaded.draw(target, shaders);
+			.map_vertices(|p| (p.to_pixel_coordinate(target.area()), pipeline.vertex(i, p)));
+		shaded.draw(target, pipeline);
 		// transformed
 		// 	.apply(perspective.clone())
 		// 	.to_triangle_2d(target, shaders, n)
