@@ -228,35 +228,9 @@ impl World {
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
-				let target = &mut camera.viewport.target(screen);
-				for triangle in object.triangles() {
-					let transformed = triangle.apply(transform.clone());
-					let projected = transformed.clone().apply(camera.projection.clone());
-					Triangle::new(
-						(
-							projected
-								.vertex1
-								.position
-								.to_pixel_coordinate(target.area()),
-							shaders.vertex(0, transformed.vertex1),
-						),
-						(
-							projected
-								.vertex2
-								.position
-								.to_pixel_coordinate(target.area()),
-							shaders.vertex(1, transformed.vertex2),
-						),
-						(
-							projected
-								.vertex3
-								.position
-								.to_pixel_coordinate(target.area()),
-							shaders.vertex(2, transformed.vertex3),
-						),
-					)
-					.draw(target, shaders);
-				}
+				let target: &mut rendy3d::graphics::viewport::ViewportTarget<'_, Screen<'_>> =
+					&mut camera.viewport.target(screen);
+				object.render(shaders, target, transform, camera.projection.clone());
 			}
 		}
 	}
