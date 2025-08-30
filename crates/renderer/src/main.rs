@@ -168,11 +168,6 @@ impl Pipeline for Test {
 
 	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut {
 		let intensity = vertex.normal.dot_with(&self.light_direction);
-		// let val = (255.0 * intensity) as u8;
-		// Colour::new(val, val, val, 0xff)
-
-		// TODO: Don't interpolate texture coordinates linearly
-		// println!("Vertex z: {z}");
 		let z = vertex.position.z;
 		(
 			PerspectiveCorrectInterpolate::new(vertex.texture, z),
@@ -188,10 +183,6 @@ impl Pipeline for Test {
 	}
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
-		// let intensity = data.dot_with(&self.light_direction);
-		// let val = (255.0 * intensity) as u8;
-		// Colour::new(val, val, val, 0xff)
-		// println!("Interpolated z: {z}");
 		let texture_coordinates = data.0.get();
 		let base_colour = self
 			.texture

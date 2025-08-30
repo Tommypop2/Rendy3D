@@ -97,6 +97,8 @@ where
 			z_reciprocal,
 		}
 	}
+
+	/// Gets the interpolated value
 	pub fn get(self) -> T {
 		let z = 1.0 / self.z_reciprocal;
 		self.data * z
