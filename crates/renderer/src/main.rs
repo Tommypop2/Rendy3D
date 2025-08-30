@@ -11,6 +11,7 @@ use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::draw::Draw;
 use rendy3d::graphics::interpolate::Interpolate;
+use rendy3d::graphics::perspective::perspective_matrix;
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
@@ -52,13 +53,13 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-	// let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
-	let pers_mat = Matrix4::identity();
+	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
+	// let pers_mat = Matrix4::identity();
 
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let main_camera = Camera::new(viewport, pers_mat.clone())
-		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 1.0)));
+		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 3.0)));
 	// let viewport2 = Viewport::new(BoundingArea2D::new(
 	// 	(WIDTH / 2) as usize,
 	// 	WIDTH as usize,
@@ -162,7 +163,7 @@ struct Test {
 	texture: Texture,
 }
 impl Pipeline for Test {
-	type VsOut = (Vector2<f64>, f64);
+	type VsOut = (Vector2<f64>, f64, f64);
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 
@@ -173,9 +174,9 @@ impl Pipeline for Test {
 
 		// TODO: Don't interpolate texture coordinates linearly
 		// println!("Vertex z: {z}");
-		// let z = vertex.position.z;
-		// let z_reciprocal = 1.0 / z;
-		(vertex.texture, intensity)
+		let z = vertex.position.z;
+		let z_reciprocal = 1.0 / z;
+		(vertex.texture * z_reciprocal, intensity, z_reciprocal)
 		// let res = index % 3;
 		// match res {
 		// 	0 => Colour::RED,
@@ -189,10 +190,10 @@ impl Pipeline for Test {
 		// let intensity = data.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
-		// let z_reciprocal = data.2;
-		// let z = 1.0 / z_reciprocal;
+		let z_reciprocal = data.2;
+		let z = 1.0 / z_reciprocal;
 		// println!("Interpolated z: {z}");
-		let texture_coordinates = data.0;
+		let texture_coordinates = data.0 * z;
 		let base_colour = self
 			.texture
 			.get_pixel(texture_coordinates.x as f32, texture_coordinates.y as f32);
@@ -202,13 +203,13 @@ impl Pipeline for Test {
 			(base_colour.green as f64 * intensity) as u8,
 			(base_colour.blue as f64 * intensity) as u8,
 			(base_colour.alpha as f64 * intensity) as u8,
-		);
-		let (r, g, b) = hsv_to_rgb(
-			((pos.z + 1.0) * 360.0).clamp(0.0, 360.0) as f64 * 0.75,
-			1.0,
-			1.0,
-		);
-		Colour::new(r, g, b, 255)
+		)
+		// let (r, g, b) = hsv_to_rgb(
+		// 	((pos.z + 1.0) * 360.0).clamp(0.0, 360.0) as f64 * 0.75,
+		// 	1.0,
+		// 	1.0,
+		// );
+		// Colour::new(r, g, b, 255)
 	}
 	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
 		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullClockwise
