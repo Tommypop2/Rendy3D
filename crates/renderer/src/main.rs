@@ -8,13 +8,12 @@ use maths::vector::vector3::Vector3;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
-use rendy3d::graphics::draw::Draw;
 use rendy3d::graphics::interpolate::{Interpolate, PerspectiveCorrectInterpolate};
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
-use rendy3d::graphics::shapes_2d::triangle::Triangle;
+use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::texture::Texture;
 use rendy3d::graphics::viewport::Viewport;
@@ -165,12 +164,15 @@ impl Pipeline for Test {
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 
-	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut {
+	fn vertex(&self, index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		let intensity = vertex.normal.dot_with(&self.light_direction);
 		let z = vertex.position.z;
 		(
-			PerspectiveCorrectInterpolate::new(vertex.texture, z),
-			intensity,
+			vertex.position,
+			(
+				PerspectiveCorrectInterpolate::new(vertex.texture, z),
+				intensity,
+			),
 		)
 		// let res = index % 3;
 		// match res {

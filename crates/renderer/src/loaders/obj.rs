@@ -119,29 +119,38 @@ impl Mesh<TexturedVertex> {
 	{
 		for triangle in self.triangles() {
 			let transformed = triangle.apply(transform.clone());
-			let projected = transformed.clone().apply(projection.clone());
+			// let projected = transformed.clone().apply(projection.clone());
 			Triangle::new(
-				(
-					projected
-						.vertex1
-						.position
-						.to_pixel_coordinate(target.area()),
-					pipeline.vertex(0, transformed.vertex1),
-				),
-				(
-					projected
-						.vertex2
-						.position
-						.to_pixel_coordinate(target.area()),
-					pipeline.vertex(1, transformed.vertex2),
-				),
-				(
-					projected
-						.vertex3
-						.position
-						.to_pixel_coordinate(target.area()),
-					pipeline.vertex(2, transformed.vertex3),
-				),
+				{
+					let vsout = pipeline.vertex(0, transformed.vertex1);
+					(
+						vsout
+							.0
+							.apply(projection.clone())
+							.to_pixel_coordinate(target.area()),
+						vsout.1,
+					)
+				},
+				{
+					let vsout = pipeline.vertex(0, transformed.vertex2);
+					(
+						vsout
+							.0
+							.apply(projection.clone())
+							.to_pixel_coordinate(target.area()),
+						vsout.1,
+					)
+				},
+				{
+					let vsout = pipeline.vertex(0, transformed.vertex3);
+					(
+						vsout
+							.0
+							.apply(projection.clone())
+							.to_pixel_coordinate(target.area()),
+						vsout.1,
+					)
+				},
 			)
 			.draw(target, pipeline);
 		}

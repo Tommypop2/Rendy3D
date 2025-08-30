@@ -1,5 +1,5 @@
 use derive_more::{Add, Deref, DerefMut, Sub};
-use maths::vector::vector3::Vector3;
+use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
 
@@ -29,5 +29,10 @@ impl Point {
 		let y = (offset.y as f64 - self.y * (height as f64) / 2.0).round() as usize;
 		// println!("({}, {}, {})", x, y, self.z);
 		AbsoluteScreenCoordinate::new(x, y, self.z as f32)
+	}
+	pub fn apply(self, transformation: Matrix4<f64>) -> Point {
+		Point::from_vector(Vector3::from_homogenous(
+			transformation * self.to_homogenous(),
+		))
 	}
 }

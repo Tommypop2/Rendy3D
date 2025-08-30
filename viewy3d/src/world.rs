@@ -57,11 +57,11 @@ impl Pipeline for CoolShaders {
 	type Fragment = Colour;
 	type VsOut = Colour;
 	type Vertex = Point;
-	fn vertex(&self, index: usize, vertex: Self::Vertex) -> Self::VsOut {
+	fn vertex(&self, index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		// let intensity = normal.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
-		Colour::WHITE
+		(vertex, Colour::WHITE)
 	}
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		let (r, g, b) = hsv_to_rgb((pos.z * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);

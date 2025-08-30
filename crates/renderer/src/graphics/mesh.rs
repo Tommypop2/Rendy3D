@@ -55,13 +55,16 @@ pub fn render_mesh<
 {
 	for (i, triangle) in mesh.iter().enumerate() {
 		let transformed = triangle.clone().apply(transform.clone());
-		let projected = transformed.clone().apply(perspective.clone());
-		let shaded = projected
-			.map_vertices(|p| (p.to_pixel_coordinate(target.area()), pipeline.vertex(i, p)));
+		let shaded = transformed.map_vertices(|v| {
+			let vsout = pipeline.vertex(i, v);
+			(
+				vsout
+					.0
+					.apply(perspective.clone())
+					.to_pixel_coordinate(target.area()),
+				vsout.1,
+			)
+		});
 		shaded.draw(target, pipeline);
-		// transformed
-		// 	.apply(perspective.clone())
-		// 	.to_triangle_2d(target, shaders, n)
-		// 	.draw(target, shaders);
 	}
 }

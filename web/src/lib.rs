@@ -183,8 +183,8 @@ impl Pipeline for Test {
 	type Vertex = Point;
 	type Fragment = Colour;
 
-	fn vertex(&self, index: usize, vertex: Point) -> Self::VsOut {
-		Colour::BLACK
+	fn vertex(&self, index: usize, vertex: Point) -> (Point, Self::VsOut) {
+		(vertex, Colour::BLACK)
 	}
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
