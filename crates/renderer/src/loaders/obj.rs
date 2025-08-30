@@ -48,50 +48,56 @@ impl From<TexturedVertex_OBJ> for TexturedVertex {
 		}
 	}
 }
-pub struct Mesh {
-	pub vertices: Vec<TexturedVertex>,
+pub struct Mesh<T> {
+	pub vertices: Vec<T>,
 	pub indices: Vec<u16>,
 }
-impl From<Obj<TexturedVertex_OBJ, u16>> for Mesh {
-	fn from(value: Obj<TexturedVertex_OBJ>) -> Self {
+impl<ObjVertex, V> From<Obj<ObjVertex, u16>> for Mesh<V>
+where
+	ObjVertex: Into<V>,
+{
+	fn from(value: Obj<ObjVertex>) -> Self {
 		Self {
 			vertices: value.vertices.into_iter().map(|v| v.into()).collect(),
 			indices: value.indices,
 		}
 	}
 }
-pub struct MeshIter<'a> {
-	mesh: &'a Mesh,
+pub struct MeshIter<'a, T> {
+	mesh: &'a Mesh<T>,
 	chunks: ChunksExact<'a, u16>,
 }
-impl Iterator for MeshIter<'_> {
-	type Item = Triangle<TexturedVertex>;
+impl<T> Iterator for MeshIter<'_, T>
+where
+	T: Clone,
+{
+	type Item = Triangle<T>;
 	fn next(&mut self) -> Option<Self::Item> {
 		let chunk = self.chunks.next()?;
 		let i1 = chunk[0];
 		let i2 = chunk[1];
 		let i3 = chunk[2];
-		let v1 = self.mesh.vertices[i1 as usize];
-		let v2 = self.mesh.vertices[i2 as usize];
-		let v3 = self.mesh.vertices[i3 as usize];
+		let v1 = self.mesh.vertices[i1 as usize].clone();
+		let v2 = self.mesh.vertices[i2 as usize].clone();
+		let v3 = self.mesh.vertices[i3 as usize].clone();
 		let triangle = Triangle::new(v1, v2, v3);
 		Some(triangle)
 	}
 }
-impl Mesh {
+impl<T> Mesh<T> {
 	/// Returns an iterator over the triangles in this mesh
-	pub fn triangles(&self) -> MeshIter<'_> {
+	pub fn triangles(&self) -> MeshIter<'_, T> {
 		let chunks = self.indices.chunks_exact(3);
-		MeshIter {
-			mesh: &self,
-			chunks,
-		}
+		MeshIter { mesh: self, chunks }
 	}
 }
-pub fn load_obj<P: AsRef<Path>>(path: P) -> Result<Mesh, Box<dyn std::error::Error>> {
+
+pub fn load_obj<P: AsRef<Path>>(
+	path: P,
+) -> Result<Mesh<TexturedVertex>, Box<dyn std::error::Error>> {
 	let input = BufReader::new(File::open(path)?);
 	let dome: Obj<TexturedVertex_OBJ, u16> = load_obj_1(input)?;
-	let mesh: Mesh = dome.into();
+	let mesh: Mesh<TexturedVertex> = dome.into();
 
 	Ok(mesh)
 }

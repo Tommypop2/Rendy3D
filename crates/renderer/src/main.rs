@@ -1,7 +1,6 @@
 use std::time::{Instant, SystemTime};
 
 use error_iter::ErrorIter as _;
-use hsv::hsv_to_rgb;
 use log::error;
 use maths::matrices::matrix4::Matrix4;
 use maths::vector::vector2::Vector2;
@@ -30,7 +29,7 @@ const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
 struct World {
 	pub cameras: Vec<Camera>,
-	pub objects: Vec<Mesh>,
+	pub objects: Vec<Mesh<TexturedVertex>>,
 }
 
 fn main() -> Result<(), Error> {
@@ -206,7 +205,7 @@ impl Pipeline for Test {
 	}
 }
 impl World {
-	fn new(cameras: Vec<Camera>, objects: Vec<Mesh>) -> Self {
+	fn new(cameras: Vec<Camera>, objects: Vec<Mesh<TexturedVertex>>) -> Self {
 		Self { objects, cameras }
 	}
 
