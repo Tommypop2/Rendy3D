@@ -1,7 +1,6 @@
 use hsv::hsv_to_rgb;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::mesh::render_mesh;
-use rendy3d::graphics::perspective::perspective_matrix;
 // Derived from softbuffer `winit` example
 use log::debug;
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
@@ -310,7 +309,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 								* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
 								* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
 						},
-						perspective_matrix(1.0, 1.0, -20.0, 1.0),
+						Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0),
 						&mut Test {},
 					);
 					buffer.present().unwrap();

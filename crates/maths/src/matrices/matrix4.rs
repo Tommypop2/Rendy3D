@@ -14,7 +14,18 @@ pub struct Matrix4<T> {
 	z: Vector4<T>,
 	w: Vector4<T>,
 }
-
+impl Matrix4<f64> {
+	pub fn new_perspective(fov_x: f64, fov_y: f64, far: f64, near: f64) -> Matrix4<f64> {
+		Matrix4::new(
+			Vector4::new(1.0 / f64::tan(fov_x / 2.0), 0.0, 0.0, 0.0),
+			Vector4::new(0.0, 1.0 / f64::tan(fov_y / 2.0), 0.0, 0.0),
+			// Should be -1.0 here for w but 1.0 seems to make things work for some reason
+			// TODO: Look into why this is the case
+			Vector4::new(0.0, 0.0, -((far + near) / (far - near)), -1.0),
+			Vector4::new(0.0, 0.0, -2.0 * (far * near) / (far - near), 0.0),
+		)
+	}
+}
 impl<T> Matrix4<T> {
 	pub const fn new(x: Vector4<T>, y: Vector4<T>, z: Vector4<T>, w: Vector4<T>) -> Self {
 		Self { x, y, z, w }

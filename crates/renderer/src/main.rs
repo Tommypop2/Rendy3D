@@ -11,7 +11,6 @@ use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::draw::Draw;
 use rendy3d::graphics::interpolate::Interpolate;
-use rendy3d::graphics::perspective::perspective_matrix;
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
@@ -53,7 +52,7 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-	let pers_mat = perspective_matrix(1.0, 1.0, -20.0, 1.0);
+	let pers_mat = Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0);
 	// let pers_mat = Matrix4::identity();
 
 	let viewport =
