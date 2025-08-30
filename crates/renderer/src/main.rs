@@ -230,15 +230,7 @@ impl World {
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
 				let target = &mut camera.viewport.target(screen);
-
-				for chunk in object.indices.chunks_exact(3) {
-					let i1 = chunk[0];
-					let i2 = chunk[1];
-					let i3 = chunk[2];
-					let v1 = object.vertices[i1 as usize];
-					let v2 = object.vertices[i2 as usize];
-					let v3 = object.vertices[i3 as usize];
-					let triangle = Triangle::new(v1, v2, v3);
+				for triangle in object.triangles() {
 					let transformed = triangle.apply(transform.clone());
 					let projected = transformed.clone().apply(camera.projection.clone());
 					Triangle::new(

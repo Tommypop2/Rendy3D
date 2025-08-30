@@ -3,6 +3,7 @@ use std::{
 	io::BufReader,
 	ops::{Mul, MulAssign},
 	path::Path,
+	slice::ChunksExact,
 };
 
 use maths::{
@@ -11,7 +12,7 @@ use maths::{
 };
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 
-use crate::graphics::shapes_3d::point::Point;
+use crate::graphics::{shapes_2d::triangle::Triangle, shapes_3d::point::Point};
 
 #[derive(Clone, Copy)]
 pub struct TexturedVertex {
@@ -56,6 +57,34 @@ impl From<Obj<TexturedVertex_OBJ, u16>> for Mesh {
 		Self {
 			vertices: value.vertices.into_iter().map(|v| v.into()).collect(),
 			indices: value.indices,
+		}
+	}
+}
+pub struct MeshIter<'a> {
+	mesh: &'a Mesh,
+	chunks: ChunksExact<'a, u16>,
+}
+impl Iterator for MeshIter<'_> {
+	type Item = Triangle<TexturedVertex>;
+	fn next(&mut self) -> Option<Self::Item> {
+		let chunk = self.chunks.next()?;
+		let i1 = chunk[0];
+		let i2 = chunk[1];
+		let i3 = chunk[2];
+		let v1 = self.mesh.vertices[i1 as usize];
+		let v2 = self.mesh.vertices[i2 as usize];
+		let v3 = self.mesh.vertices[i3 as usize];
+		let triangle = Triangle::new(v1, v2, v3);
+		Some(triangle)
+	}
+}
+impl Mesh {
+	/// Returns an iterator over the triangles in this mesh
+	pub fn triangles(&self) -> MeshIter<'_> {
+		let chunks = self.indices.chunks_exact(3);
+		MeshIter {
+			mesh: &self,
+			chunks,
 		}
 	}
 }
