@@ -8,6 +8,7 @@ use std::{
 
 use maths::{
 	matrices::matrix4::Matrix4,
+	traits::{num::Num, signed::Signed, unsigned::Unsigned},
 	vector::{vector2::Vector2, vector3::Vector3},
 };
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
@@ -51,9 +52,9 @@ impl From<TexturedVertex_OBJ> for TexturedVertex {
 		}
 	}
 }
-pub struct Mesh<T> {
+pub struct Mesh<T, I = u16> {
 	pub vertices: Vec<T>,
-	pub indices: Vec<u16>,
+	pub indices: Vec<I>,
 }
 impl<ObjVertex, V> From<Obj<ObjVertex, u16>> for Mesh<V>
 where
@@ -66,13 +67,14 @@ where
 		}
 	}
 }
-pub struct MeshIter<'a, T> {
-	mesh: &'a Mesh<T>,
-	chunks: ChunksExact<'a, u16>,
+pub struct MeshIter<'a, T, I> {
+	mesh: &'a Mesh<T, I>,
+	chunks: ChunksExact<'a, I>,
 }
-impl<T> Iterator for MeshIter<'_, T>
+impl<T, I> Iterator for MeshIter<'_, T, I>
 where
 	T: Clone,
+	I: Into<usize> + Copy,
 {
 	type Item = Triangle<T>;
 	fn next(&mut self) -> Option<Self::Item> {
@@ -80,16 +82,16 @@ where
 		let i1 = chunk[0];
 		let i2 = chunk[1];
 		let i3 = chunk[2];
-		let v1 = self.mesh.vertices[i1 as usize].clone();
-		let v2 = self.mesh.vertices[i2 as usize].clone();
-		let v3 = self.mesh.vertices[i3 as usize].clone();
+		let v1 = self.mesh.vertices[i1.into()].clone();
+		let v2 = self.mesh.vertices[i2.into()].clone();
+		let v3 = self.mesh.vertices[i3.into()].clone();
 		let triangle = Triangle::new(v1, v2, v3);
 		Some(triangle)
 	}
 }
-impl<T> Mesh<T> {
+impl<T, I> Mesh<T, I> {
 	/// Returns an iterator over the triangles in this mesh
-	pub fn triangles(&self) -> MeshIter<'_, T> {
+	pub fn triangles(&self) -> MeshIter<'_, T, I> {
 		let chunks = self.indices.chunks_exact(3);
 		MeshIter { mesh: self, chunks }
 	}
@@ -105,7 +107,7 @@ pub fn load_obj<P: AsRef<Path>>(
 	Ok(mesh)
 }
 
-impl Mesh<TexturedVertex> {
+impl<V, I> Mesh<V, I> {
 	pub fn render<P, T, U>(
 		&self,
 		pipeline: &mut P,
@@ -113,9 +115,11 @@ impl Mesh<TexturedVertex> {
 		transform: Matrix4<f64>,
 		projection: Matrix4<f64>,
 	) where
-		P: Pipeline<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>,
+		P: Pipeline<VsOut = U, Fragment = Colour, Vertex = V>,
 		T: Target<Item = Colour>,
 		U: Interpolate,
+		V: MulAssign<Matrix4<f64>> + Clone,
+		I: Into<usize> + Copy,
 	{
 		for triangle in self.triangles() {
 			let transformed = triangle.apply(transform.clone());

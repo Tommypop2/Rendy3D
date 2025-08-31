@@ -45,3 +45,5 @@ implement_num!(u16);
 implement_num!(u32);
 implement_num!(u64);
 implement_num!(u128);
+
+implement_num!(usize);

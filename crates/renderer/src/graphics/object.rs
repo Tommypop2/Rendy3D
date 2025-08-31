@@ -1,14 +1,14 @@
 use maths::matrices::matrix4::Matrix4;
 
-use crate::graphics::mesh::Mesh;
+use crate::loaders::{obj::Mesh, stl::Vertex};
 
 /// Contains a mesh, and its world-space transformation
 pub struct Object {
-	pub mesh: Mesh,
+	pub mesh: Mesh<Vertex, usize>,
 	pub transformation: Matrix4<f64>,
 }
 impl Object {
-	pub fn new(mesh: Mesh, transformation: Matrix4<f64>) -> Self {
+	pub fn new(mesh: Mesh<Vertex, usize>, transformation: Matrix4<f64>) -> Self {
 		Self {
 			mesh,
 			transformation,

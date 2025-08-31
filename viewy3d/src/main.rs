@@ -6,11 +6,9 @@ use rendy3d::{
 	graphics::{
 		camera::Camera,
 		colour::Colour,
-		mesh::Mesh,
 		object::Object,
 		screen::Screen,
 		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
-		shapes_3d::{point::Point, triangle::Triangle3D},
 		target::Target,
 		viewport::Viewport,
 	},
@@ -170,14 +168,14 @@ fn main() -> Result<(), Error> {
 	let perspective_matrix = Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0);
 	let camera = Camera::new(viewport, perspective_matrix.clone())
 		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 1.0)));
-	let f1_car = Mesh::new(load_file(args.file));
-	let object = Mesh::new(vec![Triangle3D::new(
-		Point::new(0.0, 0.0, 0.0),
-		Point::new(0.5, 0.0, 0.0),
-		Point::new(0.1, 0.4, 0.0),
-	)]);
+	// let f1_car = load_file(args.file);
+	// let object = Mesh::new(vec![Triangle3D::new(
+	// 	Point::new(0.0, 0.0, 0.0),
+	// 	Point::new(0.5, 0.0, 0.0),
+	// 	Point::new(0.1, 0.4, 0.0),
+	// )]);
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
-	let guinea_pig = Mesh::new(load_file("../GatlingGuineaPig.stl"));
+	let guinea_pig = load_file("../GatlingGuineaPig.stl");
 	let scene = World::new(
 		vec![camera],
 		vec![Object::new(guinea_pig, Matrix4::identity())],

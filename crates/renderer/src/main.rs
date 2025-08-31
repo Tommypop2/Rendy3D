@@ -1,3 +1,4 @@
+use std::f64::consts::PI;
 use std::time::{Instant, SystemTime};
 
 use error_iter::ErrorIter as _;
@@ -50,7 +51,7 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-	let pers_mat = Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0);
+	let pers_mat = Matrix4::new_perspective(PI / 4.0, PI / 4.0, -20.0, 1.0);
 	// let pers_mat = Matrix4::identity();
 
 	let viewport =
