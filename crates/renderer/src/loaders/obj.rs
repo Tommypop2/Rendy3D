@@ -8,7 +8,7 @@ use crate::graphics::{
 	draw::Draw,
 	interpolate::Interpolate,
 	mesh::{IndexedMesh, vertices::TexturedVertex},
-	pipeline::pipeline::Pipeline,
+	pipeline::Pipeline,
 	shapes_2d::triangle::Triangle,
 	shapes_3d::point::Point,
 	target::Target,

@@ -4,7 +4,7 @@ use hsv::hsv_to_rgb;
 use rendy3d::{
 	graphics::{
 		camera::Camera, colour::Colour, mesh::vertices::Vertex, object::Object,
-		pipeline::pipeline::Pipeline, screen::Screen, shapes_2d::point::AbsoluteScreenCoordinate,
+		pipeline::Pipeline, screen::Screen, shapes_2d::point::AbsoluteScreenCoordinate,
 		shapes_3d::point::Point,
 	},
 	loaders::obj::render,
@@ -22,7 +22,7 @@ impl World {
 	}
 
 	pub fn draw(&mut self, screen: &mut Screen) {
-		let x: std::time::Duration = SystemTime::now()
+		let _x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
 		let base_transform = Matrix4::scale(0.01);
@@ -39,7 +39,7 @@ impl World {
 				render(
 					object.mesh.triangles(),
 					&mut CoolShaders {
-						light_direction: Vector3::new(0.0, 0.0, 1.0),
+						_light_direction: Vector3::new(0.0, 0.0, 1.0),
 					},
 					&mut camera.viewport.target(screen),
 					transform,
@@ -60,19 +60,19 @@ impl World {
 }
 #[derive(Clone)]
 struct CoolShaders {
-	light_direction: Vector3<f64>,
+	_light_direction: Vector3<f64>,
 }
 impl Pipeline for CoolShaders {
 	type Fragment = Colour;
 	type VsOut = Colour;
 	type Vertex = Vertex;
-	fn vertex(&self, index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
+	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		// let intensity = normal.dot_with(&self.light_direction);
 		// let val = (255.0 * intensity) as u8;
 		// Colour::new(val, val, val, 0xff)
 		(vertex.position, Colour::WHITE)
 	}
-	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
+	fn fragment(&self, pos: AbsoluteScreenCoordinate, _data: Self::VsOut) -> Self::Fragment {
 		let (r, g, b) = hsv_to_rgb((pos.z * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
 		Colour::new(r, g, b, 255)
 		// data

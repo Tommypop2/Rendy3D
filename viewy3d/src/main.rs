@@ -37,6 +37,7 @@ pub mod world;
 /// View STL files
 struct Args {
 	#[argh(positional)]
+	#[expect(dead_code)]
 	file: PathBuf,
 }
 
@@ -66,14 +67,14 @@ impl ApplicationHandler for App {
 	}
 	fn device_event(
 		&mut self,
-		event_loop: &ActiveEventLoop,
-		device_id: winit::event::DeviceId,
+		_event_loop: &ActiveEventLoop,
+		_device_id: winit::event::DeviceId,
 		event: winit::event::DeviceEvent,
 	) {
 		self.control
 			.handle_device_event(&event, &mut self.scene.cameras[0]);
 	}
-	fn window_event(&mut self, event_loop: &ActiveEventLoop, id: WindowId, event: WindowEvent) {
+	fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
 		self.control.handle_window_event(&event);
 		match event {
 			WindowEvent::CloseRequested => {
@@ -161,9 +162,9 @@ impl App {
 	}
 }
 fn main() -> Result<(), Error> {
-	let args: Args = argh::from_env();
+	let _args: Args = argh::from_env();
 	let event_loop = EventLoop::new().unwrap();
-	let input = WinitInputHelper::new();
+	let _input = WinitInputHelper::new();
 	let viewport = Viewport::new(BoundingArea2D::new(0, 0_usize, 0, 0_usize)).unwrap();
 	let perspective_matrix = Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0);
 	let camera = Camera::new(viewport, perspective_matrix)

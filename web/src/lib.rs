@@ -3,7 +3,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::interpolate::PerspectiveCorrectInterpolate;
 // Derived from softbuffer `winit` example
 use log::debug;
-use rendy3d::graphics::pipeline::pipeline::Pipeline;
+use rendy3d::graphics::pipeline::Pipeline;
 use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
@@ -184,7 +184,7 @@ impl Pipeline for Test {
 	type Vertex = Point;
 	type Fragment = Colour;
 
-	fn vertex(&self, index: usize, vertex: Point) -> (Point, Self::VsOut) {
+	fn vertex(&self, _index: usize, vertex: Point) -> (Point, Self::VsOut) {
 		// let (r, g, b) = hsv_to_rgb(
 		// 	360.0 - ((vertex.z - 1.5) / 2.0 * 360.0).clamp(0.0, 360.0) as f64,
 		// 	1.0,
@@ -197,7 +197,7 @@ impl Pipeline for Test {
 		)
 	}
 
-	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
+	fn fragment(&self, _pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		// let (r, g, b) = hsv_to_rgb(
 		// 	360.0 - ((pos.z - 1.7) / 0.6 * 360.0).clamp(0.0, 360.0) as f64,
 		// 	1.0,
@@ -384,6 +384,7 @@ impl Timer for StdTime {
 	}
 }
 
+#[allow(dead_code)]
 struct WasmTime {
 	performance: Performance,
 }

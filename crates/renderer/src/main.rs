@@ -12,7 +12,7 @@ use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::interpolate::{Interpolate, PerspectiveCorrectInterpolate};
 use rendy3d::graphics::mesh::IndexedMesh;
 use rendy3d::graphics::mesh::vertices::TexturedVertex;
-use rendy3d::graphics::pipeline::pipeline::Pipeline;
+use rendy3d::graphics::pipeline::Pipeline;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
 use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
@@ -167,7 +167,7 @@ impl Pipeline for Test {
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 
-	fn vertex(&self, index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
+	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		let intensity = vertex.normal.dot_with(&self.light_direction);
 		let z = vertex.position.z;
 		(
@@ -186,7 +186,7 @@ impl Pipeline for Test {
 		// }
 	}
 
-	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
+	fn fragment(&self, _pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		let texture_coordinates = data.0.get();
 		let base_colour = self
 			.texture
