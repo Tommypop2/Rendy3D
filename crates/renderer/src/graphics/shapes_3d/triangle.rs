@@ -16,18 +16,6 @@ where
 	}
 }
 impl Triangle3D {
-	pub fn apply(mut self, matrix: Matrix4<f64>) -> Self {
-		self.vertex1 = Point::from_vector(Vector3::from_homogenous(
-			matrix.clone() * self.vertex1.to_homogenous(),
-		));
-		self.vertex2 = Point::from_vector(Vector3::from_homogenous(
-			matrix.clone() * self.vertex2.to_homogenous(),
-		));
-		self.vertex3 = Point::from_vector(Vector3::from_homogenous(
-			matrix * self.vertex3.to_homogenous(),
-		));
-		self
-	}
 	pub fn vertices(&self) -> [Point; 3] {
 		[self.vertex1, self.vertex2, self.vertex3]
 	}

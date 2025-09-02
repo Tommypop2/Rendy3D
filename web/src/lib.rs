@@ -1,6 +1,6 @@
 use hsv::hsv_to_rgb;
 use rendy3d::graphics::colour::Colour;
-use rendy3d::graphics::mesh::render_mesh;
+use rendy3d::graphics::interpolate::PerspectiveCorrectInterpolate;
 // Derived from softbuffer `winit` example
 use log::debug;
 use rendy3d::graphics::pipeline::pipeline::Pipeline;
@@ -11,6 +11,7 @@ use rendy3d::graphics::shapes_2d::triangle::Triangle;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
+use rendy3d::loaders::obj::render;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector3::Vector3;
 #[cfg(target_arch = "wasm32")]
@@ -179,20 +180,35 @@ where
 #[derive(Clone)]
 struct Test;
 impl Pipeline for Test {
-	type VsOut = Colour;
+	type VsOut = PerspectiveCorrectInterpolate<f64>;
 	type Vertex = Point;
 	type Fragment = Colour;
 
 	fn vertex(&self, index: usize, vertex: Point) -> (Point, Self::VsOut) {
-		(vertex, Colour::BLACK)
+		// let (r, g, b) = hsv_to_rgb(
+		// 	360.0 - ((vertex.z - 1.5) / 2.0 * 360.0).clamp(0.0, 360.0) as f64,
+		// 	1.0,
+		// 	1.0,
+		// );
+		// let c = Colour::new(r, g, b, 255);
+		(
+			vertex,
+			PerspectiveCorrectInterpolate::new(
+				360.0 * (1.0 - ((vertex.z - 1.2) / 3.0) as f64),
+				vertex.z,
+			),
+		)
 	}
 
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
-		let (r, g, b) = hsv_to_rgb(
-			360.0 - ((pos.z - 1.7) / 0.6 * 360.0).clamp(0.0, 360.0) as f64,
-			1.0,
-			1.0,
-		);
+		// let (r, g, b) = hsv_to_rgb(
+		// 	360.0 - ((pos.z - 1.7) / 0.6 * 360.0).clamp(0.0, 360.0) as f64,
+		// 	1.0,
+		// 	1.0,
+		// );
+		// Colour::new(r, g, b, 255)
+		let hue = data.get();
+		let (r, g, b) = hsv_to_rgb(hue.clamp(0.0, 360.0), 1.0, 1.0);
 		Colour::new(r, g, b, 255)
 	}
 	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
@@ -219,7 +235,9 @@ pub fn entry(event_loop: EventLoop<()>) {
 			#[cfg(not(target_arch = "wasm32"))]
 			return (window, context, StdTime {});
 		},
-		|_elwt, (window, context, time)| softbuffer::Surface::new(context, window.clone()).unwrap(),
+		|_elwt, (window, context, _time)| {
+			softbuffer::Surface::new(context, window.clone()).unwrap()
+		},
 	)
 	.with_event_handler(|(window, _context, time), surface, event, elwt| {
 		elwt.set_control_flow(ControlFlow::Wait);
@@ -282,9 +300,8 @@ pub fn entry(event_loop: EventLoop<()>) {
 					let f = Point::new(-1.0, -1.0, -1.0);
 					let g = Point::new(-1.0, 1.0, -1.0);
 					let h = Point::new(1.0, 1.0, -1.0);
-					render_mesh(
-						&mut target,
-						&[
+					render(
+						[
 							Triangle::new(a, b, c),
 							Triangle::new(c, b, e),
 							Triangle::new(a, h, g),
@@ -297,11 +314,11 @@ pub fn entry(event_loop: EventLoop<()>) {
 							Triangle::new(e, f, d),
 							Triangle::new(g, h, d),
 							Triangle::new(f, g, d),
-						],
+						]
+						.into_iter(),
+						&mut Test {},
+						&mut target,
 						{
-							// let x: std::time::Duration = SystemTime::now()
-							// 	.duration_since(SystemTime::UNIX_EPOCH)
-							// 	.unwrap();
 							let x = time.secs();
 
 							Matrix4::scale_x(height.get() as f64 / width.get() as f64)
@@ -310,7 +327,6 @@ pub fn entry(event_loop: EventLoop<()>) {
 								* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
 						},
 						Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0),
-						&mut Test {},
 					);
 					buffer.present().unwrap();
 					window.request_redraw();

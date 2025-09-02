@@ -166,7 +166,7 @@ fn main() -> Result<(), Error> {
 	let input = WinitInputHelper::new();
 	let viewport = Viewport::new(BoundingArea2D::new(0, 0_usize, 0, 0_usize)).unwrap();
 	let perspective_matrix = Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0);
-	let camera = Camera::new(viewport, perspective_matrix.clone())
+	let camera = Camera::new(viewport, perspective_matrix)
 		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 1.0)));
 	// let f1_car = load_file(args.file);
 	// let object = Mesh::new(vec![Triangle3D::new(

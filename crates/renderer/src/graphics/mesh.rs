@@ -40,31 +40,3 @@ impl Mesh {
 			});
 	}
 }
-
-pub fn render_mesh<
-	T: Target,
-	P: Pipeline<VsOut = T::Item, Fragment = T::Item, Vertex = Point> + Clone,
->(
-	target: &mut T,
-	mesh: &[Triangle3D],
-	transform: Matrix4<f64>,
-	perspective: Matrix4<f64>,
-	pipeline: &mut P,
-) where
-	<T as Target>::Item: Interpolate,
-{
-	for (i, triangle) in mesh.iter().enumerate() {
-		let transformed = triangle.clone().apply(transform.clone());
-		let shaded = transformed.map_vertices(|v| {
-			let vsout = pipeline.vertex(i, v);
-			(
-				vsout
-					.0
-					.apply(perspective.clone())
-					.to_pixel_coordinate(target.area()),
-				vsout.1,
-			)
-		});
-		shaded.draw(target, pipeline);
-	}
-}

@@ -1,3 +1,5 @@
+use std::ops::Mul;
+
 use crate::graphics::interpolate::Interpolate;
 
 #[repr(C)]
@@ -49,6 +51,17 @@ impl Interpolate for Colour {
 			(a.green as f32 * x + b.green as f32 * y + c.green as f32 * z) as u8,
 			(a.blue as f32 * x + b.blue as f32 * y + c.blue as f32 * z) as u8,
 			(a.alpha as f32 * x + b.alpha as f32 * y + c.alpha as f32 * z) as u8,
+		)
+	}
+}
+impl Mul<f64> for Colour {
+	type Output = Self;
+	fn mul(self, rhs: f64) -> Self::Output {
+		Colour::new(
+			(self.red as f64 * rhs) as u8,
+			(self.green as f64 * rhs) as u8,
+			(self.blue as f64 * rhs) as u8,
+			(self.alpha as f64) as u8,
 		)
 	}
 }

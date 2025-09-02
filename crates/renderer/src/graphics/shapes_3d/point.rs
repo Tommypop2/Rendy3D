@@ -1,3 +1,5 @@
+use std::ops::MulAssign;
+
 use derive_more::{Add, Deref, DerefMut, Sub};
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
@@ -34,5 +36,11 @@ impl Point {
 		Point::from_vector(Vector3::from_homogenous(
 			transformation * self.to_homogenous(),
 		))
+	}
+}
+
+impl MulAssign<Matrix4<f64>> for Point {
+	fn mul_assign(&mut self, rhs: Matrix4<f64>) {
+		*self = Point::from_vector(Vector3::from_homogenous(rhs * self.to_homogenous()));
 	}
 }
