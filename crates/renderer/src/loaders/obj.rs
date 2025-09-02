@@ -1,21 +1,16 @@
-use std::{
-	fs::File,
-	io::BufReader,
-	ops::{Mul, MulAssign},
-	path::Path,
-	slice::ChunksExact,
-};
+use std::{fs::File, io::BufReader, ops::MulAssign, path::Path};
 
-use maths::{
-	matrices::matrix4::Matrix4,
-	traits::{num::Num, signed::Signed, unsigned::Unsigned},
-	vector::{vector2::Vector2, vector3::Vector3},
-};
+use maths::{matrices::matrix4::Matrix4, vector::vector2::Vector2};
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 
 use crate::graphics::{
-	colour::Colour, draw::Draw, interpolate::Interpolate, mesh::{IndexedMesh, vertices::TexturedVertex},
-	pipeline::pipeline::Pipeline, shapes_2d::triangle::Triangle, shapes_3d::point::Point,
+	colour::Colour,
+	draw::Draw,
+	interpolate::Interpolate,
+	mesh::{IndexedMesh, vertices::TexturedVertex},
+	pipeline::pipeline::Pipeline,
+	shapes_2d::triangle::Triangle,
+	shapes_3d::point::Point,
 	target::Target,
 };
 

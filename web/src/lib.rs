@@ -193,10 +193,7 @@ impl Pipeline for Test {
 		// let c = Colour::new(r, g, b, 255);
 		(
 			vertex,
-			PerspectiveCorrectInterpolate::new(
-				360.0 * (1.0 - ((vertex.z - 1.2) / 3.0) as f64),
-				vertex.z,
-			),
+			PerspectiveCorrectInterpolate::new(360.0 * (1.0 - ((vertex.z - 1.2) / 3.0)), vertex.z),
 		)
 	}
 

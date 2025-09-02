@@ -2,16 +2,7 @@ pub mod vertices;
 
 use std::slice::ChunksExact;
 
-use maths::matrices::matrix4::Matrix4;
-
-use crate::graphics::{
-	draw::Draw,
-	interpolate::Interpolate,
-	pipeline::pipeline::Pipeline,
-	shapes_2d::triangle::Triangle,
-	shapes_3d::{point::Point, triangle::Triangle3D},
-	target::Target,
-};
+use crate::graphics::{shapes_2d::triangle::Triangle, shapes_3d::triangle::Triangle3D};
 
 // Non-indexed mesh
 pub struct Mesh {

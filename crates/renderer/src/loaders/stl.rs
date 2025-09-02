@@ -1,10 +1,8 @@
-use std::{fs::OpenOptions, ops::MulAssign, path::Path};
-
-use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
+use std::{fs::OpenOptions, path::Path};
 
 use crate::graphics::{
 	mesh::{IndexedMesh, vertices::Vertex},
-	shapes_3d::{point::Point, triangle::Triangle3D},
+	shapes_3d::point::Point,
 };
 
 pub fn load_file<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {
@@ -18,11 +16,10 @@ pub fn load_file<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {
 		.collect::<Vec<Vertex>>();
 	let triangles = stl.faces;
 	IndexedMesh {
-		vertices: vertices,
+		vertices,
 		indices: triangles
 			.iter()
-			.map(|t| t.vertices)
-			.flatten()
+			.flat_map(|t| t.vertices)
 			.collect::<Vec<usize>>(),
 	}
 	// triangles

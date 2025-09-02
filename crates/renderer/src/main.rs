@@ -137,12 +137,12 @@ fn main() -> Result<(), Error> {
 				return;
 			}
 
-			if let Some(size) = input.window_resized() {
-				if let Err(err) = pixels.resize_surface(size.width, size.height) {
-					log_error("pixels.resize_surface", err);
-					elwt.exit();
-					return;
-				}
+			if let Some(size) = input.window_resized()
+				&& let Err(err) = pixels.resize_surface(size.width, size.height)
+			{
+				log_error("pixels.resize_surface", err);
+				elwt.exit();
+				return;
 			}
 
 			scene.update();
