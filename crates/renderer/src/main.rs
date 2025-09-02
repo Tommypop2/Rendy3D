@@ -18,7 +18,7 @@ use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::texture::Texture;
 use rendy3d::graphics::viewport::Viewport;
-use rendy3d::loaders::obj::{Mesh, TexturedVertex, load_obj};
+use rendy3d::loaders::obj::{IndexedMesh, TexturedVertex, load_obj, render};
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::EventLoop;
@@ -29,7 +29,7 @@ const WIDTH: u32 = 1280;
 const HEIGHT: u32 = 720;
 struct World {
 	pub cameras: Vec<Camera>,
-	pub objects: Vec<Mesh<TexturedVertex>>,
+	pub objects: Vec<IndexedMesh<TexturedVertex>>,
 }
 
 fn main() -> Result<(), Error> {
@@ -208,7 +208,7 @@ impl Pipeline for Test {
 	}
 }
 impl World {
-	fn new(cameras: Vec<Camera>, objects: Vec<Mesh<TexturedVertex>>) -> Self {
+	fn new(cameras: Vec<Camera>, objects: Vec<IndexedMesh<TexturedVertex>>) -> Self {
 		Self { objects, cameras }
 	}
 
@@ -233,7 +233,13 @@ impl World {
 					) * base_transform.clone();
 				let target: &mut rendy3d::graphics::viewport::ViewportTarget<'_, Screen<'_>> =
 					&mut camera.viewport.target(screen);
-				object.render(pipeline, target, transform, camera.projection.clone());
+				render(
+					object.triangles(),
+					pipeline,
+					target,
+					transform,
+					camera.projection.clone(),
+				);
 			}
 		}
 	}

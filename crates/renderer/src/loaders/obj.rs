@@ -52,11 +52,11 @@ impl From<TexturedVertex_OBJ> for TexturedVertex {
 		}
 	}
 }
-pub struct Mesh<T, I = u16> {
+pub struct IndexedMesh<T, I = u16> {
 	pub vertices: Vec<T>,
 	pub indices: Vec<I>,
 }
-impl<ObjVertex, V> From<Obj<ObjVertex, u16>> for Mesh<V>
+impl<ObjVertex, V> From<Obj<ObjVertex, u16>> for IndexedMesh<V>
 where
 	ObjVertex: Into<V>,
 {
@@ -68,7 +68,7 @@ where
 	}
 }
 pub struct MeshIter<'a, T, I> {
-	mesh: &'a Mesh<T, I>,
+	mesh: &'a IndexedMesh<T, I>,
 	chunks: ChunksExact<'a, I>,
 }
 impl<T, I> Iterator for MeshIter<'_, T, I>
@@ -89,7 +89,7 @@ where
 		Some(triangle)
 	}
 }
-impl<T, I> Mesh<T, I> {
+impl<T, I> IndexedMesh<T, I> {
 	/// Returns an iterator over the triangles in this mesh
 	pub fn triangles(&self) -> MeshIter<'_, T, I> {
 		let chunks = self.indices.chunks_exact(3);
@@ -99,64 +99,62 @@ impl<T, I> Mesh<T, I> {
 
 pub fn load_obj<P: AsRef<Path>>(
 	path: P,
-) -> Result<Mesh<TexturedVertex>, Box<dyn std::error::Error>> {
+) -> Result<IndexedMesh<TexturedVertex>, Box<dyn std::error::Error>> {
 	let input = BufReader::new(File::open(path)?);
 	let dome: Obj<TexturedVertex_OBJ, u16> = load_obj_1(input)?;
-	let mesh: Mesh<TexturedVertex> = dome.into();
+	let mesh: IndexedMesh<TexturedVertex> = dome.into();
 
 	Ok(mesh)
 }
 
-impl<V, I> Mesh<V, I> {
-	pub fn render<P, T, U>(
-		&self,
-		pipeline: &mut P,
-		target: &mut T,
-		transform: Matrix4<f64>,
-		projection: Matrix4<f64>,
-	) where
-		P: Pipeline<VsOut = U, Fragment = Colour, Vertex = V>,
-		T: Target<Item = Colour>,
-		U: Interpolate,
-		V: MulAssign<Matrix4<f64>> + Clone,
-		I: Into<usize> + Copy,
-	{
-		for triangle in self.triangles() {
-			let transformed = triangle.apply(transform.clone());
-			// let projected = transformed.clone().apply(projection.clone());
-			Triangle::new(
-				{
-					let vsout = pipeline.vertex(0, transformed.vertex1);
-					(
-						vsout
-							.0
-							.apply(projection.clone())
-							.to_pixel_coordinate(target.area()),
-						vsout.1,
-					)
-				},
-				{
-					let vsout = pipeline.vertex(0, transformed.vertex2);
-					(
-						vsout
-							.0
-							.apply(projection.clone())
-							.to_pixel_coordinate(target.area()),
-						vsout.1,
-					)
-				},
-				{
-					let vsout = pipeline.vertex(0, transformed.vertex3);
-					(
-						vsout
-							.0
-							.apply(projection.clone())
-							.to_pixel_coordinate(target.area()),
-						vsout.1,
-					)
-				},
-			)
-			.draw(target, pipeline);
-		}
+pub fn render<M, P, T, U, V>(
+	mesh: M,
+	pipeline: &mut P,
+	target: &mut T,
+	transform: Matrix4<f64>,
+	projection: Matrix4<f64>,
+) where
+	M: Iterator<Item = Triangle<V>>,
+	P: Pipeline<VsOut = U, Fragment = Colour, Vertex = V>,
+	T: Target<Item = Colour>,
+	U: Interpolate,
+	V: MulAssign<Matrix4<f64>> + Clone,
+{
+	for triangle in mesh {
+		let transformed = triangle.apply(transform.clone());
+		// let projected = transformed.clone().apply(projection.clone());
+		Triangle::new(
+			{
+				let vsout = pipeline.vertex(0, transformed.vertex1);
+				(
+					vsout
+						.0
+						.apply(projection.clone())
+						.to_pixel_coordinate(target.area()),
+					vsout.1,
+				)
+			},
+			{
+				let vsout = pipeline.vertex(0, transformed.vertex2);
+				(
+					vsout
+						.0
+						.apply(projection.clone())
+						.to_pixel_coordinate(target.area()),
+					vsout.1,
+				)
+			},
+			{
+				let vsout = pipeline.vertex(0, transformed.vertex3);
+				(
+					vsout
+						.0
+						.apply(projection.clone())
+						.to_pixel_coordinate(target.area()),
+					vsout.1,
+				)
+			},
+		)
+		.draw(target, pipeline);
 	}
 }

@@ -6,7 +6,7 @@ use rendy3d::{
 		camera::Camera, colour::Colour, object::Object, pipeline::pipeline::Pipeline,
 		screen::Screen, shapes_2d::point::AbsoluteScreenCoordinate, shapes_3d::point::Point,
 	},
-	loaders::stl::Vertex,
+	loaders::{obj::render, stl::Vertex},
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
 
@@ -35,7 +35,8 @@ impl World {
 					camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 				) * camera.view()
 					* base_transform.clone();
-				object.mesh.render(
+				render(
+					object.mesh.triangles(),
 					&mut CoolShaders {
 						light_direction: Vector3::new(0.0, 0.0, 1.0),
 					},
