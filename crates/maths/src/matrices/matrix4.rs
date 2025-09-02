@@ -21,7 +21,7 @@ impl Matrix4<f64> {
 			Vector4::new(0.0, 1.0 / f64::tan(fov_y / 2.0), 0.0, 0.0),
 			// Should be -1.0 here for w but 1.0 seems to make things work for some reason
 			// TODO: Look into why this is the case
-			Vector4::new(0.0, 0.0, -((far + near) / (far - near)), -1.0),
+			Vector4::new(0.0, 0.0, -((far + near) / (far - near)), 1.0),
 			Vector4::new(0.0, 0.0, -2.0 * (far * near) / (far - near), 0.0),
 		)
 	}
