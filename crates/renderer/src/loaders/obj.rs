@@ -14,32 +14,11 @@ use maths::{
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 
 use crate::graphics::{
-	colour::Colour, draw::Draw, interpolate::Interpolate, pipeline::pipeline::Pipeline,
-	shapes_2d::triangle::Triangle, shapes_3d::point::Point, target::Target,
+	colour::Colour, draw::Draw, interpolate::Interpolate, mesh::{IndexedMesh, vertices::TexturedVertex},
+	pipeline::pipeline::Pipeline, shapes_2d::triangle::Triangle, shapes_3d::point::Point,
+	target::Target,
 };
 
-#[derive(Clone, Copy)]
-pub struct TexturedVertex {
-	pub position: Point,
-	pub normal: Vector3<f64>,
-	pub texture: Vector2<f64>,
-}
-impl Mul<Matrix4<f64>> for TexturedVertex {
-	type Output = Self;
-	fn mul(mut self, rhs: Matrix4<f64>) -> Self::Output {
-		self *= rhs;
-		self
-	}
-}
-impl MulAssign<Matrix4<f64>> for TexturedVertex {
-	fn mul_assign(&mut self, rhs: Matrix4<f64>) {
-		self.position = Point::from_vector(Vector3::from_homogenous(
-			rhs.clone() * self.position.to_homogenous(),
-		));
-		// TODO: technically use inverse-transpose here but just the rotation should be fine for now :)
-		self.normal = rhs.extract_rotation() * self.normal;
-	}
-}
 impl From<TexturedVertex_OBJ> for TexturedVertex {
 	fn from(value: TexturedVertex_OBJ) -> Self {
 		let t = value.texture;
@@ -52,10 +31,6 @@ impl From<TexturedVertex_OBJ> for TexturedVertex {
 		}
 	}
 }
-pub struct IndexedMesh<T, I = u16> {
-	pub vertices: Vec<T>,
-	pub indices: Vec<I>,
-}
 impl<ObjVertex, V> From<Obj<ObjVertex, u16>> for IndexedMesh<V>
 where
 	ObjVertex: Into<V>,
@@ -67,36 +42,6 @@ where
 		}
 	}
 }
-pub struct IndexedMeshIter<'a, T, I> {
-	mesh: &'a IndexedMesh<T, I>,
-	chunks: ChunksExact<'a, I>,
-}
-impl<T, I> Iterator for IndexedMeshIter<'_, T, I>
-where
-	T: Clone,
-	I: Into<usize> + Copy,
-{
-	type Item = Triangle<T>;
-	fn next(&mut self) -> Option<Self::Item> {
-		let chunk = self.chunks.next()?;
-		let i1 = chunk[0];
-		let i2 = chunk[1];
-		let i3 = chunk[2];
-		let v1 = self.mesh.vertices[i1.into()].clone();
-		let v2 = self.mesh.vertices[i2.into()].clone();
-		let v3 = self.mesh.vertices[i3.into()].clone();
-		let triangle = Triangle::new(v1, v2, v3);
-		Some(triangle)
-	}
-}
-impl<T, I> IndexedMesh<T, I> {
-	/// Returns an iterator over the triangles in this mesh
-	pub fn triangles(&self) -> IndexedMeshIter<'_, T, I> {
-		let chunks = self.indices.chunks_exact(3);
-		IndexedMeshIter { mesh: self, chunks }
-	}
-}
-
 pub fn load_obj<P: AsRef<Path>>(
 	path: P,
 ) -> Result<IndexedMesh<TexturedVertex>, Box<dyn std::error::Error>> {

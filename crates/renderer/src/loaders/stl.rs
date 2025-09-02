@@ -2,24 +2,11 @@ use std::{fs::OpenOptions, ops::MulAssign, path::Path};
 
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
-use crate::{
-	graphics::shapes_3d::{point::Point, triangle::Triangle3D},
-	loaders::obj::IndexedMesh,
+use crate::graphics::{
+	mesh::{IndexedMesh, vertices::Vertex},
+	shapes_3d::{point::Point, triangle::Triangle3D},
 };
-#[derive(Clone, Copy)]
-pub struct Vertex {
-	pub position: Point,
-}
-impl Vertex {
-	pub fn new(p: Point) -> Self {
-		Self { position: p }
-	}
-}
-impl MulAssign<Matrix4<f64>> for Vertex {
-	fn mul_assign(&mut self, rhs: Matrix4<f64>) {
-		self.position = self.position.apply(rhs)
-	}
-}
+
 pub fn load_file<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {
 	let mut file = OpenOptions::new().read(true).open(path).unwrap();
 	let stl = stl_io::read_stl(&mut file).unwrap();
