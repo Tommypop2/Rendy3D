@@ -67,11 +67,11 @@ where
 		}
 	}
 }
-pub struct MeshIter<'a, T, I> {
+pub struct IndexedMeshIter<'a, T, I> {
 	mesh: &'a IndexedMesh<T, I>,
 	chunks: ChunksExact<'a, I>,
 }
-impl<T, I> Iterator for MeshIter<'_, T, I>
+impl<T, I> Iterator for IndexedMeshIter<'_, T, I>
 where
 	T: Clone,
 	I: Into<usize> + Copy,
@@ -91,9 +91,9 @@ where
 }
 impl<T, I> IndexedMesh<T, I> {
 	/// Returns an iterator over the triangles in this mesh
-	pub fn triangles(&self) -> MeshIter<'_, T, I> {
+	pub fn triangles(&self) -> IndexedMeshIter<'_, T, I> {
 		let chunks = self.indices.chunks_exact(3);
-		MeshIter { mesh: self, chunks }
+		IndexedMeshIter { mesh: self, chunks }
 	}
 }
 
