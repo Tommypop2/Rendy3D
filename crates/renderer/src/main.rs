@@ -10,7 +10,7 @@ use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::interpolate::{Interpolate, PerspectiveCorrectInterpolate};
-use rendy3d::graphics::mesh::IndexedMesh;
+use rendy3d::graphics::mesh::indexed::IndexedMesh;
 use rendy3d::graphics::mesh::vertices::TexturedVertex;
 use rendy3d::graphics::pipeline::Pipeline;
 use rendy3d::graphics::screen::{Screen, frame_pixels};

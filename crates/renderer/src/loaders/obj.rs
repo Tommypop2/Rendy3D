@@ -4,14 +4,8 @@ use maths::{matrices::matrix4::Matrix4, vector::vector2::Vector2};
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 
 use crate::graphics::{
-	colour::Colour,
-	draw::Draw,
-	interpolate::Interpolate,
-	mesh::{IndexedMesh, vertices::TexturedVertex},
-	pipeline::Pipeline,
-	shapes_2d::triangle::Triangle,
-	shapes_3d::point::Point,
-	target::Target,
+	colour::Colour, draw::Draw, interpolate::Interpolate, mesh::{indexed::IndexedMesh, vertices::TexturedVertex},
+	pipeline::Pipeline, shapes_2d::triangle::Triangle, shapes_3d::point::Point, target::Target,
 };
 
 impl From<TexturedVertex_OBJ> for TexturedVertex {

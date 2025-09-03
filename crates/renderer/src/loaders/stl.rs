@@ -1,7 +1,7 @@
 use std::{fs::OpenOptions, path::Path};
 
 use crate::graphics::{
-	mesh::{IndexedMesh, vertices::Vertex},
+	mesh::{indexed::IndexedMesh, vertices::Vertex},
 	shapes_3d::point::Point,
 };
 

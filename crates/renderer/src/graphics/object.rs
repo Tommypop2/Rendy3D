@@ -1,6 +1,6 @@
 use maths::matrices::matrix4::Matrix4;
 
-use crate::graphics::mesh::{IndexedMesh, vertices::Vertex};
+use crate::graphics::mesh::{indexed::IndexedMesh, vertices::Vertex};
 
 /// Contains a mesh, and its world-space transformation
 pub struct Object {

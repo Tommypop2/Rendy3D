@@ -1,4 +1,3 @@
-use std::fmt::Display;
 
 use derive_more::Add;
 
@@ -12,6 +11,9 @@ pub struct AbsoluteScreenCoordinate {
 	pub y: usize,
 	pub z: f32,
 }
+#[cfg(feature = "std")]
+use std::fmt::Display;
+#[cfg(feature = "std")]
 impl Display for AbsoluteScreenCoordinate {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		writeln!(f, "({}, {}, {})", self.x, self.y, self.z)
