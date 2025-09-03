@@ -21,6 +21,10 @@ Experiment with shader composition (implementing a shader on top of an existing 
 
 Maybe a new crate for a more fully-featured engine?
 
+Look into `micromath` for adding `no_std` support
+
+`Texture` trait. This should make the texturing implementation more flexible (allow procedural textures and `no_std`)
+
 ## Useful Resources
 
 - <https://trenki2.github.io/blog/2017/06/06/developing-a-software-renderer-part1/>
