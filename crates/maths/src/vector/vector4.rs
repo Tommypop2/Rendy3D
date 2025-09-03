@@ -1,4 +1,4 @@
-use std::ops::MulAssign;
+use core::ops::MulAssign;
 
 use crate::vector::vector3::Vector3;
 #[derive(Default, Clone, Debug)]

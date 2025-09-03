@@ -1,4 +1,4 @@
-use std::ops::Neg;
+use core::ops::Neg;
 
 use crate::traits::num::Num;
 

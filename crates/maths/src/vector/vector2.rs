@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Mul, MulAssign};
+use core::ops::{Add, AddAssign, Mul, MulAssign};
 
 use derive_more::{Add, Sub};
 

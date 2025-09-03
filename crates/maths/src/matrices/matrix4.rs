@@ -1,4 +1,4 @@
-use std::ops::{Mul, MulAssign, Neg};
+use core::ops::{Mul, MulAssign, Neg};
 
 use crate::{
 	matrices::matrix3::Matrix3,
