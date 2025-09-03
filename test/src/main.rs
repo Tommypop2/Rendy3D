@@ -3,9 +3,6 @@ use std::time::{Instant, SystemTime};
 
 use error_iter::ErrorIter as _;
 use log::error;
-use maths::matrices::matrix4::Matrix4;
-use maths::vector::vector2::Vector2;
-use maths::vector::vector3::Vector3;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
@@ -21,6 +18,9 @@ use rendy3d::graphics::target::Target;
 use rendy3d::graphics::texture::Texture;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::obj::{load_obj, render};
+use rendy3d::maths::matrices::matrix4::Matrix4;
+use rendy3d::maths::vector::vector2::Vector2;
+use rendy3d::maths::vector::vector3::Vector3;
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::EventLoop;
@@ -80,7 +80,7 @@ fn main() -> Result<(), Error> {
 	// 		Point::new(0.8, 0.4, 0.0),
 	// 	),
 	// ]);
-	let object = load_obj("./obj-tests/checkered-cube.obj").unwrap();
+	let object = load_obj("../obj-tests/checkered-cube.obj").unwrap();
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(vec![main_camera], vec![object]);
@@ -89,7 +89,7 @@ fn main() -> Result<(), Error> {
 	let mut sum: u128 = 0;
 	let mut pipeline = Test {
 		light_direction: Vector3::new(0.0, 0.0, 1.0),
-		texture: Texture::from_path("obj-tests/checkered-cube.png"),
+		texture: Texture::from_path("../obj-tests/checkered-cube.png"),
 	};
 	// let pers_mat = Matrix4::unit();
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];

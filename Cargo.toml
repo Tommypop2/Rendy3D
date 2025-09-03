@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/*", "viewy3d", "web"]
+members = ["crates/*", "test", "viewy3d", "web"]
 
 [profile.profile]
 inherits = "release"
