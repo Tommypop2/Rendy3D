@@ -1,4 +1,4 @@
-use std::ops::MulAssign;
+use core::ops::MulAssign;
 
 use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 

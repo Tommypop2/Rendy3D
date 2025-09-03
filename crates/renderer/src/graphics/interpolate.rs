@@ -1,5 +1,5 @@
 //! Trait for types which can be interpolated across a triangle
-use std::ops::{Add, Mul};
+use core::ops::{Add, Mul};
 
 use maths::vector::{vector2::Vector2, vector3::Vector3};
 

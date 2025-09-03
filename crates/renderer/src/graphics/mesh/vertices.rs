@@ -1,6 +1,6 @@
 //! Vertex Types
 
-use std::ops::{Mul, MulAssign};
+use core::ops::{Mul, MulAssign};
 
 use maths::{
 	matrices::matrix4::Matrix4,
