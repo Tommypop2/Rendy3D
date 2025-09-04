@@ -11,9 +11,9 @@ use rendy3d::graphics::shapes_2d::triangle::Triangle;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
-use rendy3d::loaders::obj::render;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector3::Vector3;
+use rendy3d::render::render;
 #[cfg(target_arch = "wasm32")]
 use std::cell::RefCell;
 use std::marker::PhantomData;

@@ -3,12 +3,11 @@ use std::time::SystemTime;
 use hsv::hsv_to_rgb;
 use rendy3d::{
 	graphics::{
-		camera::Camera, colour::Colour, mesh::vertices::Vertex, object::Object,
-		pipeline::Pipeline, screen::Screen, shapes_2d::point::AbsoluteScreenCoordinate,
-		shapes_3d::point::Point,
+		camera::Camera, colour::Colour, mesh::vertices::Vertex, object::Object, pipeline::Pipeline,
+		screen::Screen, shapes_2d::point::AbsoluteScreenCoordinate, shapes_3d::point::Point,
 	},
-	loaders::obj::render,
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
+	render::render,
 };
 
 pub struct World {

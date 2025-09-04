@@ -4,8 +4,14 @@ use maths::{matrices::matrix4::Matrix4, vector::vector2::Vector2};
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 
 use crate::graphics::{
-	colour::Colour, draw::Draw, interpolate::Interpolate, mesh::{indexed::IndexedMesh, vertices::TexturedVertex},
-	pipeline::Pipeline, shapes_2d::triangle::Triangle, shapes_3d::point::Point, target::Target,
+	colour::Colour,
+	draw::Draw,
+	interpolate::Interpolate,
+	mesh::{indexed::IndexedMesh, vertices::TexturedVertex},
+	pipeline::Pipeline,
+	shapes_2d::triangle::Triangle,
+	shapes_3d::point::Point,
+	target::Target,
 };
 
 impl From<TexturedVertex_OBJ> for TexturedVertex {
@@ -39,56 +45,4 @@ pub fn load_obj<P: AsRef<Path>>(
 	let mesh: IndexedMesh<TexturedVertex> = dome.into();
 
 	Ok(mesh)
-}
-
-pub fn render<M, P, T, U, V>(
-	mesh: M,
-	pipeline: &mut P,
-	target: &mut T,
-	transform: Matrix4<f64>,
-	projection: Matrix4<f64>,
-) where
-	M: Iterator<Item = Triangle<V>>,
-	P: Pipeline<VsOut = U, Fragment = Colour, Vertex = V>,
-	T: Target<Item = Colour>,
-	U: Interpolate,
-	V: MulAssign<Matrix4<f64>> + Clone,
-{
-	for triangle in mesh {
-		let transformed = triangle.apply(transform.clone());
-		// let projected = transformed.clone().apply(projection.clone());
-		Triangle::new(
-			{
-				let vsout = pipeline.vertex(0, transformed.vertex1);
-				(
-					vsout
-						.0
-						.apply(projection.clone())
-						.to_pixel_coordinate(target.area()),
-					vsout.1,
-				)
-			},
-			{
-				let vsout = pipeline.vertex(0, transformed.vertex2);
-				(
-					vsout
-						.0
-						.apply(projection.clone())
-						.to_pixel_coordinate(target.area()),
-					vsout.1,
-				)
-			},
-			{
-				let vsout = pipeline.vertex(0, transformed.vertex3);
-				(
-					vsout
-						.0
-						.apply(projection.clone())
-						.to_pixel_coordinate(target.area()),
-					vsout.1,
-				)
-			},
-		)
-		.draw(target, pipeline);
-	}
 }
