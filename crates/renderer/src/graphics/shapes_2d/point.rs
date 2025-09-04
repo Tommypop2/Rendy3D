@@ -1,9 +1,6 @@
-
 use derive_more::Add;
 
-use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, pipeline::Pipeline, target::Target,
-};
+use crate::graphics::{draw::Draw, interpolate::Interpolate, pipeline::Pipeline, target::Target};
 
 #[derive(Clone, Add, Copy, Debug)]
 pub struct AbsoluteScreenCoordinate {
