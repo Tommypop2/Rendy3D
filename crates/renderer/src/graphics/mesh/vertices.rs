@@ -10,7 +10,7 @@ use maths::{
 use crate::graphics::shapes_3d::point::Point;
 
 /// Vertex with texture coordinates
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct TexturedVertex {
 	pub position: Point,
 	pub normal: Vector3<f64>,
@@ -36,7 +36,7 @@ impl MulAssign<Matrix4<f64>> for TexturedVertex {
 //
 
 /// Vertex with only position information
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Vertex {
 	pub position: Point,
 }

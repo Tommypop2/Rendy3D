@@ -3,7 +3,7 @@
 use core::slice::ChunksExact;
 
 use crate::graphics::shapes_2d::triangle::Triangle;
-
+#[derive(Debug)]
 pub struct IndexedMesh<T, I = u16> {
 	pub vertices: Vec<T>,
 	pub indices: Vec<I>,
