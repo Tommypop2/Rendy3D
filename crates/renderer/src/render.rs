@@ -3,11 +3,11 @@ use core::ops::MulAssign;
 use maths::matrices::matrix4::Matrix4;
 
 use crate::graphics::{
-	colour::Colour, draw::Draw, interpolate::Interpolate, pipeline::Pipeline,
-	shapes_2d::triangle::Triangle, target::Target,
+	draw::Draw, interpolate::Interpolate, pipeline::Pipeline, shapes_2d::triangle::Triangle,
+	target::Target,
 };
 
-pub fn render<M, P, T, U, V>(
+pub fn render<M, P, T, U, V, F>(
 	mesh: M,
 	pipeline: &mut P,
 	target: &mut T,
@@ -15,8 +15,8 @@ pub fn render<M, P, T, U, V>(
 	projection: Matrix4<f64>,
 ) where
 	M: Iterator<Item = Triangle<V>>,
-	P: Pipeline<VsOut = U, Fragment = Colour, Vertex = V>,
-	T: Target<Item = Colour>,
+	P: Pipeline<VsOut = U, Fragment = F, Vertex = V>,
+	T: Target<Item = F>,
 	U: Interpolate,
 	V: MulAssign<Matrix4<f64>> + Clone,
 {
