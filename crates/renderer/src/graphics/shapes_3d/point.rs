@@ -27,8 +27,8 @@ impl Point {
 			target_area.min_y + (height / 2),
 			0.0,
 		);
-		let x = (offset.x as f64 + self.x * (width as f64) / 2.0).round() as usize;
-		let y = (offset.y as f64 - self.y * (height as f64) / 2.0).round() as usize;
+		let x = (offset.x as f64 + self.x * (width as f64) / 2.0) as usize;
+		let y = (offset.y as f64 - self.y * (height as f64) / 2.0) as usize;
 		// println!("({}, {}, {})", x, y, self.z);
 		AbsoluteScreenCoordinate::new(x, y, self.z as f32)
 	}
