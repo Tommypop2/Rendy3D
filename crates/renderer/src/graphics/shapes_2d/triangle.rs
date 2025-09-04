@@ -15,7 +15,7 @@ pub struct Triangle<Vertex = AbsoluteScreenCoordinate> {
 	pub vertex3: Vertex,
 }
 impl<Vertex> Triangle<Vertex> {
-	pub fn new(vertex1: Vertex, vertex2: Vertex, vertex3: Vertex) -> Self {
+	pub const fn new(vertex1: Vertex, vertex2: Vertex, vertex3: Vertex) -> Self {
 		Self {
 			vertex1,
 			vertex2,
