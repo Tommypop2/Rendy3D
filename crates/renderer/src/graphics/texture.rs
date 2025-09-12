@@ -4,10 +4,10 @@ use image::{DynamicImage, GenericImageView, ImageReader, Rgba};
 
 use crate::graphics::colour::Colour;
 
-pub struct Texture {
+pub struct ImageTexture {
 	base: DynamicImage,
 }
-impl Texture {
+impl ImageTexture {
 	pub const fn new(base: DynamicImage) -> Self {
 		Self { base }
 	}
@@ -15,7 +15,10 @@ impl Texture {
 		let img = ImageReader::open(path).unwrap().decode().unwrap();
 		Self::new(img)
 	}
-	pub fn get_pixel(&self, u: f32, v: f32) -> Colour {
+}
+impl Texture for ImageTexture {
+	type Texel = Colour;
+	fn get_texel(&self, u: f32, v: f32) -> Self::Texel {
 		let (width, height) = self.base.dimensions();
 		let x = (width as f32 * u) as u32;
 		let y = (height as f32 * v) as u32;
@@ -23,6 +26,10 @@ impl Texture {
 			.get_pixel(x % width, height - 1 - (y % height))
 			.into()
 	}
+}
+pub trait Texture {
+	type Texel;
+	fn get_texel(&self, u: f32, v: f32) -> Self::Texel;
 }
 impl From<Rgba<u8>> for Colour {
 	fn from(value: Rgba<u8>) -> Self {

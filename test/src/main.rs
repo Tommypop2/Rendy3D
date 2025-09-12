@@ -15,7 +15,7 @@ use rendy3d::graphics::shapes_2d::bounding_area::BoundingArea2D;
 use rendy3d::graphics::shapes_2d::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::target::Target;
-use rendy3d::graphics::texture::Texture;
+use rendy3d::graphics::texture::{ImageTexture, Texture};
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::loaders::obj::load_obj;
 use rendy3d::maths::matrices::matrix4::Matrix4;
@@ -89,7 +89,7 @@ fn main() -> Result<(), Error> {
 	let mut sum: u128 = 0;
 	let mut pipeline = Test {
 		light_direction: Vector3::new(0.0, 0.0, 1.0),
-		texture: Texture::from_path("../obj-tests/checkered-cube.png"),
+		texture: ImageTexture::from_path("../obj-tests/checkered-cube.png"),
 	};
 	// let pers_mat = Matrix4::unit();
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
@@ -160,7 +160,7 @@ fn log_error<E: std::error::Error + 'static>(method_name: &str, err: E) {
 }
 struct Test {
 	light_direction: Vector3<f64>,
-	texture: Texture,
+	texture: ImageTexture,
 }
 impl Pipeline for Test {
 	type VsOut = (PerspectiveCorrectInterpolate<Vector2<f64>>, f64);
@@ -190,7 +190,7 @@ impl Pipeline for Test {
 		let texture_coordinates = data.0.get();
 		let base_colour = self
 			.texture
-			.get_pixel(texture_coordinates.x as f32, texture_coordinates.y as f32);
+			.get_texel(texture_coordinates.x as f32, texture_coordinates.y as f32);
 		let intensity = data.1;
 		Colour::new(
 			(base_colour.red as f64 * intensity) as u8,
