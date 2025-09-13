@@ -1,6 +1,6 @@
 use std::{fs::File, io::BufReader, path::Path};
 
-use maths::vector::vector2::Vector2;
+use crate::maths::vector::vector2::Vector2;
 use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 
 use crate::graphics::{

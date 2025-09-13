@@ -2,7 +2,7 @@
 
 use core::ops::{Mul, MulAssign};
 
-use maths::{
+use crate::maths::{
 	matrices::matrix4::Matrix4,
 	vector::{vector2::Vector2, vector3::Vector3},
 };

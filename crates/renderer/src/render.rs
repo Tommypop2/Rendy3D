@@ -1,6 +1,6 @@
 use core::ops::MulAssign;
 
-use maths::matrices::matrix4::Matrix4;
+use crate::maths::matrices::matrix4::Matrix4;
 
 use crate::graphics::{
 	draw::Draw, interpolate::Interpolate, pipeline::Pipeline, shapes_2d::triangle::Triangle,

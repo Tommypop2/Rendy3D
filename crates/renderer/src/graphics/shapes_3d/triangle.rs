@@ -1,6 +1,6 @@
 use core::ops::MulAssign;
 
-use maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
+use crate::maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 
 use crate::graphics::{shapes_2d::triangle::Triangle, shapes_3d::point::Point};
 pub type Triangle3D = Triangle<Point>;

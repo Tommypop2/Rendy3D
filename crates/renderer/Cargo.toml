@@ -10,10 +10,10 @@ derive_more = { version = "2.0.1", features = [
 	"add",
 ], default-features = false }
 stl_io = { version = "0.8.5", optional = true }
-maths = { path = "../maths" }
+rendy3d-maths = { path = "../maths" }
 obj-rs = { version = "0.7.4", optional = true }
 image = { version = "0.25.6", optional = true }
 
 [features]
 default = ["std"]
-std = ["dep:image", "dep:stl_io", "dep:obj-rs", "maths/std"]
+std = ["dep:image", "dep:stl_io", "dep:obj-rs", "rendy3d-maths/std"]

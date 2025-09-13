@@ -1,4 +1,4 @@
-use maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
+use crate::maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
 
 use crate::graphics::interpolate::Interpolate;
 use crate::graphics::pipeline::back_face_culling::BackFaceCulling;

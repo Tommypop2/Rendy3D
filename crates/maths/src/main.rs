@@ -1,6 +1,6 @@
 use std::hint::black_box;
 
-use maths::matrices::matrix3::Matrix3;
+use rendy3d_maths::matrices::matrix3::Matrix3;
 
 #[inline(never)]
 pub fn yes() -> f64 {

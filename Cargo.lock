@@ -1451,14 +1451,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "maths"
-version = "0.1.0"
-dependencies = [
- "derive_more",
- "micromath",
-]
-
-[[package]]
 name = "maybe-rayon"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2366,9 +2358,17 @@ version = "0.1.0"
 dependencies = [
  "derive_more",
  "image",
- "maths",
  "obj-rs",
+ "rendy3d-maths",
  "stl_io",
+]
+
+[[package]]
+name = "rendy3d-maths"
+version = "0.1.0"
+dependencies = [
+ "derive_more",
+ "micromath",
 ]
 
 [[package]]

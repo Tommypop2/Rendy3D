@@ -1,7 +1,7 @@
 //! Trait for types which can be interpolated across a triangle
 use core::ops::{Add, Mul};
 
-use maths::vector::{vector2::Vector2, vector3::Vector3};
+use crate::maths::vector::{vector2::Vector2, vector3::Vector3};
 
 /// Represents types that can be interpolated
 pub trait Interpolate {

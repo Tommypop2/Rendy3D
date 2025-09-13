@@ -1,4 +1,4 @@
-use maths::matrices::matrix4::Matrix4;
+use crate::maths::matrices::matrix4::Matrix4;
 
 use crate::graphics::viewport::Viewport;
 
