@@ -84,26 +84,6 @@ where
 		{
 			return;
 		}
-		// println!("2");
-		// If all vertices are below the current pixels in the Z buffer, also don't draw
-		// Can't do this optimisation as some triangles may still be visible, even with
-		// all vertices below the Z buffer
-		// if viewport.point_below_z_buffer(screen, self.vertex1)
-		// 	&& viewport.point_below_z_buffer(screen, self.vertex2)
-		// 	&& viewport.point_below_z_buffer(screen, self.vertex3)
-		// {
-		// 	return;
-		// }
-		// println!("3");
-		// viewport.draw_line(screen, self.vertex1, self.vertex2);
-		// viewport.draw_line(screen, self.vertex2, self.vertex3);
-		// viewport.draw_line(screen, self.vertex3, self.vertex1);
-		// unsafe { TRIANGLE_RENDER_COUNT += 1 };
-		// Line::new(self.vertex1, self.vertex2).draw(viewport, screen);
-		// Line::new(self.vertex2, self.vertex3).draw(viewport, screen);
-		// Line::new(self.vertex3, self.vertex1).draw(viewport, screen);
-		// println!("4");
-		// Now need to fill in the triangle
 		let bounding_area = shape.bounding_area();
 		let abc = shape.signed_doubled_area();
 		if match P::backface_culling() {
