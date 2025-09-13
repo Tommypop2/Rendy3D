@@ -8,7 +8,9 @@ use crate::graphics::{
 pub trait Pipeline {
 	/// Output of vertex shader
 	type VsOut: Interpolate;
+	/// Type of fragments emitted by fragment shader
 	type Fragment;
+	/// Input vertex type
 	type Vertex;
 
 	/// Vertex shader
@@ -17,7 +19,7 @@ pub trait Pipeline {
 	/// Fragment shader
 	fn fragment(&self, position: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment;
 
-	/// How triangles should be culled
+	/// Back-face Culling Mode
 	fn backface_culling() -> BackFaceCulling {
 		BackFaceCulling::None
 	}

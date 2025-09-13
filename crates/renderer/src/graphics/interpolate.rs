@@ -5,6 +5,7 @@ use crate::maths::vector::{vector2::Vector2, vector3::Vector3};
 
 /// Represents types that can be interpolated
 pub trait Interpolate {
+	/// Interpolate 3 instances of an interpolatable type with 3 weights
 	fn interpolate3(a: &Self, b: &Self, c: &Self, x: f32, y: f32, z: f32) -> Self;
 }
 
@@ -80,7 +81,7 @@ where
 	}
 }
 
-//
+/// Structure for simplifying perspective correct interpolation
 #[derive(Clone)]
 pub struct PerspectiveCorrectInterpolate<T: Interpolate + Mul<f64, Output = T>> {
 	data: T,

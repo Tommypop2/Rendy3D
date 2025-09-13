@@ -1,4 +1,4 @@
-// Indexed Mesh
+//! Indexed mesh
 
 use core::slice::ChunksExact;
 

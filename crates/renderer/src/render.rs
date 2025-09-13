@@ -7,6 +7,7 @@ use crate::graphics::{
 	target::Target,
 };
 
+/// Renders a mesh with the given shaders
 pub fn render<M, P, T, U, V, F>(
 	mesh: M,
 	pipeline: &mut P,
