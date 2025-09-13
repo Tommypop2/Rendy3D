@@ -15,15 +15,9 @@ It is being built for learning purposes so performance and features are likely n
 
 ## Future Ideas
 
-~~Implement some sort of `Query` system in the shader, where the vertex shader input can be anything that can be derived from the input model. This would reduce the amount of data stored in most cases so cache performance would (maybe) be improved~~ Allow vertex input to be anything that implements `From<InputData>`. This allows for both indexed rendering, as well as only including what is needed
-
 Experiment with shader composition (implementing a shader on top of an existing shader). This would allow for "pre-built" shaders that could do things like handle perspective rendering
 
 Maybe a new crate for a more fully-featured engine?
-
-Look into `micromath` for adding `no_std` support
-
-`Texture` trait. This should make the texturing implementation more flexible (allow procedural textures and `no_std`)
 
 ## Useful Resources
 
