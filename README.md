@@ -10,6 +10,12 @@ It is being built for learning purposes so performance and features are likely n
 - `no_std` support (can be used in embedded environments)
 - Flexible mesh formats (can render anything that implements an `Iterator` that returns triangles)
 
+## TODO
+
+- [ ] Move application of the projection matrices into the shader
+- [ ] Triangle clipping
+- [ ] Shadows
+
 ## Future Ideas
 
 Experiment with shader composition (implementing a shader on top of an existing shader). This would allow for "pre-built" shaders that could do things like handle perspective rendering
