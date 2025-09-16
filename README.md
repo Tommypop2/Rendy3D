@@ -15,6 +15,7 @@ It is being built for learning purposes so performance and features are likely n
 - [ ] Move application of the projection matrices into the shader
 - [ ] Triangle clipping
 - [ ] Shadows
+- [ ] Accessing rate of change of interpolated values in the shader (allows for texture mipmapping)
 
 ## Future Ideas
 
