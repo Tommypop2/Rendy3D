@@ -3,7 +3,7 @@ use core::ops::MulAssign;
 use crate::maths::matrices::matrix4::Matrix4;
 
 use crate::graphics::{
-	draw::Draw, interpolate::Interpolate, pipeline::Pipeline, geometry::triangle::Triangle,
+	draw::Draw, geometry::triangle::Triangle, interpolate::Interpolate, pipeline::Pipeline,
 	target::Target,
 };
 
@@ -24,9 +24,9 @@ pub fn render<M, P, T, U, V, F>(
 	for triangle in mesh {
 		let transformed = triangle.apply(transform.clone());
 		// let projected = transformed.clone().apply(projection.clone());
-		Triangle::new(
-			{
-				let vsout = pipeline.vertex(0, transformed.vertex1);
+		transformed
+			.map_vertices(|vertex| {
+				let vsout = pipeline.vertex(0, vertex);
 				(
 					vsout
 						.0
@@ -34,28 +34,7 @@ pub fn render<M, P, T, U, V, F>(
 						.to_pixel_coordinate(target.area()),
 					vsout.1,
 				)
-			},
-			{
-				let vsout = pipeline.vertex(0, transformed.vertex2);
-				(
-					vsout
-						.0
-						.apply(projection.clone())
-						.to_pixel_coordinate(target.area()),
-					vsout.1,
-				)
-			},
-			{
-				let vsout = pipeline.vertex(0, transformed.vertex3);
-				(
-					vsout
-						.0
-						.apply(projection.clone())
-						.to_pixel_coordinate(target.area()),
-					vsout.1,
-				)
-			},
-		)
-		.draw(target, pipeline);
+			})
+			.draw(target, pipeline);
 	}
 }
