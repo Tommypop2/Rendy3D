@@ -2,7 +2,7 @@ use std::{fs::OpenOptions, path::Path};
 
 use rendy3d::graphics::{
 	mesh::{indexed::IndexedMesh, vertices::Vertex},
-	shapes_3d::point::Point,
+	geometry_3d::point::Point,
 };
 
 pub fn load_file<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {

@@ -1,6 +1,6 @@
 use core::{f32, slice};
 
-use crate::graphics::{colour::Colour, shapes_2d::bounding_area::BoundingArea2D, target::Target};
+use crate::graphics::{colour::Colour, geometry::bounding_area::BoundingArea2D, target::Target};
 
 /// Root [`Target`] that actually writes to a framebuffer
 ///
@@ -41,7 +41,7 @@ impl<'a> Target for Screen<'a> {
 		self.reset_z_buffer();
 	}
 
-	fn area(&self) -> super::shapes_2d::bounding_area::BoundingArea2D {
+	fn area(&self) -> super::geometry::bounding_area::BoundingArea2D {
 		BoundingArea2D {
 			min_x: 0,
 			max_x: self.width,

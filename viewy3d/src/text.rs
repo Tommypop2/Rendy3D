@@ -1,4 +1,4 @@
-use rendy3d::graphics::{colour::Colour, shapes_2d::point::AbsoluteScreenCoordinate};
+use rendy3d::graphics::{colour::Colour, geometry::point::AbsoluteScreenCoordinate};
 
 pub fn draw_char(
 	font: &fontdue::Font,

@@ -1,4 +1,4 @@
-use crate::graphics::{shapes_2d::bounding_area::BoundingArea2D, target::Target};
+use crate::graphics::{geometry::bounding_area::BoundingArea2D, target::Target};
 
 pub struct Viewport {
 	pub area: BoundingArea2D,

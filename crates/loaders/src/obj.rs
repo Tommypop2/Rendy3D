@@ -5,7 +5,7 @@ use rendy3d::maths::vector::vector2::Vector2;
 
 use rendy3d::graphics::{
 	mesh::{indexed::IndexedMesh, vertices::TexturedVertex},
-	shapes_3d::point::Point,
+	geometry_3d::point::Point,
 };
 
 // impl From<TexturedVertex_OBJ> for TexturedVertex {

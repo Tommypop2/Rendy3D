@@ -7,7 +7,7 @@ use crate::maths::{
 	vector::{vector2::Vector2, vector3::Vector3},
 };
 
-use crate::graphics::shapes_3d::point::Point;
+use crate::graphics::geometry_3d::point::Point;
 
 /// Vertex with texture coordinates
 #[derive(Clone, Copy, Debug)]

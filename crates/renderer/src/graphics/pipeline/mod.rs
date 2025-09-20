@@ -2,7 +2,7 @@ pub mod back_face_culling;
 
 use crate::graphics::{
 	interpolate::Interpolate, pipeline::back_face_culling::BackFaceCulling,
-	shapes_2d::point::AbsoluteScreenCoordinate, shapes_3d::point::Point,
+	geometry::point::AbsoluteScreenCoordinate, geometry_3d::point::Point,
 };
 
 /// Render pipeline trait

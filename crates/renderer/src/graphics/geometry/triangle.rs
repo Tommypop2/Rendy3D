@@ -5,7 +5,7 @@ use crate::graphics::pipeline::back_face_culling::BackFaceCulling;
 use crate::graphics::{
 	draw::Draw,
 	pipeline::Pipeline,
-	shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
+	geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 	target::Target,
 };
 #[derive(Debug, Clone)]

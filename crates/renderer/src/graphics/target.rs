@@ -1,4 +1,4 @@
-use crate::graphics::shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
+use crate::graphics::geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
 
 /// Target that we can render to
 /// Includes basic functions for manipulating a buffer

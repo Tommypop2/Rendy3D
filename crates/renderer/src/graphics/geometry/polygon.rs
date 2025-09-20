@@ -1,4 +1,4 @@
-use crate::graphics::shapes_2d::{point::AbsoluteScreenCoordinate, triangle::Triangle};
+use crate::graphics::geometry::{point::AbsoluteScreenCoordinate, triangle::Triangle};
 
 pub struct Polygon<'a> {
 	points: &'a [AbsoluteScreenCoordinate],

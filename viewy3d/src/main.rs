@@ -8,7 +8,7 @@ use rendy3d::{
 		colour::Colour,
 		object::Object,
 		screen::Screen,
-		shapes_2d::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
+		geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 		target::Target,
 		viewport::Viewport,
 	},

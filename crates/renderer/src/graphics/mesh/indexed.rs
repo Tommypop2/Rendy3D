@@ -2,7 +2,7 @@
 
 use core::slice::ChunksExact;
 
-use crate::graphics::shapes_2d::triangle::Triangle;
+use crate::graphics::geometry::triangle::Triangle;
 
 /// Indexed mesh type
 ///
