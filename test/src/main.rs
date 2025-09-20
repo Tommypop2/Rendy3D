@@ -53,7 +53,7 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-	let pers_mat = Matrix4::new_perspective(PI / 4.0, PI / 4.0, -20.0, 1.0);
+	let pers_mat = Matrix4::new_perspective(PI / 4.0, PI / 4.0, -20.0, -0.1);
 	// let pers_mat = Matrix4::identity();
 
 	let viewport =
@@ -80,7 +80,7 @@ fn main() -> Result<(), Error> {
 	// 		Point::new(0.8, 0.4, 0.0),
 	// 	),
 	// ]);
-	let object = load_obj("../obj-tests/checkered-cube.obj").unwrap();
+	let object = load_obj("../obj-tests/potted_plant_04_4k.obj").unwrap();
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(vec![main_camera], vec![object]);
@@ -89,7 +89,7 @@ fn main() -> Result<(), Error> {
 	let mut sum: u128 = 0;
 	let mut pipeline = Test {
 		light_direction: Vector3::new(0.0, 0.0, 1.0),
-		texture: ImageTexture::from_path("../obj-tests/checkered-cube.png"),
+		texture: ImageTexture::from_path("../obj-tests/potted_plant_04_diff_4k.jpg"),
 	};
 	// let pers_mat = Matrix4::unit();
 	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
@@ -174,7 +174,7 @@ impl Pipeline for Test {
 			vertex.position,
 			(
 				PerspectiveCorrectInterpolate::new(vertex.texture, z),
-				intensity,
+				intensity / 1.5,
 			),
 		)
 		// let res = index % 3;
@@ -224,9 +224,26 @@ impl World {
 		let x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
-		let base_transform = Matrix4::rotation_z(x.as_secs_f64())
+		let tu64 = x.as_secs();
+		let tf64 = x.as_secs_f64();
+		let fract = tf64.fract();
+		let rotation = Matrix4::rotation_z(x.as_secs_f64())
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64());
+		let m = f64::sin(fract * PI);
+		let base_transform = Matrix4::translation(if (tu64 - 1) % 3 == 0 {
+			if fract < 0.01 {
+				println!("X")
+			}
+			// x
+			Vector3::new(m, 0.0, 0.0)
+		} else if (tu64 - 2) % 3 == 0 {
+			// y
+			Vector3::new(0.0, m * 1.5, 0.0)
+		} else {
+			// z
+			Vector3::new(0.0, 0.0, m)
+		}) * Matrix4::scale(3.0) * rotation;
 		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.view()
