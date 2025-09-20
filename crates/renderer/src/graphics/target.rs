@@ -30,7 +30,7 @@ pub trait Target {
 		}
 		let (_, _, z) = p.as_tuple();
 		let buffered_z = self.get_depth(p.x, p.y);
-		z < buffered_z && f32::abs(z - buffered_z) >= 0.001
+		z < buffered_z && f32::abs(z - buffered_z) >= 0.00001
 	}
 	fn set_z_in_z_buffer(&mut self, p: AbsoluteScreenCoordinate) {
 		self.set_depth(p.x, p.y, p.z);
