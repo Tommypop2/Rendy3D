@@ -17,7 +17,7 @@ impl Plane {
 		}
 	}
 	pub fn signed_distance(&self, p: Point) -> f64 {
-		let (x, y, z) = p.to_vector().as_tuple();
+		let (x, y, z) = p.to_vector3().as_tuple();
 		let (a, b, c) = self.normal.as_tuple();
 		a * x + b * y + c * z - self.distance
 	}

@@ -1,7 +1,9 @@
 use core::ops::MulAssign;
 
+use derive_more::{Add, Sub};
+
 use crate::vector::vector3::Vector3;
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, Debug, Add, Copy, Sub)]
 pub struct Vector4<T> {
 	pub x: T,
 	pub y: T,

@@ -169,7 +169,7 @@ impl Pipeline for Test {
 
 	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		let intensity = vertex.normal.dot_with(&self.light_direction);
-		let z = vertex.position.z;
+		let z = vertex.position.to_vector3().z;
 		(
 			vertex.position,
 			(

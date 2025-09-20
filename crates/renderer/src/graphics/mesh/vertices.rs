@@ -25,9 +25,7 @@ impl Mul<Matrix4<f64>> for TexturedVertex {
 }
 impl MulAssign<Matrix4<f64>> for TexturedVertex {
 	fn mul_assign(&mut self, rhs: Matrix4<f64>) {
-		self.position = Point::from_vector(Vector3::from_homogenous(
-			rhs.clone() * self.position.to_homogenous(),
-		));
+		self.position = Point::from_vector4(rhs.clone() * self.position.to_vector4());
 		// TODO: technically use inverse-transpose here but just the rotation should be fine for now :)
 		self.normal = rhs.extract_rotation() * self.normal;
 	}

@@ -23,8 +23,8 @@ impl Triangle3D {
 		[&mut self.vertex1, &mut self.vertex2, &mut self.vertex3]
 	}
 	pub fn normal(&self) -> Vector3<f64> {
-		let side1 = self.vertex2 - self.vertex1;
-		let side2 = self.vertex3 - self.vertex1;
+		let side1 = (self.vertex2 - self.vertex1).to_vector3();
+		let side2 = (self.vertex3 - self.vertex1).to_vector3();
 
 		side1.cross_with(&side2)
 	}

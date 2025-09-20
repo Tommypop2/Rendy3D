@@ -36,7 +36,7 @@ fn convert_textured_vertex(vertex: TexturedVertex_OBJ) -> TexturedVertex {
 	// Z value should always be 0!
 	debug_assert_eq!(t[2], 0.0);
 	TexturedVertex {
-		position: Point::from_vector(vertex.position.into()),
+		position: Point::from_vector3(vertex.position.into()),
 		normal: vertex.normal.into(),
 		texture: Vector2::new(t[0] as f64, t[1] as f64),
 	}
