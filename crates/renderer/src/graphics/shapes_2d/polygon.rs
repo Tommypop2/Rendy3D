@@ -4,7 +4,7 @@ pub struct Polygon<'a> {
 	points: &'a [AbsoluteScreenCoordinate],
 }
 impl<'a> Polygon<'a> {
-	pub fn new(points: &'a [AbsoluteScreenCoordinate]) -> Self {
+	pub const fn new(points: &'a [AbsoluteScreenCoordinate]) -> Self {
 		Self { points }
 	}
 	#[cfg(feature = "std")]

@@ -20,7 +20,7 @@ pub struct Matrix3<T> {
 }
 
 impl<T> Matrix3<T> {
-	pub fn new(x: Vector3<T>, y: Vector3<T>, z: Vector3<T>) -> Self {
+	pub const fn new(x: Vector3<T>, y: Vector3<T>, z: Vector3<T>) -> Self {
 		Self { x, y, z }
 	}
 }

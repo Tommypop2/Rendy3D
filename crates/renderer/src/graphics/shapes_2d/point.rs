@@ -17,10 +17,10 @@ impl Display for AbsoluteScreenCoordinate {
 	}
 }
 impl AbsoluteScreenCoordinate {
-	pub fn new(x: usize, y: usize, z: f32) -> Self {
+	pub const fn new(x: usize, y: usize, z: f32) -> Self {
 		Self { x, y, z }
 	}
-	pub fn as_tuple(self) -> (usize, usize, f32) {
+	pub const fn as_tuple(self) -> (usize, usize, f32) {
 		(self.x, self.y, self.z)
 	}
 }

@@ -8,7 +8,7 @@ pub struct Object {
 	pub transformation: Matrix4<f64>,
 }
 impl Object {
-	pub fn new(mesh: IndexedMesh<Vertex, usize>, transformation: Matrix4<f64>) -> Self {
+	pub const fn new(mesh: IndexedMesh<Vertex, usize>, transformation: Matrix4<f64>) -> Self {
 		Self {
 			mesh,
 			transformation,

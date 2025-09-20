@@ -31,7 +31,7 @@ impl<Vertex> Triangle<Vertex> {
 	}
 }
 impl Triangle<AbsoluteScreenCoordinate> {
-	pub fn signed_doubled_area(&self) -> i32 {
+	pub const fn signed_doubled_area(&self) -> i32 {
 		let (x1, y1, _) = self.vertex1.as_tuple();
 		let (x2, y2, _) = self.vertex2.as_tuple();
 		let (x3, y3, _) = self.vertex3.as_tuple();
@@ -40,7 +40,7 @@ impl Triangle<AbsoluteScreenCoordinate> {
 			+ x2 as i32 * (y3 as i32 - y1 as i32)
 			+ x3 as i32 * (y1 as i32 - y2 as i32)
 	}
-	pub fn doubled_area(&self) -> usize {
+	pub const fn doubled_area(&self) -> usize {
 		i32::abs(self.signed_doubled_area()) as usize
 	}
 	fn bounding_area(&self) -> BoundingArea2D {
@@ -58,7 +58,7 @@ impl Triangle<AbsoluteScreenCoordinate> {
 }
 pub static mut TRIANGLE_RENDER_COUNT: usize = 0;
 
-fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<i32> {
+const fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<i32> {
 	Vector2::new(p.x as i32, p.y as i32)
 }
 #[inline]
