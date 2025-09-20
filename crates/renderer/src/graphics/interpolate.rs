@@ -93,6 +93,8 @@ where
 {
 	pub fn new(data: T, z: f64) -> Self {
 		let z_reciprocal = 1.0 / z;
+		// Interpolate data/z and 1/z
+		// as 1/z is linear when an object is perspective projected
 		Self {
 			data: data * z_reciprocal,
 			z_reciprocal,

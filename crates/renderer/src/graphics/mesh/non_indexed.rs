@@ -1,6 +1,10 @@
 //! Non-indexed mesh
 
 use crate::graphics::shapes_3d::triangle::Triangle3D;
+
+/// Non-indexed mesh type
+///
+/// Triangles are stored in a single [`Vec`], so vertices may be duplicated if they are shared between multiple triangles
 pub struct Mesh {
 	/// Triangles that make up the shape
 	pub triangles: Vec<Triangle3D>,

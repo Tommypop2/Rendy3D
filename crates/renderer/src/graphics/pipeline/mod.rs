@@ -5,6 +5,9 @@ use crate::graphics::{
 	shapes_2d::point::AbsoluteScreenCoordinate, shapes_3d::point::Point,
 };
 
+/// Render pipeline trait
+///
+/// This is where the vertex and fragment shaders are implemented. The back-face culling strategy is also selected here.
 pub trait Pipeline {
 	/// Output of vertex shader
 	type VsOut: Interpolate;

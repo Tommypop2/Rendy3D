@@ -22,15 +22,4 @@ pub fn load_file<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {
 			.flat_map(|t| t.vertices)
 			.collect::<Vec<usize>>(),
 	}
-	// triangles
-	// 	.iter()
-	// 	.map(|indexed_triangle| {
-	// 		let vertex_indices = indexed_triangle.vertices;
-	// 		Triangle3D::new(
-	// 			vertices[vertex_indices[0]],
-	// 			vertices[vertex_indices[1]],
-	// 			vertices[vertex_indices[2]],
-	// 		)
-	// 	})
-	// 	.collect::<Vec<Triangle3D>>()
 }

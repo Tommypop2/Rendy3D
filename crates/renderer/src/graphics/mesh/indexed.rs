@@ -3,6 +3,11 @@
 use core::slice::ChunksExact;
 
 use crate::graphics::shapes_2d::triangle::Triangle;
+
+/// Indexed mesh type
+///
+/// The vertices are stored in a separate [`Vec`] to the indices. This means that no vertex is duplicated, even if it appears in multiple triangles.
+/// This approach saves memory, at the expensive of adding some extra indirection on each triangle access
 #[derive(Debug)]
 pub struct IndexedMesh<T, I = u16> {
 	pub vertices: Vec<T>,
