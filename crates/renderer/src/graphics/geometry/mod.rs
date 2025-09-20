@@ -2,6 +2,7 @@
 
 pub mod bounding_area;
 pub mod line;
+pub mod plane;
 pub mod point;
 pub mod polygon;
 pub mod triangle;
