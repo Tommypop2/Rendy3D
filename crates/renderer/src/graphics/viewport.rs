@@ -3,18 +3,7 @@ use crate::graphics::{shapes_2d::bounding_area::BoundingArea2D, target::Target};
 pub struct Viewport {
 	pub area: BoundingArea2D,
 }
-// impl Default for Viewport {
-// 	fn default() -> Self {
-// 		Self {
-// 			area: BoundingArea2D {
-// 				min_x: 0,
-// 				max_x: WIDTH as usize,
-// 				min_y: 0,
-// 				max_y: HEIGHT as usize,
-// 			},
-// 		}
-// 	}
-// }
+
 #[derive(Debug)]
 pub enum ViewportCreationError {
 	MaxXGreaterThanScreenSize,
