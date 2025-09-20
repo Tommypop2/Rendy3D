@@ -2358,8 +2358,15 @@ version = "0.1.0"
 dependencies = [
  "derive_more",
  "image",
- "obj-rs",
  "rendy3d-maths",
+]
+
+[[package]]
+name = "rendy3d-loaders"
+version = "0.1.0"
+dependencies = [
+ "obj-rs",
+ "rendy3d",
  "stl_io",
 ]
 
@@ -2730,6 +2737,7 @@ dependencies = [
  "log",
  "pixels",
  "rendy3d",
+ "rendy3d-loaders",
  "winit 0.29.15",
  "winit_input_helper",
 ]
@@ -2936,6 +2944,7 @@ dependencies = [
  "hsv",
  "pixels",
  "rendy3d",
+ "rendy3d-loaders",
  "softbuffer",
  "winit 0.30.12",
  "winit_input_helper",

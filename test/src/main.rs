@@ -17,7 +17,7 @@ use rendy3d::graphics::shapes_3d::point::Point;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::texture::{ImageTexture, Texture};
 use rendy3d::graphics::viewport::Viewport;
-use rendy3d::loaders::obj::load_obj;
+use rendy3d_loaders::obj::load_obj;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector2::Vector2;
 use rendy3d::maths::vector::vector3::Vector3;

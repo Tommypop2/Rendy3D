@@ -1,0 +1,14 @@
+[package]
+name = "rendy3d-loaders"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+obj-rs = { version = "0.7.4", features = [], optional = true }
+rendy3d = { path = "../renderer" }
+stl_io = { version = "0.8.5", optional = true }
+
+[features]
+default = ["stl", "obj"]
+stl = ["dep:obj-rs"]
+obj = ["dep:stl_io"]

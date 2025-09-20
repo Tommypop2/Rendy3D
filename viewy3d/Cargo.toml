@@ -7,6 +7,7 @@ name = "v3d"
 path = "src/main.rs"
 [dependencies]
 rendy3d = { path = "../crates/renderer" }
+rendy3d-loaders = {path = "../crates/loaders"}
 winit = "0.30.12"
 winit_input_helper = "0.16"
 pixels = "0.15.0"

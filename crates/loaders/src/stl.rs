@@ -1,6 +1,6 @@
 use std::{fs::OpenOptions, path::Path};
 
-use crate::graphics::{
+use rendy3d::graphics::{
 	mesh::{indexed::IndexedMesh, vertices::Vertex},
 	shapes_3d::point::Point,
 };

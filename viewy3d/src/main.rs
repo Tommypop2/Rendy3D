@@ -12,9 +12,9 @@ use rendy3d::{
 		target::Target,
 		viewport::Viewport,
 	},
-	loaders::stl::load_file,
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
+use rendy3d_loaders::stl::load_file;
 use winit::{
 	application::ApplicationHandler,
 	dpi::PhysicalSize,
