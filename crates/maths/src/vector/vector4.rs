@@ -13,6 +13,9 @@ impl<T> Vector4<T> {
 	pub const fn new(x: T, y: T, z: T, w: T) -> Self {
 		Self { x, y, z, w }
 	}
+	pub fn as_tuple(self) -> (T, T, T, T) {
+		(self.x, self.y, self.z, self.w)
+	}
 }
 
 impl<T> From<Vector3<T>> for Vector4<T>
