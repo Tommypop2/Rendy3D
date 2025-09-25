@@ -2,13 +2,14 @@ use hsv::hsv_to_rgb;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::interpolate::PerspectiveCorrectInterpolate;
 // Derived from softbuffer `winit` example
+use core::f32;
 use log::debug;
-use rendy3d::graphics::pipeline::Pipeline;
-use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::geometry::bounding_area::BoundingArea2D;
 use rendy3d::graphics::geometry::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::geometry::triangle::Triangle;
 use rendy3d::graphics::geometry_3d::point::Point;
+use rendy3d::graphics::pipeline::Pipeline;
+use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::maths::matrices::matrix4::Matrix4;
@@ -193,7 +194,7 @@ impl Pipeline for Test {
 		// let c = Colour::new(r, g, b, 255);
 		(
 			vertex,
-			PerspectiveCorrectInterpolate::new(360.0 * (1.0 - ((vertex.z - 1.2) / 3.0)), vertex.z),
+			PerspectiveCorrectInterpolate::new(360.0 * (1.0 - ((vertex.z + 2.8) / 3.0)), vertex.z),
 		)
 	}
 
@@ -209,7 +210,7 @@ impl Pipeline for Test {
 		Colour::new(r, g, b, 255)
 	}
 	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
-		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullAnticlockwise
+		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullClockwise
 	}
 }
 pub fn entry(event_loop: EventLoop<()>) {
@@ -272,8 +273,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 					let mut buffer = surface.buffer_mut().unwrap();
 					let pixels = &mut *buffer as *mut [u32];
 					let casted = unsafe { &mut *(pixels as *mut [Colour]) };
-					let mut z_buffer =
-						vec![f32::NEG_INFINITY; { width.get() * height.get() } as usize];
+					let mut z_buffer = vec![f32::INFINITY; { width.get() * height.get() } as usize];
 					let mut screen = Screen::new(
 						casted,
 						&mut z_buffer,
@@ -319,11 +319,11 @@ pub fn entry(event_loop: EventLoop<()>) {
 							let x = time.secs();
 
 							Matrix4::scale_x(height.get() as f64 / width.get() as f64)
-								* Matrix4::translation(Vector3::new(0.0, 0.0, 2.0))
+								* Matrix4::translation(Vector3::new(0.0, 0.0, -2.0))
 								* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
 								* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
 						},
-						Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0),
+						Matrix4::new_perspective(1.0, 1.0, 20.0, 0.01),
 					);
 					buffer.present().unwrap();
 					window.request_redraw();
