@@ -36,9 +36,15 @@ impl MulAssign<Matrix4<f64>> for TexturedVertex {
 //
 
 /// Vertex with position and normal information
+#[derive(Clone, Copy, Debug)]
 pub struct NormalVertex {
 	pub position: Point,
 	pub normal: Vector3<f64>,
+}
+impl NormalVertex {
+	pub const fn new(position: Point, normal: Vector3<f64>) -> Self {
+		Self { position, normal }
+	}
 }
 impl Mul<Matrix4<f64>> for NormalVertex {
 	type Output = Self;

@@ -71,11 +71,11 @@ impl FirstPersonControl {
 			let transform = match code {
 				KeyCode::KeyW => Matrix4::translation(Vector3::new(0.0, 0.0, -self.speed)),
 				KeyCode::KeyS => Matrix4::translation(Vector3::new(0.0, 0.0, self.speed)),
-				KeyCode::KeyA => Matrix4::translation(Vector3::new(self.speed, 0.0, 0.0)),
-				KeyCode::KeyD => Matrix4::translation(Vector3::new(-self.speed, 0.0, 0.0)),
-				KeyCode::Space => Matrix4::translation(Vector3::new(0.0, -self.speed, 0.0)),
+				KeyCode::KeyA => Matrix4::translation(Vector3::new(-self.speed, 0.0, 0.0)),
+				KeyCode::KeyD => Matrix4::translation(Vector3::new(self.speed, 0.0, 0.0)),
+				KeyCode::Space => Matrix4::translation(Vector3::new(0.0, self.speed, 0.0)),
 				KeyCode::ShiftLeft | KeyCode::ShiftRight => {
-					Matrix4::translation(Vector3::new(0.0, self.speed, 0.0))
+					Matrix4::translation(Vector3::new(0.0, -self.speed, 0.0))
 				}
 				_ => {
 					continue;
