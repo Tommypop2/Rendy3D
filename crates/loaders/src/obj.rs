@@ -41,7 +41,7 @@ fn convert_textured_vertex(vertex: TexturedVertex_OBJ) -> TexturedVertex {
 		texture: Vector2::new(t[0] as f64, t[1] as f64),
 	}
 }
-pub fn load_obj<P: AsRef<Path>>(
+pub fn load_obj_indexed<P: AsRef<Path>>(
 	path: P,
 ) -> Result<IndexedMesh<TexturedVertex>, Box<dyn std::error::Error>> {
 	let input = BufReader::new(File::open(path)?);

@@ -5,7 +5,7 @@ use rendy3d::graphics::{
 	geometry_3d::point::Point,
 };
 
-pub fn load_file<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {
+pub fn load_stl_indexed<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {
 	let mut file = OpenOptions::new().read(true).open(path).unwrap();
 	let stl = stl_io::read_stl(&mut file).unwrap();
 	// stl.validate().unwrap();

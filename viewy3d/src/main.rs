@@ -6,15 +6,15 @@ use rendy3d::{
 	graphics::{
 		camera::Camera,
 		colour::Colour,
+		geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 		object::Object,
 		screen::Screen,
-		geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
 		target::Target,
 		viewport::Viewport,
 	},
 	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
-use rendy3d_loaders::stl::load_file;
+use rendy3d_loaders::stl::load_stl_indexed;
 use winit::{
 	application::ApplicationHandler,
 	dpi::PhysicalSize,
@@ -86,7 +86,7 @@ impl ApplicationHandler for App {
 				let height = size.height;
 				println!("{width}, {height}");
 				// Ensure that Z buffer has enough space allocated
-				self.z_buffer = vec![f32::NEG_INFINITY; { width * height } as usize];
+				self.z_buffer = vec![f32::INFINITY; { width * height } as usize];
 				self.surface
 					.as_mut()
 					.unwrap()
@@ -166,7 +166,7 @@ fn main() -> Result<(), Error> {
 	let event_loop = EventLoop::new().unwrap();
 	let _input = WinitInputHelper::new();
 	let viewport = Viewport::new(BoundingArea2D::new(0, 0_usize, 0, 0_usize)).unwrap();
-	let perspective_matrix = Matrix4::new_perspective(1.0, 1.0, -20.0, 1.0);
+	let perspective_matrix = Matrix4::new_perspective(1.0, 1.0, 20.0, 0.01);
 	let camera = Camera::new(viewport, perspective_matrix)
 		.with_transformation(Matrix4::translation(Vector3::new(0.0, 0.0, 1.0)));
 	// let f1_car = load_file(args.file);
@@ -176,7 +176,7 @@ fn main() -> Result<(), Error> {
 	// 	Point::new(0.1, 0.4, 0.0),
 	// )]);
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
-	let guinea_pig = load_file("../GatlingGuineaPig.stl");
+	let guinea_pig = load_stl_indexed("../GatlingGuineaPig.stl");
 	let scene = World::new(
 		vec![camera],
 		vec![Object::new(guinea_pig, Matrix4::identity())],

@@ -22,7 +22,7 @@ use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector2::Vector2;
 use rendy3d::maths::vector::vector3::Vector3;
 use rendy3d::render::render;
-use rendy3d_loaders::obj::load_obj;
+use rendy3d_loaders::obj::load_obj_indexed;
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::EventLoop;
@@ -83,7 +83,7 @@ fn main() -> Result<(), Error> {
 	// 		Point::new(0.8, 0.4, 0.0),
 	// 	),
 	// ]);
-	let object = load_obj("../obj-tests/potted_plant_04_4k.obj").unwrap();
+	let object = load_obj_indexed("../obj-tests/potted_plant_04_4k.obj").unwrap();
 	// let object = Mesh::new(load_file("./F1_RB16B.stl"));
 	// let guinea_pig = Mesh::new(load_file("./GatlingGuineaPig.stl"));
 	let mut scene = World::new(vec![main_camera], vec![object]);
