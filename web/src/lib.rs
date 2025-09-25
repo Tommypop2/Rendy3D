@@ -218,7 +218,15 @@ pub fn entry(event_loop: EventLoop<()>) {
 		|elwt| {
 			let window = make_window(elwt, |w| w);
 			let context = softbuffer::Context::new(window.clone()).unwrap();
-
+			let size = window.inner_size();
+			let (width, height) = if let (Some(width), Some(height)) =
+				(NonZeroU32::new(size.width), NonZeroU32::new(size.height))
+			{
+				(width.get(), height.get())
+			} else {
+				(0, 0)
+			};
+			let z_buffer = vec![f32::INFINITY; { width * height } as usize];
 			#[cfg(target_arch = "wasm32")]
 			{
 				use winit::dpi::PhysicalSize;
@@ -228,16 +236,16 @@ pub fn entry(event_loop: EventLoop<()>) {
 				let w = web_sys::window().expect("there should be a window");
 				let performance = w.performance().unwrap();
 
-				return (window, context, WasmTime { performance });
+				return (window, context, WasmTime { performance }, z_buffer);
 			}
 			#[cfg(not(target_arch = "wasm32"))]
-			return (window, context, StdTime {});
+			return (window, context, StdTime {}, z_buffer);
 		},
-		|_elwt, (window, context, _time)| {
+		|_elwt, (window, context, _time, _z_buffer)| {
 			softbuffer::Surface::new(context, window.clone()).unwrap()
 		},
 	)
-	.with_event_handler(|(window, _context, time), surface, event, elwt| {
+	.with_event_handler(|(window, _context, time, z_buffer), surface, event, elwt| {
 		elwt.set_control_flow(ControlFlow::Wait);
 
 		match event {
@@ -254,6 +262,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 				if let (Some(width), Some(height)) =
 					(NonZeroU32::new(size.width), NonZeroU32::new(size.height))
 				{
+					z_buffer.resize((width.get() * height.get()) as usize, f32::INFINITY);
 					surface.resize(width, height).unwrap();
 				}
 			}
@@ -273,10 +282,10 @@ pub fn entry(event_loop: EventLoop<()>) {
 					let mut buffer = surface.buffer_mut().unwrap();
 					let pixels = &mut *buffer as *mut [u32];
 					let casted = unsafe { &mut *(pixels as *mut [Colour]) };
-					let mut z_buffer = vec![f32::INFINITY; { width.get() * height.get() } as usize];
+
 					let mut screen = Screen::new(
 						casted,
-						&mut z_buffer,
+						z_buffer,
 						width.get() as usize,
 						height.get() as usize,
 					);
