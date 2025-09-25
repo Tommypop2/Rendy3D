@@ -54,6 +54,7 @@ impl MulAssign<Matrix4<f64>> for NormalVertex {
 		self.normal = rhs.extract_rotation() * self.normal;
 	}
 }
+
 //
 
 /// Vertex with only position information
