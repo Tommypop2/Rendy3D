@@ -1,8 +1,8 @@
 pub mod back_face_culling;
 
 use crate::graphics::{
-	interpolate::Interpolate, pipeline::back_face_culling::BackFaceCulling,
-	geometry::point::AbsoluteScreenCoordinate, geometry_3d::point::Point,
+	geometry::point::AbsoluteScreenCoordinate, geometry_3d::point::Point, interpolate::Interpolate,
+	pipeline::back_face_culling::BackFaceCulling,
 };
 
 /// Render pipeline trait

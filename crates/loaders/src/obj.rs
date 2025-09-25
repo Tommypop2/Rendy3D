@@ -4,8 +4,8 @@ use obj::{Obj, TexturedVertex as TexturedVertex_OBJ, load_obj as load_obj_1};
 use rendy3d::maths::vector::vector2::Vector2;
 
 use rendy3d::graphics::{
-	mesh::{indexed::IndexedMesh, vertices::TexturedVertex},
 	geometry_3d::point::Point,
+	mesh::{indexed::IndexedMesh, vertices::TexturedVertex},
 };
 
 // impl From<TexturedVertex_OBJ> for TexturedVertex {

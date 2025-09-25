@@ -1,8 +1,8 @@
 use std::{fs::OpenOptions, path::Path};
 
 use rendy3d::graphics::{
-	mesh::{indexed::IndexedMesh, vertices::Vertex},
 	geometry_3d::point::Point,
+	mesh::{indexed::IndexedMesh, vertices::Vertex},
 };
 
 pub fn load_stl_indexed<P: AsRef<Path>>(path: P) -> IndexedMesh<Vertex, usize> {
