@@ -1,3 +1,4 @@
+use core::f32;
 use std::f64::consts::PI;
 use std::time::{Instant, SystemTime};
 
@@ -6,22 +7,22 @@ use log::error;
 use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
+use rendy3d::graphics::geometry::bounding_area::BoundingArea2D;
+use rendy3d::graphics::geometry::point::AbsoluteScreenCoordinate;
+use rendy3d::graphics::geometry_3d::point::Point;
 use rendy3d::graphics::interpolate::{Interpolate, PerspectiveCorrectInterpolate};
 use rendy3d::graphics::mesh::indexed::IndexedMesh;
 use rendy3d::graphics::mesh::vertices::TexturedVertex;
 use rendy3d::graphics::pipeline::Pipeline;
 use rendy3d::graphics::screen::{Screen, frame_pixels};
-use rendy3d::graphics::geometry::bounding_area::BoundingArea2D;
-use rendy3d::graphics::geometry::point::AbsoluteScreenCoordinate;
-use rendy3d::graphics::geometry_3d::point::Point;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::texture::{ImageTexture, Texture};
 use rendy3d::graphics::viewport::Viewport;
-use rendy3d_loaders::obj::load_obj;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector2::Vector2;
 use rendy3d::maths::vector::vector3::Vector3;
 use rendy3d::render::render;
+use rendy3d_loaders::obj::load_obj;
 use winit::dpi::LogicalSize;
 use winit::event::{Event, WindowEvent};
 use winit::event_loop::EventLoop;
@@ -53,9 +54,11 @@ fn main() -> Result<(), Error> {
 		let surface_texture = SurfaceTexture::new(window_size.width, window_size.height, &window);
 		Pixels::new(WIDTH, HEIGHT, surface_texture)?
 	};
-	let pers_mat = Matrix4::new_perspective(PI / 4.0, PI / 4.0, -20.0, -0.1);
+	let pers_mat = Matrix4::new_perspective(PI / 4.0, PI / 4.0, 20.0, 0.01);
 	// let pers_mat = Matrix4::identity();
-
+	// let p = Point::new(0.0, 0.0, 20.1);
+	// let res = p.apply(pers_mat.clone());
+	// dbg!(res);
 	let viewport =
 		Viewport::new(BoundingArea2D::new(0, WIDTH as usize, 0, HEIGHT as usize)).unwrap();
 	let main_camera = Camera::new(viewport, pers_mat.clone())
@@ -92,7 +95,7 @@ fn main() -> Result<(), Error> {
 		texture: ImageTexture::from_path("../obj-tests/potted_plant_04_diff_4k.jpg"),
 	};
 	// let pers_mat = Matrix4::unit();
-	let mut z_buffer = vec![f32::NEG_INFINITY; { WIDTH * HEIGHT } as usize];
+	let mut z_buffer = vec![f32::INFINITY; { WIDTH * HEIGHT } as usize];
 	let res = event_loop.run(|event, elwt| {
 		let mut screen = Screen::new(
 			frame_pixels(pixels.frame_mut()),
@@ -169,6 +172,7 @@ impl Pipeline for Test {
 
 	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		let intensity = vertex.normal.dot_with(&self.light_direction);
+		// dbg!(&vertex);
 		let z = vertex.position.z;
 		(
 			vertex.position,
@@ -192,6 +196,8 @@ impl Pipeline for Test {
 			.texture
 			.get_texel(texture_coordinates.x as f32, texture_coordinates.y as f32);
 		let intensity = data.1;
+		// let intensity = 1.0;
+		// println!("Fragment");
 		Colour::new(
 			(base_colour.red as f64 * intensity) as u8,
 			(base_colour.green as f64 * intensity) as u8,
@@ -243,7 +249,8 @@ impl World {
 		} else {
 			// z
 			Vector3::new(0.0, 0.0, m)
-		}) * Matrix4::scale(3.0) * rotation;
+		}) * Matrix4::scale(3.0)
+			* rotation;
 		for object in &self.objects {
 			for camera in &mut self.cameras {
 				let transform = camera.view()

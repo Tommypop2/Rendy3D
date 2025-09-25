@@ -81,7 +81,7 @@ impl<'a> Screen<'a> {
 		self.frame_buffer
 	}
 	pub fn reset_z_buffer(&mut self) {
-		self.z_buffer.fill(f32::NEG_INFINITY);
+		self.z_buffer.fill(f32::INFINITY);
 	}
 }
 

@@ -4,8 +4,8 @@ use crate::graphics::interpolate::Interpolate;
 use crate::graphics::pipeline::back_face_culling::BackFaceCulling;
 use crate::graphics::{
 	draw::Draw,
-	pipeline::Pipeline,
 	geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
+	pipeline::Pipeline,
 	target::Target,
 };
 #[derive(Debug, Clone)]
