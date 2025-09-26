@@ -1,6 +1,5 @@
 //! Implementation of a triangle clipping algorithm
 
-use core::{array::IntoIter, slice::Iter};
 
 use rendy3d_maths::vector::vector4::Vector4;
 
@@ -104,7 +103,7 @@ where
 		];
 		// println!("{values:?}");
 		let mask: u8 =
-			(values[0] < 0.0) as u8 | (values[1] < 0.0) as u8 * 2 | (values[2] < 0.0) as u8 * 4;
+			(values[0] < 0.0) as u8 | ((values[1] < 0.0) as u8 * 2) | ((values[2] < 0.0) as u8 * 4);
 		let out_triangles: [Option<Triangle<Vertex<T>>>; 2] = match mask {
 			0b000 => {
 				// All triangles are in range, so no clipping :(

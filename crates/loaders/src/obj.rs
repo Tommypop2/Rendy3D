@@ -50,7 +50,7 @@ pub fn load_obj_indexed<P: AsRef<Path>>(
 		vertices: dome
 			.vertices
 			.into_iter()
-			.map(|v| convert_textured_vertex(v))
+			.map(convert_textured_vertex)
 			.collect(),
 		indices: dome.indices,
 	};

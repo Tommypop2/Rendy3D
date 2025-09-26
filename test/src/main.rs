@@ -116,7 +116,7 @@ fn main() -> Result<(), Error> {
 			let time_taken = start.elapsed();
 			frame_num += 1;
 			sum += time_taken.as_micros();
-			if frame_num % 1000 == 0 {
+			if frame_num.is_multiple_of(1000) {
 				//
 				let mean = sum as f64 / frame_num as f64;
 				frame_num = 0;
@@ -240,13 +240,13 @@ impl World {
 			* Matrix4::rotation_y(x.as_secs_f64())
 			* Matrix4::rotation_x(x.as_secs_f64());
 		let m = f64::sin(fract * PI);
-		let base_transform = Matrix4::translation(if (tu64 - 1) % 3 == 0 {
+		let base_transform = Matrix4::translation(if (tu64 - 1).is_multiple_of(3) {
 			if fract < 0.01 {
 				println!("X")
 			}
 			// x
 			Vector3::new(m, 0.0, 0.0)
-		} else if (tu64 - 2) % 3 == 0 {
+		} else if (tu64 - 2).is_multiple_of(3) {
 			// y
 			Vector3::new(0.0, m * 1.5, 0.0)
 		} else {

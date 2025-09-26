@@ -3,7 +3,7 @@ use core::ops::MulAssign;
 use rendy3d_maths::vector::vector3::Vector3;
 use rendy3d_maths::vector::vector4::Vector4;
 
-use crate::graphics::geometry::clipping::{ClippingPlane, SutherlandHodgman, TriangleClipper};
+use crate::graphics::geometry::clipping::{SutherlandHodgman, TriangleClipper};
 use crate::graphics::geometry_3d::point::Point;
 use crate::maths::matrices::matrix4::Matrix4;
 

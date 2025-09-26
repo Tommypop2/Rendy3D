@@ -1,7 +1,5 @@
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
-use derive_more::Mul;
-
 use crate::{
 	traits::{float::Float, signed::Signed},
 	vector::vector4::Vector4,

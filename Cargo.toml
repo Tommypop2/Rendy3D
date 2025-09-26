@@ -2,6 +2,9 @@
 resolver = "3"
 members = ["crates/*", "test", "viewy3d", "web"]
 
+[profile.release]
+lto = "thin"
+
 [profile.profile]
 inherits = "release"
 debug = true
