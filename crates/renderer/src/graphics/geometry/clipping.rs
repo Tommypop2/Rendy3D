@@ -1,6 +1,5 @@
 //! Implementation of a triangle clipping algorithm
 
-
 use rendy3d_maths::vector::vector4::Vector4;
 
 use crate::graphics::{
@@ -138,7 +137,7 @@ where
 				// V2 out of range
 				let nv0 = Self::intersection(&v2, &v0, values[2], values[0]);
 				let nv1 = Self::intersection(&v2, &v1, values[2], values[1]);
-				let [x,y] = Quad::new(v0, v1, nv1, nv0).triangulate();
+				let [x, y] = Quad::new(v0, v1, nv1, nv0).triangulate();
 				[Some(x), Some(y)]
 			}
 			0b101 => {

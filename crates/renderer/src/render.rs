@@ -13,7 +13,6 @@ use crate::graphics::{
 };
 fn test_point(p: Vector4<f64>) -> bool {
 	let (x, y, z, w) = p.as_tuple();
-	// println!("{x}, {y}, {z}, {w}");
 	(-w <= x && x <= w) && (-w <= y && y <= w) && (-w <= z && z <= w)
 }
 
