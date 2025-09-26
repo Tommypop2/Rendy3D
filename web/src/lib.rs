@@ -308,34 +308,39 @@ pub fn entry(event_loop: EventLoop<()>) {
 					let h = Point::new(1.0, 1.0, -1.0);
 					render(
 						[
-							Triangle::new(a, b, c),
-							Triangle::new(c, b, e),
-							Triangle::new(a, h, g),
-							Triangle::new(b, a, g),
-							Triangle::new(f, b, g),
-							Triangle::new(e, b, f),
-							Triangle::new(a, c, d),
-							Triangle::new(h, a, d),
-							Triangle::new(c, e, d),
-							Triangle::new(e, f, d),
-							Triangle::new(g, h, d),
-							Triangle::new(f, g, d),
+							Triangle::new(
+								Point::new(0.0, 0.0, -0.85),
+								Point::new(0.6, -0.4, -1.0),
+								Point::new(0.4, 0.4, -1.0),
+							), // Triangle::new(a, b, c),
+							   // Triangle::new(c, b, e),
+							   // Triangle::new(a, h, g),
+							   // Triangle::new(b, a, g),
+							   // Triangle::new(f, b, g),
+							   // Triangle::new(e, b, f),
+							   // Triangle::new(a, c, d),
+							   // Triangle::new(h, a, d),
+							   // Triangle::new(c, e, d),
+							   // Triangle::new(e, f, d),
+							   // Triangle::new(g, h, d),
+							   // Triangle::new(f, g, d),
 						]
 						.into_iter(),
 						&mut Test {},
 						&mut target,
 						{
-							let x = time.secs();
+							// let x = time.secs();
 
-							Matrix4::scale_x(height.get() as f64 / width.get() as f64)
-								* Matrix4::translation(Vector3::new(0.0, 0.0, -2.0))
-								* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
-								* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
+							// Matrix4::scale_x(height.get() as f64 / width.get() as f64)
+							// 	* Matrix4::translation(Vector3::new(0.0, 0.0, -2.0))
+							// 	* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
+							// 	* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
+							Matrix4::identity()
 						},
-						Matrix4::new_perspective(1.0, 1.0, 20.0, 1.5),
+						Matrix4::new_perspective(1.0, 1.0, 20.0, 0.9),
 					);
 					buffer.present().unwrap();
-					window.request_redraw();
+					// window.request_redraw();
 				};
 			}
 			Event::WindowEvent {

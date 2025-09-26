@@ -222,7 +222,10 @@ impl World {
 
 	fn update(&mut self) {}
 
-	fn draw<U: Interpolate, T: Pipeline<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>>(
+	fn draw<
+		U: Interpolate + Clone,
+		T: Pipeline<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>,
+	>(
 		&mut self,
 		screen: &mut Screen,
 		pipeline: &mut T,
