@@ -1,5 +1,7 @@
 use core::ops::{Add, AddAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
+use derive_more::Mul;
+
 use crate::{
 	traits::{float::Float, signed::Signed},
 	vector::vector4::Vector4,
@@ -82,7 +84,7 @@ impl<T: Float> Vector3<T> {
 	}
 }
 // Add
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Copy> Add<Self> for Vector3<T> {
+impl<T: AddAssign + Copy> Add<Self> for Vector3<T> {
 	type Output = Self;
 
 	fn add(mut self, rhs: Self) -> Self::Output {
@@ -90,13 +92,11 @@ impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Copy> Add<Self> fo
 		self
 	}
 }
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Copy> AddAssign<Self> for Vector3<T> {
+impl<T: AddAssign + Copy> AddAssign<Self> for Vector3<T> {
 	fn add_assign(&mut self, rhs: Self) {
-		*self = Self {
-			x: self.x + rhs.x,
-			y: self.y + rhs.y,
-			z: self.z + rhs.z,
-		}
+		self.x += rhs.x;
+		self.y += rhs.y;
+		self.z += rhs.z;
 	}
 }
 
@@ -124,9 +124,7 @@ impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + 
 }
 
 // Multiply
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> MulAssign<T>
-	for Vector3<T>
-{
+impl<T: Mul<Output = T> + Copy> MulAssign<T> for Vector3<T> {
 	fn mul_assign(&mut self, rhs: T) {
 		*self = Self {
 			x: self.x * rhs,
@@ -135,9 +133,7 @@ impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + 
 		}
 	}
 }
-impl<T: Mul<Output = T> + Add<Output = T> + Sub<Output = T> + Neg<Output = T> + Copy> Mul<T>
-	for Vector3<T>
-{
+impl<T: Mul<Output = T> + Copy> Mul<T> for Vector3<T> {
 	type Output = Self;
 	fn mul(mut self, rhs: T) -> Self {
 		self *= rhs;

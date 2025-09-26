@@ -1,9 +1,11 @@
 use core::ops::Mul;
 
+use derive_more::Add;
+
 use crate::graphics::interpolate::Interpolate;
 
 #[repr(C)]
-#[derive(Clone, Debug, Copy)]
+#[derive(Clone, Debug, Copy, Add)]
 pub struct Colour {
 	pub red: u8,
 	pub green: u8,
@@ -53,7 +55,11 @@ impl Interpolate for Colour {
 			(a.alpha as f32 * x + b.alpha as f32 * y + c.alpha as f32 * z) as u8,
 		)
 	}
+	fn interpolate2(a: &Self, b: &Self, x: f32, y: f32) -> Self {
+		*a * x + *b * y
+	}
 }
+
 impl Mul<f64> for Colour {
 	type Output = Self;
 	fn mul(self, rhs: f64) -> Self::Output {
@@ -62,6 +68,17 @@ impl Mul<f64> for Colour {
 			(self.green as f64 * rhs) as u8,
 			(self.blue as f64 * rhs) as u8,
 			(self.alpha as f64) as u8,
+		)
+	}
+}
+impl Mul<f32> for Colour {
+	type Output = Self;
+	fn mul(self, rhs: f32) -> Self::Output {
+		Colour::new(
+			(self.red as f32 * rhs) as u8,
+			(self.green as f32 * rhs) as u8,
+			(self.blue as f32 * rhs) as u8,
+			(self.alpha as f32) as u8,
 		)
 	}
 }

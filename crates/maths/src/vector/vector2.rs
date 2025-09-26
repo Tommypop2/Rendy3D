@@ -1,13 +1,13 @@
 use core::ops::{Add, AddAssign, Mul, MulAssign};
 
-use derive_more::{Add, Sub};
+use derive_more::{Add, Mul, Sub};
 
 use crate::{
 	traits::{float::Float, num::Num},
 	vector::vector3::Vector3,
 };
 
-#[derive(Debug, Clone, Copy, PartialEq, Sub, Add)]
+#[derive(Debug, Clone, Copy, PartialEq, Sub, Add, Mul)]
 pub struct Vector2<T> {
 	pub x: T,
 	pub y: T,
@@ -56,13 +56,13 @@ where
 		self.y *= rhs;
 	}
 }
-impl<T> Mul<T> for Vector2<T>
-where
-	T: Num,
-{
-	type Output = Vector2<T>;
-	fn mul(mut self, rhs: T) -> Self::Output {
-		self *= rhs;
-		self
-	}
-}
+// impl<T> Mul<T> for Vector2<T>
+// where
+// 	T: Num,
+// {
+// 	type Output = Vector2<T>;
+// 	fn mul(mut self, rhs: T) -> Self::Output {
+// 		self *= rhs;
+// 		self
+// 	}
+// }

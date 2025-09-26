@@ -1,14 +1,14 @@
 pub mod camera;
 pub mod colour;
 pub mod draw;
+pub mod geometry;
+pub mod geometry_3d;
 pub mod interpolate;
 pub mod mesh;
 #[cfg(feature = "std")]
 pub mod object;
 pub mod pipeline;
 pub mod screen;
-pub mod geometry;
-pub mod geometry_3d;
 pub mod target;
 #[cfg(feature = "std")]
 pub mod texture;

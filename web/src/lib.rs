@@ -332,7 +332,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 								* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
 								* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
 						},
-						Matrix4::new_perspective(1.0, 1.0, 20.0, 0.01),
+						Matrix4::new_perspective(1.0, 1.0, 20.0, 1.5),
 					);
 					buffer.present().unwrap();
 					window.request_redraw();
