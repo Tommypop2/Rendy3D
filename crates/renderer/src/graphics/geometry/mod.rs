@@ -6,4 +6,5 @@ pub mod line;
 pub mod plane;
 pub mod point;
 pub mod polygon;
+pub mod quad;
 pub mod triangle;
