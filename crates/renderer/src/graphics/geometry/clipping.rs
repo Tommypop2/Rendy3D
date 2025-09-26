@@ -132,15 +132,15 @@ where
 				// V0 and V1 out of range
 				let nv0 = Self::intersection(&v2, &v0, values[2], values[0]);
 				let nv1 = Self::intersection(&v2, &v1, values[2], values[1]);
-				let [x, y] = Quad::new(v0, v1, nv1, nv0).triangulate();
-				[Some(x), Some(y)]
+				let t = Triangle::new(nv0, nv1, v2);
+				[Some(t), None]
 			}
 			0b100 => {
 				// V2 out of range
 				let nv0 = Self::intersection(&v2, &v0, values[2], values[0]);
 				let nv1 = Self::intersection(&v2, &v1, values[2], values[1]);
-				let t = Triangle::new(nv0, nv1, v2);
-				[Some(t), None]
+				let [x,y] = Quad::new(v0, v1, nv1, nv0).triangulate();
+				[Some(x), Some(y)]
 			}
 			0b101 => {
 				// V0 and V2 out of range
