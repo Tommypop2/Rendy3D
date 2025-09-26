@@ -2,7 +2,7 @@ use core::ops::MulAssign;
 
 use derive_more::{Add, Mul, Sub};
 
-use crate::vector::vector3::Vector3;
+use crate::{traits::signed::Signed, vector::vector3::Vector3};
 #[derive(Default, Clone, Debug, Mul, Sub, Add, Copy)]
 pub struct Vector4<T> {
 	pub x: T,
@@ -19,7 +19,14 @@ impl<T> Vector4<T> {
 		(self.x, self.y, self.z, self.w)
 	}
 }
-
+impl<T: Signed> Vector4<T> {
+	pub fn dot(a: Vector4<T>, b: Vector4<T>) -> T {
+		a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w
+	}
+	pub fn dot_with(self, other: Self) -> T {
+		Self::dot(self, other)
+	}
+}
 impl<T> From<Vector3<T>> for Vector4<T>
 where
 	T: Default,
