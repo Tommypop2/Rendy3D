@@ -1,5 +1,6 @@
 use hsv::hsv_to_rgb;
 use rendy3d::graphics::colour::Colour;
+use rendy3d::graphics::geometry::clipping::SutherlandHodgman;
 use rendy3d::graphics::interpolate::PerspectiveCorrectInterpolate;
 // Derived from softbuffer `winit` example
 use core::f32;
@@ -184,6 +185,7 @@ impl Pipeline for Test {
 	type VsOut = PerspectiveCorrectInterpolate<f64>;
 	type Vertex = Point;
 	type Fragment = Colour;
+	type ClippingStrategy = SutherlandHodgman;
 
 	fn vertex(&self, _index: usize, vertex: Point) -> (Point, Self::VsOut) {
 		// let (r, g, b) = hsv_to_rgb(

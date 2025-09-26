@@ -44,7 +44,7 @@ pub fn render<M, P, T, U, V, F>(
 			&& test_point(clip_space.vertex3.0))
 		{
 			// Clip!
-			for t in SutherlandHodgman::clip(clip_space) {
+			for t in P::ClippingStrategy::clip(clip_space) {
 				t.map_vertices(|(p, a)| {
 					(
 						Point::from_vector(Vector3::from_homogenous(p))

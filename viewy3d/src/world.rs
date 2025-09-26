@@ -4,7 +4,9 @@ use rendy3d::{
 	graphics::{
 		camera::Camera,
 		colour::Colour,
-		geometry::{point::AbsoluteScreenCoordinate, triangle::Triangle},
+		geometry::{
+			clipping::SutherlandHodgman, point::AbsoluteScreenCoordinate, triangle::Triangle,
+		},
 		geometry_3d::point::Point,
 		mesh::vertices::NormalVertex,
 		object::Object,
@@ -80,6 +82,8 @@ impl Pipeline for CoolShaders {
 	type Fragment = Colour;
 	type VsOut = Colour;
 	type Vertex = NormalVertex;
+	type ClippingStrategy = SutherlandHodgman;
+
 	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		let intensity = vertex.normal.dot_with(&self.light_direction);
 		// println!("{intensity}");

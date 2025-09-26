@@ -37,10 +37,7 @@ impl ClippingPlane {
 		}
 	}
 }
-pub trait TriangleClipper<T>
-where
-	T: Interpolate + Clone,
-{
+pub trait TriangleClipper<T> {
 	type ClipResult: IntoIterator<Item = Option<Triangle<Vertex<T>>>>;
 	/// Clips triangle by each equation in turn
 	fn clip(triangle: Triangle<Vertex<T>>) -> impl Iterator<Item = Triangle<Vertex<T>>>;
@@ -163,3 +160,16 @@ where
 		out_triangles
 	}
 }
+
+// pub struct NoClip;
+// impl<T> TriangleClipper<T> for NoClip {
+// 	type ClipResult = ();
+
+// 	fn clip(triangle: Triangle<Vertex<T>>) -> impl Iterator<Item = Triangle<Vertex<T>>> {
+// 		todo!()
+// 	}
+
+// 	fn clip_equation(triangle: Triangle<Vertex<T>>, equation: Vector4<f64>) -> Self::ClipResult {
+// 		todo!()
+// 	}
+// }

@@ -1,7 +1,9 @@
 pub mod back_face_culling;
 
 use crate::graphics::{
-	geometry::point::AbsoluteScreenCoordinate, geometry_3d::point::Point, interpolate::Interpolate,
+	geometry::{clipping::TriangleClipper, point::AbsoluteScreenCoordinate},
+	geometry_3d::point::Point,
+	interpolate::Interpolate,
 	pipeline::back_face_culling::BackFaceCulling,
 };
 
@@ -15,6 +17,8 @@ pub trait Pipeline {
 	type Fragment;
 	/// Input vertex type
 	type Vertex;
+
+	type ClippingStrategy: TriangleClipper<Self::VsOut>;
 
 	/// Vertex shader
 	fn vertex(&self, index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut);

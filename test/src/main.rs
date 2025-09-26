@@ -8,6 +8,7 @@ use pixels::{Error, Pixels, SurfaceTexture};
 use rendy3d::graphics::camera::Camera;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::geometry::bounding_area::BoundingArea2D;
+use rendy3d::graphics::geometry::clipping::SutherlandHodgman;
 use rendy3d::graphics::geometry::point::AbsoluteScreenCoordinate;
 use rendy3d::graphics::geometry_3d::point::Point;
 use rendy3d::graphics::interpolate::{Interpolate, PerspectiveCorrectInterpolate};
@@ -169,7 +170,7 @@ impl Pipeline for Test {
 	type VsOut = (PerspectiveCorrectInterpolate<Vector2<f64>>, f64);
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
-
+	type ClippingStrategy = SutherlandHodgman;
 	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
 		let intensity = vertex.normal.dot_with(&self.light_direction);
 		// dbg!(&vertex);
