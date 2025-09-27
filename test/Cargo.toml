@@ -2,6 +2,7 @@
 name = "test-binary"
 version = "0.1.0"
 edition = "2024"
+publish = false
 default-run = "test-binary"
 [dependencies]
 rendy3d = { path = "../crates/renderer", features = ["std"] }
