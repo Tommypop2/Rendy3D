@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use image::{DynamicImage, GenericImageView, ImageReader, Rgba, RgbaImage};
+use image::{ImageReader, Rgba, RgbaImage};
 
 use crate::graphics::colour::Colour;
 

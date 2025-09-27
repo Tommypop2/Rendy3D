@@ -3,7 +3,7 @@ use core::ops::MulAssign;
 use rendy3d_maths::vector::vector3::Vector3;
 use rendy3d_maths::vector::vector4::Vector4;
 
-use crate::graphics::geometry::clipping::{SutherlandHodgman, TriangleClipper};
+use crate::graphics::geometry::clipping::TriangleClipper;
 use crate::graphics::geometry_3d::point::Point;
 use crate::maths::matrices::matrix4::Matrix4;
 
@@ -11,6 +11,10 @@ use crate::graphics::{
 	draw::Draw, geometry::triangle::Triangle, interpolate::Interpolate, pipeline::Pipeline,
 	target::Target,
 };
+
+/// Tests a given point for whether it's within the view frustum
+///
+/// Returns `true` if the point is within the view frustum, and `false` if it isn't
 fn test_point(p: Vector4<f64>) -> bool {
 	let (x, y, z, w) = p.as_tuple();
 	(-w <= x && x <= w) && (-w <= y && y <= w) && (-w <= z && z <= w)
