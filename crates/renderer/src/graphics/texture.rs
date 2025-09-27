@@ -1,18 +1,18 @@
 use std::path::Path;
 
-use image::{DynamicImage, GenericImageView, ImageReader, Rgba};
+use image::{DynamicImage, GenericImageView, ImageReader, Rgba, RgbaImage};
 
 use crate::graphics::colour::Colour;
 
 pub struct ImageTexture {
-	base: DynamicImage,
+	base: RgbaImage,
 }
 impl ImageTexture {
-	pub const fn new(base: DynamicImage) -> Self {
+	pub const fn new(base: RgbaImage) -> Self {
 		Self { base }
 	}
 	pub fn from_path<P: AsRef<Path>>(path: P) -> Self {
-		let img = ImageReader::open(path).unwrap().decode().unwrap();
+		let img = ImageReader::open(path).unwrap().decode().unwrap().into();
 		Self::new(img)
 	}
 }
@@ -22,8 +22,8 @@ impl Texture for ImageTexture {
 		let (width, height) = self.base.dimensions();
 		let x = (width as f32 * u) as u32;
 		let y = (height as f32 * v) as u32;
-		self.base
-			.get_pixel(x % width, height - 1 - (y % height))
+		(*self.base
+			.get_pixel(x % width, height - 1 - (y % height)))
 			.into()
 	}
 }
