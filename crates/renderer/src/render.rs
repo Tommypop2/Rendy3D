@@ -39,10 +39,17 @@ pub fn render<M, P, T, U, V, F>(
 			(clip_space, vsout.1)
 		});
 		// Test each vertex for clipping
-		if !(test_point(clip_space.vertex1.0)
-			&& test_point(clip_space.vertex2.0)
-			&& test_point(clip_space.vertex3.0))
-		{
+		let vertex_test = [
+			test_point(clip_space.vertex1.0),
+			test_point(clip_space.vertex2.0),
+			test_point(clip_space.vertex3.0),
+		];
+		// If all vertices are outside of the view frustum, discard triangle entirely
+		if !(vertex_test[0] || vertex_test[1] || vertex_test[2]) {
+			continue;
+		}
+		// If any vertex is outside the view frustum, clip
+		else if !(vertex_test[0] && vertex_test[1] && vertex_test[2]) {
 			// Clip!
 			for t in P::ClippingStrategy::clip(clip_space) {
 				t.map_vertices(|(p, a)| {
@@ -54,7 +61,9 @@ pub fn render<M, P, T, U, V, F>(
 				})
 				.draw(target, pipeline);
 			}
-		} else {
+		}
+		// If all vertices are inside the viewing frustum, render
+		else {
 			// Convert to screen space
 			clip_space
 				.map_vertices(|(p, a)| {
