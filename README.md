@@ -9,11 +9,13 @@ It is being built for learning purposes so performance and features are likely n
 - WASM support (see <https://tommypop2.github.io/Rendy3D/>)
 - `no_std` support (can be used in embedded environments)
 - Flexible mesh formats (can render anything that implements an `Iterator` that returns triangles)
+- Triangle clipping
 
 ## TODO
 
 - [ ] Move application of the projection matrices into the shader
-- [x] Triangle clipping (fairly slow for now)
+- [ ] Optimize triangle clipping (maybe do XY clipping in 2D on integer coordinates)
+- [ ] Multithreading
 - [ ] Shadows
 - [ ] Accessing rate of change of interpolated values in the shader (allows for texture mipmapping)
 
