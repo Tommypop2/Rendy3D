@@ -5,3 +5,4 @@ flamegraph.svg
 *.obj
 *.jpg
 *.png
+*.mtl
