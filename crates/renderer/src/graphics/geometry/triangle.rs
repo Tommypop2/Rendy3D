@@ -43,7 +43,7 @@ impl Triangle<AbsoluteScreenCoordinate> {
 	pub const fn doubled_area(&self) -> usize {
 		i32::abs(self.signed_doubled_area()) as usize
 	}
-	fn bounding_area(&self) -> BoundingArea2D {
+	pub fn bounding_area(&self) -> BoundingArea2D {
 		let min_x = self.vertex1.x.min(self.vertex2.x).min(self.vertex3.x);
 		let max_x = self.vertex1.x.max(self.vertex2.x).max(self.vertex3.x);
 		let min_y = self.vertex1.y.min(self.vertex2.y).min(self.vertex3.y);
@@ -56,7 +56,6 @@ impl Triangle<AbsoluteScreenCoordinate> {
 		}
 	}
 }
-pub static mut TRIANGLE_RENDER_COUNT: usize = 0;
 
 const fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<i32> {
 	Vector2::new(p.x as i32, p.y as i32)

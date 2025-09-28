@@ -8,6 +8,7 @@ pub mod mesh;
 #[cfg(feature = "std")]
 pub mod object;
 pub mod pipeline;
+pub mod rasterizer;
 pub mod screen;
 pub mod target;
 #[cfg(feature = "std")]

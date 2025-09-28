@@ -5,6 +5,7 @@ use rendy3d_maths::vector::vector4::Vector4;
 
 use crate::graphics::geometry::clipping::TriangleClipper;
 use crate::graphics::geometry_3d::point::Point;
+use crate::graphics::rasterizer::{Rasterizer, TriangleRasterizer};
 use crate::maths::matrices::matrix4::Matrix4;
 
 use crate::graphics::{
@@ -56,14 +57,25 @@ pub fn render<M, P, T, U, V, F>(
 		else if !(vertex_test[0] && vertex_test[1] && vertex_test[2]) {
 			// Clip!
 			for t in P::ClippingStrategy::clip(clip_space) {
-				t.map_vertices(|(p, a)| {
-					(
-						Point::from_vector(Vector3::from_homogenous(p))
-							.to_pixel_coordinate(target.area()),
-						a,
-					)
-				})
-				.draw(target, pipeline);
+				TriangleRasterizer::draw(
+					target,
+					pipeline,
+					t.map_vertices(|(p, a)| {
+						(
+							Point::from_vector(Vector3::from_homogenous(p))
+								.to_pixel_coordinate(target.area()),
+							a,
+						)
+					}),
+				);
+				// t.map_vertices(|(p, a)| {
+				// 	(
+				// 		Point::from_vector(Vector3::from_homogenous(p))
+				// 			.to_pixel_coordinate(target.area()),
+				// 		a,
+				// 	)
+				// })
+				// .draw(target, pipeline);
 			}
 		}
 		// If all vertices are inside the viewing frustum, render
