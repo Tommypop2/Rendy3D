@@ -1,4 +1,6 @@
-use crate::graphics::geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
+use rendy3d_maths::geometry::bounding_area::BoundingArea2D;
+
+use crate::graphics::geometry::point::AbsoluteScreenCoordinate;
 
 /// Target that we can render to
 /// Includes basic functions for manipulating a buffer

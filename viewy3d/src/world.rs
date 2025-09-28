@@ -5,7 +5,7 @@ use rendy3d::{
 		camera::Camera,
 		colour::Colour,
 		geometry::{
-			clipping::SutherlandHodgman, point::AbsoluteScreenCoordinate, triangle::Triangle,
+			clipping::SutherlandHodgman, point::AbsoluteScreenCoordinate,
 		},
 		geometry_3d::point::Point,
 		mesh::vertices::NormalVertex,
@@ -13,7 +13,7 @@ use rendy3d::{
 		pipeline::Pipeline,
 		screen::Screen,
 	},
-	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
+	maths::{geometry::triangle::Triangle, matrices::matrix4::Matrix4, vector::vector3::Vector3},
 	render::render,
 };
 

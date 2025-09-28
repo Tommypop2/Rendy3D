@@ -1,6 +1,5 @@
-use rendy3d_maths::vector::vector3::Vector3;
+use crate::vector::vector3::Vector3;
 
-use crate::graphics::geometry_3d::point::Point;
 /// Represents a plane in the form ax + by + cz = d
 pub struct Plane {
 	normal: Vector3<f64>,
@@ -16,12 +15,12 @@ impl Plane {
 			distance: distance * m,
 		}
 	}
-	pub fn signed_distance(&self, p: Point) -> f64 {
-		let (x, y, z) = p.to_vector().as_tuple();
+	pub fn signed_distance(&self, p: Vector3<f64>) -> f64 {
+		let (x, y, z) = p.as_tuple();
 		let (a, b, c) = self.normal.as_tuple();
 		a * x + b * y + c * z - self.distance
 	}
-	pub fn distance(&self, p: Point) -> f64 {
+	pub fn distance(&self, p: Vector3<f64>) -> f64 {
 		self.signed_distance(p).abs()
 	}
 }
@@ -32,7 +31,7 @@ mod test {
 
 	#[test]
 	fn distance() {
-		let p = Point::new(3.0, 2.0, -1.0);
+		let p = Vector3::new(3.0, 2.0, -1.0);
 		let plane = Plane::new(Vector3::new(2.0, -3.0, 1.0), 5.0);
 		let distance = plane.distance(p);
 		assert!(distance - 6.0 / (f64::sqrt(14.0)) <= 1E-10)

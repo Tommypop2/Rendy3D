@@ -1,10 +1,6 @@
 //! Low-level 2D shapes that use the screen co-ordinate system and are directly rendered to the display
 
-pub mod bounding_area;
 pub mod clipping;
 pub mod line;
-pub mod plane;
 pub mod point;
 pub mod polygon;
-pub mod quad;
-pub mod triangle;

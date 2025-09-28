@@ -1,9 +1,8 @@
 //! Implementation of a triangle clipping algorithm
 
-use rendy3d_maths::vector::vector4::Vector4;
+use rendy3d_maths::{geometry::{quad::Quad, triangle::Triangle}, vector::vector4::Vector4};
 
 use crate::graphics::{
-	geometry::{quad::Quad, triangle::Triangle},
 	interpolate::Interpolate,
 };
 #[derive(Clone, Copy)]

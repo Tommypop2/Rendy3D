@@ -4,15 +4,10 @@ use argh::FromArgs;
 use pixels::Error;
 use rendy3d::{
 	graphics::{
-		camera::Camera,
-		colour::Colour,
-		geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
-		object::Object,
-		screen::Screen,
-		target::Target,
-		viewport::Viewport,
+		camera::Camera, colour::Colour, geometry::point::AbsoluteScreenCoordinate, object::Object,
+		screen::Screen, target::Target, viewport::Viewport,
 	},
-	maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3},
+	maths::{geometry::bounding_area::BoundingArea2D, matrices::matrix4::Matrix4, vector::vector3::Vector3},
 };
 use rendy3d_loaders::stl::load_stl_indexed;
 use winit::{

@@ -2,12 +2,12 @@ use hsv::hsv_to_rgb;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::geometry::clipping::SutherlandHodgman;
 use rendy3d::graphics::interpolate::PerspectiveCorrectInterpolate;
+use rendy3d::maths::geometry::bounding_area::BoundingArea2D;
+use rendy3d::maths::geometry::triangle::Triangle;
 // Derived from softbuffer `winit` example
 use core::f32;
 use log::debug;
-use rendy3d::graphics::geometry::bounding_area::BoundingArea2D;
 use rendy3d::graphics::geometry::point::AbsoluteScreenCoordinate;
-use rendy3d::graphics::geometry::triangle::Triangle;
 use rendy3d::graphics::geometry_3d::point::Point;
 use rendy3d::graphics::pipeline::Pipeline;
 use rendy3d::graphics::screen::Screen;

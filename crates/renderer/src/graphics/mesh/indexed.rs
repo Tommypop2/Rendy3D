@@ -2,7 +2,7 @@
 
 use core::slice::ChunksExact;
 
-use crate::graphics::geometry::triangle::Triangle;
+use rendy3d_maths::geometry::triangle::Triangle;
 
 /// Indexed mesh type
 ///

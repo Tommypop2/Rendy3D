@@ -1,4 +1,6 @@
-use crate::graphics::{geometry::bounding_area::BoundingArea2D, target::Target};
+use rendy3d_maths::geometry::bounding_area::BoundingArea2D;
+
+use crate::graphics::target::Target;
 
 pub struct Viewport {
 	pub area: BoundingArea2D,

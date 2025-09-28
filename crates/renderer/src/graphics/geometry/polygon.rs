@@ -1,4 +1,7 @@
-use crate::graphics::geometry::{point::AbsoluteScreenCoordinate, triangle::Triangle};
+#[cfg(feature = "std")]
+use rendy3d_maths::geometry::triangle::Triangle;
+
+use crate::graphics::geometry::{point::AbsoluteScreenCoordinate};
 
 pub struct Polygon<'a> {
 	points: &'a [AbsoluteScreenCoordinate],

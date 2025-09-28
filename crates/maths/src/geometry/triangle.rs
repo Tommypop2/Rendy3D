@@ -1,6 +1,5 @@
-use rendy3d_maths::vector::vector2::Vector2;
+use crate::{geometry::bounding_area::BoundingArea2D, vector::vector2::Vector2};
 
-use crate::graphics::geometry::bounding_area::BoundingArea2D;
 #[derive(Debug, Clone)]
 pub struct Triangle<Vertex> {
 	pub vertex1: Vertex,
@@ -21,6 +20,17 @@ impl<Vertex> Triangle<Vertex> {
 			map_fn(self.vertex2),
 			map_fn(self.vertex3),
 		)
+	}
+	pub fn vertices_mut(&mut self) -> [&mut Vertex; 3] {
+		[&mut self.vertex1, &mut self.vertex2, &mut self.vertex3]
+	}
+}
+impl<Vertex> Triangle<Vertex>
+where
+	Vertex: Copy,
+{
+	pub fn vertices(&self) -> [Vertex; 3] {
+		[self.vertex1, self.vertex2, self.vertex3]
 	}
 }
 impl Triangle<Vector2<i32>> {

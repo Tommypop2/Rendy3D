@@ -1,4 +1,4 @@
-use crate::graphics::geometry::triangle::Triangle;
+use crate::geometry::triangle::Triangle;
 
 pub struct Quad<T> {
 	v0: T,

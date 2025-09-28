@@ -2,8 +2,9 @@ use core::ops::MulAssign;
 
 use crate::maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 use derive_more::{Add, Deref, DerefMut, Sub};
+use rendy3d_maths::geometry::bounding_area::BoundingArea2D;
 
-use crate::graphics::geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
+use crate::graphics::geometry::point::AbsoluteScreenCoordinate;
 
 /// Coordinates between -1 and 1
 #[derive(Deref, DerefMut, Clone, Add, Copy, Sub, Debug)]

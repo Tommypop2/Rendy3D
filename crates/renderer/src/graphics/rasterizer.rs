@@ -1,7 +1,13 @@
-use rendy3d_maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
+use rendy3d_maths::{
+	geometry::triangle::Triangle, matrices::matrix2::Matrix2, vector::vector2::Vector2,
+};
 
 use crate::graphics::{
-	draw::Draw, geometry::{point::AbsoluteScreenCoordinate, triangle::Triangle}, interpolate::Interpolate, pipeline::{Pipeline, back_face_culling::BackFaceCulling}, target::Target
+	draw::Draw,
+	geometry::point::AbsoluteScreenCoordinate,
+	interpolate::Interpolate,
+	pipeline::{Pipeline, back_face_culling::BackFaceCulling},
+	target::Target,
 };
 
 pub trait Rasterizer<Input, VsOut> {
@@ -18,6 +24,7 @@ const fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Ve
 fn is_between_0_and_1(x: f32) -> bool {
 	(0.0..=1.0).contains(&x)
 }
+
 pub struct TriangleRasterizer;
 impl<U> Rasterizer<Triangle<(AbsoluteScreenCoordinate, U)>, U> for TriangleRasterizer
 where
