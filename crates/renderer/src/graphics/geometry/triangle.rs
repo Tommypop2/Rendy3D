@@ -1,15 +1,6 @@
-use crate::maths::{matrices::matrix2::Matrix2, vector::vector2::Vector2};
-
-use crate::graphics::interpolate::Interpolate;
-use crate::graphics::pipeline::back_face_culling::BackFaceCulling;
-use crate::graphics::{
-	draw::Draw,
-	geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate},
-	pipeline::Pipeline,
-	target::Target,
-};
+use crate::graphics::geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
 #[derive(Debug, Clone)]
-pub struct Triangle<Vertex = AbsoluteScreenCoordinate> {
+pub struct Triangle<Vertex> {
 	pub vertex1: Vertex,
 	pub vertex2: Vertex,
 	pub vertex3: Vertex,

@@ -8,8 +8,8 @@ impl<'a> Polygon<'a> {
 		Self { points }
 	}
 	#[cfg(feature = "std")]
-	pub fn to_triangles(&self) -> Vec<Triangle> {
-		let mut triangles: Vec<Triangle> = Vec::with_capacity(self.points.len() - 2);
+	pub fn to_triangles(&self) -> Vec<Triangle<AbsoluteScreenCoordinate>> {
+		let mut triangles: Vec<Triangle<AbsoluteScreenCoordinate>> = Vec::with_capacity(self.points.len() - 2);
 		let first = self.points[0];
 		let len = self.points.len();
 		for i in 1..(len - 1) {
