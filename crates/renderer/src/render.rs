@@ -9,8 +9,7 @@ use crate::graphics::rasterizer::{Rasterizer, TriangleRasterizer};
 use crate::maths::matrices::matrix4::Matrix4;
 
 use crate::graphics::{
-	draw::Draw, geometry::triangle::Triangle, interpolate::Interpolate, pipeline::Pipeline,
-	target::Target,
+	geometry::triangle::Triangle, interpolate::Interpolate, pipeline::Pipeline, target::Target,
 };
 
 /// Tests a given point for whether it's within the view frustum
@@ -81,15 +80,17 @@ pub fn render<M, P, T, U, V, F>(
 		// If all vertices are inside the viewing frustum, render
 		else {
 			// Convert to screen space
-			clip_space
-				.map_vertices(|(p, a)| {
+			TriangleRasterizer::draw(
+				target,
+				pipeline,
+				clip_space.map_vertices(|(p, a)| {
 					(
 						Point::from_vector(Vector3::from_homogenous(p))
 							.to_pixel_coordinate(target.area()),
 						a,
 					)
-				})
-				.draw(target, pipeline);
+				}),
+			);
 		}
 	}
 }
