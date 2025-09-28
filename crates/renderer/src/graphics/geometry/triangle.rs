@@ -1,4 +1,6 @@
-use crate::graphics::geometry::{bounding_area::BoundingArea2D, point::AbsoluteScreenCoordinate};
+use rendy3d_maths::vector::vector2::Vector2;
+
+use crate::graphics::geometry::bounding_area::BoundingArea2D;
 #[derive(Debug, Clone)]
 pub struct Triangle<Vertex> {
 	pub vertex1: Vertex,
@@ -21,24 +23,22 @@ impl<Vertex> Triangle<Vertex> {
 		)
 	}
 }
-impl Triangle<AbsoluteScreenCoordinate> {
+impl Triangle<Vector2<i32>> {
 	pub const fn signed_doubled_area(&self) -> i32 {
-		let (x1, y1, _) = self.vertex1.as_tuple();
-		let (x2, y2, _) = self.vertex2.as_tuple();
-		let (x3, y3, _) = self.vertex3.as_tuple();
+		let (x1, y1) = self.vertex1.as_tuple();
+		let (x2, y2) = self.vertex2.as_tuple();
+		let (x3, y3) = self.vertex3.as_tuple();
 
-		x1 as i32 * (y2 as i32 - y3 as i32)
-			+ x2 as i32 * (y3 as i32 - y1 as i32)
-			+ x3 as i32 * (y1 as i32 - y2 as i32)
+		x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)
 	}
 	pub const fn doubled_area(&self) -> usize {
 		i32::abs(self.signed_doubled_area()) as usize
 	}
 	pub fn bounding_area(&self) -> BoundingArea2D {
-		let min_x = self.vertex1.x.min(self.vertex2.x).min(self.vertex3.x);
-		let max_x = self.vertex1.x.max(self.vertex2.x).max(self.vertex3.x);
-		let min_y = self.vertex1.y.min(self.vertex2.y).min(self.vertex3.y);
-		let max_y = self.vertex1.y.max(self.vertex2.y).max(self.vertex3.y);
+		let min_x = self.vertex1.x.min(self.vertex2.x).min(self.vertex3.x) as usize;
+		let max_x = self.vertex1.x.max(self.vertex2.x).max(self.vertex3.x) as usize;
+		let min_y = self.vertex1.y.min(self.vertex2.y).min(self.vertex3.y) as usize;
+		let max_y = self.vertex1.y.max(self.vertex2.y).max(self.vertex3.y) as usize;
 		BoundingArea2D {
 			min_x,
 			max_x,

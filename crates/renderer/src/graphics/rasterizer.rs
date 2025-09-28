@@ -36,8 +36,12 @@ where
 		{
 			return;
 		}
-		let bounding_area = shape.bounding_area();
-		let abc = shape.signed_doubled_area();
+		let v0 = absolute_screen_coordinate_to_2d_vec(shape.vertex1);
+		let v1 = absolute_screen_coordinate_to_2d_vec(shape.vertex2);
+		let v2 = absolute_screen_coordinate_to_2d_vec(shape.vertex3);
+		let t2 = Triangle::new(v0, v1, v2);
+		let bounding_area = t2.bounding_area();
+		let abc = t2.signed_doubled_area();
 		if match P::backface_culling() {
 			BackFaceCulling::CullClockwise => abc >= 0,
 			BackFaceCulling::CullAnticlockwise => abc <= 0,
@@ -45,9 +49,6 @@ where
 		} {
 			return;
 		}
-		let v0 = absolute_screen_coordinate_to_2d_vec(shape.vertex1);
-		let v1 = absolute_screen_coordinate_to_2d_vec(shape.vertex2);
-		let v2 = absolute_screen_coordinate_to_2d_vec(shape.vertex3);
 		let mat = Matrix2::new(v1 - v0, v2 - v0).adjugate();
 		let denom = abc as f32;
 		// Iterate over all pixels that could possibly contain the triangle

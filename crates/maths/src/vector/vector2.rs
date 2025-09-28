@@ -21,7 +21,7 @@ impl<T: Mul<Output = T> + Add<Output = T> + Copy> Vector2<T> {
 	pub fn magnitude_squared(&self) -> T {
 		self.x * self.x + self.y * self.y
 	}
-	pub fn as_tuple(&self) -> (T, T) {
+	pub const fn as_tuple(&self) -> (T, T) {
 		(self.x, self.y)
 	}
 }
