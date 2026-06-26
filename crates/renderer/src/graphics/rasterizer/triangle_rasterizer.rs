@@ -7,16 +7,10 @@ use crate::graphics::{
 	geometry::point::AbsoluteScreenCoordinate,
 	interpolate::Interpolate,
 	pipeline::{Pipeline, back_face_culling::BackFaceCulling},
+	rasterizer::Rasterizer,
 	target::Target,
 };
 
-pub trait Rasterizer<Input, VsOut> {
-	fn draw<T: Target, P: Pipeline<Fragment = T::Item, VsOut = VsOut>>(
-		target: &mut T,
-		pipeline: &mut P,
-		item: Input,
-	);
-}
 const fn absolute_screen_coordinate_to_2d_vec(p: AbsoluteScreenCoordinate) -> Vector2<i32> {
 	Vector2::new(p.x as i32, p.y as i32)
 }

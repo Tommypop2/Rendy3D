@@ -7,7 +7,8 @@ use rendy3d_maths::vector::vector4::Vector4;
 use crate::graphics::geometry::clipping::TriangleClipper;
 use crate::graphics::geometry_3d::point::Point;
 use crate::graphics::geometry_3d::triangle::Apply;
-use crate::graphics::rasterizer::{Rasterizer, TriangleRasterizer};
+use crate::graphics::rasterizer::Rasterizer;
+use crate::graphics::rasterizer::triangle_rasterizer::TriangleRasterizer;
 use crate::maths::matrices::matrix4::Matrix4;
 
 use crate::graphics::{interpolate::Interpolate, pipeline::Pipeline, target::Target};
