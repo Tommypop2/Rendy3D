@@ -15,3 +15,10 @@ image = { version = "0.25.6", optional = true }
 [features]
 default = ["std"]
 std = ["dep:image", "rendy3d-maths/std"]
+
+[[bench]]
+name = "draw_cube"
+harness = false
+
+[dev-dependencies]
+criterion = {version = "0.8.2", features = ["html_reports"]}
