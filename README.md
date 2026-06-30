@@ -18,6 +18,7 @@ It is being built for learning purposes so performance and features are likely n
 - [ ] Multithreading
 - [ ] Shadows
 - [ ] Accessing rate of change of interpolated values in the shader (allows for texture mipmapping)
+- [ ] Decide on `Rasterizer` vs `Draw` trait - `Rasterizer` technically more flexible but requires creating a new struct. Could this just be solved by implementing draw on a newtype wrapper?
 
 ## Future Ideas
 
