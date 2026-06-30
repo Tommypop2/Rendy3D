@@ -1,9 +1,9 @@
 use hsv::hsv_to_rgb;
 use rendy3d::graphics::colour::Colour;
 use rendy3d::graphics::geometry::clipping::SutherlandHodgman;
+use rendy3d::graphics::geometry_3d::cube::Cube;
 use rendy3d::graphics::interpolate::PerspectiveCorrectInterpolate;
 use rendy3d::maths::geometry::bounding_area::BoundingArea2D;
-use rendy3d::maths::geometry::triangle::Triangle;
 // Derived from softbuffer `winit` example
 use core::f32;
 use log::debug;
@@ -300,35 +300,8 @@ pub fn entry(event_loop: EventLoop<()>) {
 					))
 					.unwrap();
 					let mut target = viewport.target(&mut screen);
-					let a = Point::new(1.0, 1.0, 1.0);
-					let b = Point::new(-1.0, 1.0, 1.0);
-					let c = Point::new(1.0, -1.0, 1.0);
-					let d = Point::new(1.0, -1.0, -1.0);
-					let e = Point::new(-1.0, -1.0, 1.0);
-					let f = Point::new(-1.0, -1.0, -1.0);
-					let g = Point::new(-1.0, 1.0, -1.0);
-					let h = Point::new(1.0, 1.0, -1.0);
 					render(
-						[
-							// Triangle::new(
-							// 	Point::new(0.0, 0.0, -0.85),
-							// 	Point::new(0.4, -0.4, -1.0),
-							// 	Point::new(0.4, 0.4, -0.85),
-							// ),
-							Triangle::new(a, b, c),
-							Triangle::new(c, b, e),
-							Triangle::new(a, h, g),
-							Triangle::new(b, a, g),
-							Triangle::new(f, b, g),
-							Triangle::new(e, b, f),
-							Triangle::new(a, c, d),
-							Triangle::new(h, a, d),
-							Triangle::new(c, e, d),
-							Triangle::new(e, f, d),
-							Triangle::new(g, h, d),
-							Triangle::new(f, g, d),
-						]
-						.into_iter(),
+						Cube::new(2.0),
 						&mut Test {},
 						&mut target,
 						{

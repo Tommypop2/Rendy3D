@@ -28,7 +28,7 @@ pub fn render<M, P, T, U, V, F>(
 	transform: Matrix4<f64>,
 	projection: Matrix4<f64>,
 ) where
-	M: Iterator<Item = Triangle<V>>,
+	M: IntoIterator<Item = Triangle<V>>,
 	P: Pipeline<VsOut = U, Fragment = F, Vertex = V>,
 	T: Target<Item = F>,
 	U: Interpolate + Clone,
