@@ -1,34 +1,31 @@
-use hsv::hsv_to_rgb;
-use rendy3d::graphics::colour::Colour;
-use rendy3d::graphics::geometry::clipping::SutherlandHodgman;
-use rendy3d::graphics::geometry_3d::cube::Cube;
-use rendy3d::graphics::interpolate::PerspectiveCorrectInterpolate;
-use rendy3d::maths::geometry::bounding_area::BoundingArea2D;
 // Derived from softbuffer `winit` example
 use core::f32;
 use log::debug;
-use rendy3d::graphics::geometry::point::AbsoluteScreenCoordinate;
-use rendy3d::graphics::geometry_3d::point::Point;
-use rendy3d::graphics::pipeline::Pipeline;
+use render_pipeline::WebDemo;
+use rendy3d::graphics::colour::Colour;
+use rendy3d::graphics::geometry_3d::cube::Cube;
 use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
+use rendy3d::maths::geometry::bounding_area::BoundingArea2D;
 use rendy3d::maths::matrices::matrix4::Matrix4;
 use rendy3d::maths::vector::vector3::Vector3;
 use rendy3d::render::render;
-#[cfg(target_arch = "wasm32")]
-use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::num::NonZeroU32;
 use std::rc::Rc;
-use std::time::SystemTime;
-use web_sys::Performance;
 use winit::application::ApplicationHandler;
 use winit::event::{Event, KeyEvent, WindowEvent};
 use winit::event_loop::ActiveEventLoop;
 use winit::event_loop::{ControlFlow, EventLoop};
 use winit::keyboard::{Key, NamedKey};
 use winit::window::{Window, WindowAttributes, WindowId};
+
+#[cfg(target_arch = "wasm32")]
+use std::cell::RefCell;
+
+mod render_pipeline;
+mod timer;
 
 /// Run a Winit application.
 #[allow(unused_mut)]
@@ -179,42 +176,6 @@ where
 	}
 }
 
-#[derive(Clone)]
-struct Test;
-impl Pipeline for Test {
-	type VsOut = PerspectiveCorrectInterpolate<f64>;
-	type Vertex = Point;
-	type Fragment = Colour;
-	type ClippingStrategy = SutherlandHodgman;
-
-	fn vertex(&self, _index: usize, vertex: Point) -> (Point, Self::VsOut) {
-		// let (r, g, b) = hsv_to_rgb(
-		// 	360.0 - ((vertex.z - 1.5) / 2.0 * 360.0).clamp(0.0, 360.0) as f64,
-		// 	1.0,
-		// 	1.0,
-		// );
-		// let c = Colour::new(r, g, b, 255);
-		(
-			vertex,
-			PerspectiveCorrectInterpolate::new(360.0 * (1.0 - ((vertex.z + 2.8) / 3.0)), vertex.z),
-		)
-	}
-
-	fn fragment(&self, _pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
-		// let (r, g, b) = hsv_to_rgb(
-		// 	360.0 - ((pos.z - 1.7) / 0.6 * 360.0).clamp(0.0, 360.0) as f64,
-		// 	1.0,
-		// 	1.0,
-		// );
-		// Colour::new(r, g, b, 255)
-		let hue = data.get();
-		let (r, g, b) = hsv_to_rgb(hue.clamp(0.0, 360.0), 1.0, 1.0);
-		Colour::new(r, g, b, 255)
-	}
-	fn backface_culling() -> rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling {
-		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::None
-	}
-}
 pub fn entry(event_loop: EventLoop<()>) {
 	let app = WinitAppBuilder::with_init(
 		|elwt| {
@@ -231,6 +192,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 			let z_buffer = vec![f32::INFINITY; { width * height } as usize];
 			#[cfg(target_arch = "wasm32")]
 			{
+				use crate::timer::WasmTime;
 				use winit::dpi::PhysicalSize;
 
 				window.set_min_inner_size(Some(PhysicalSize::new(1280, 720)));
@@ -302,7 +264,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 					let mut target = viewport.target(&mut screen);
 					render(
 						Cube::new(2.0),
-						&mut Test {},
+						&mut WebDemo {},
 						&mut target,
 						{
 							let x = time.secs();
@@ -348,6 +310,10 @@ pub fn start() {
 }
 #[cfg(target_arch = "wasm32")]
 use web_sys::HtmlCanvasElement;
+
+#[cfg(not(target_arch = "wasm32"))]
+use crate::timer::StdTime;
+use crate::timer::Timer;
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen::prelude::wasm_bindgen]
 pub fn start_web(window: Option<HtmlCanvasElement>) {
@@ -359,27 +325,4 @@ pub fn start_web(window: Option<HtmlCanvasElement>) {
 	// Set window to window given
 	WINDOW.replace(window);
 	start();
-}
-
-trait Timer {
-	fn secs(&self) -> f64;
-}
-struct StdTime {}
-impl Timer for StdTime {
-	fn secs(&self) -> f64 {
-		SystemTime::now()
-			.duration_since(SystemTime::UNIX_EPOCH)
-			.unwrap()
-			.as_secs_f64()
-	}
-}
-
-#[allow(dead_code)]
-struct WasmTime {
-	performance: Performance,
-}
-impl Timer for WasmTime {
-	fn secs(&self) -> f64 {
-		self.performance.now() / 1000.0
-	}
 }
