@@ -228,7 +228,7 @@ impl World {
 		T: Pipeline<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>,
 	>(
 		&mut self,
-		screen: &mut Screen,
+		screen: &mut Screen<Colour>,
 		pipeline: &mut T,
 	) {
 		let x: std::time::Duration = SystemTime::now()
@@ -261,7 +261,7 @@ impl World {
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
-				let target: &mut rendy3d::graphics::viewport::ViewportTarget<'_, Screen<'_>> =
+				let target: &mut rendy3d::graphics::viewport::ViewportTarget<'_, Screen<'_, Colour>> =
 					&mut camera.viewport.target(screen);
 				render(
 					object.triangles(),

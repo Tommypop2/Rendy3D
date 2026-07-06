@@ -7,15 +7,18 @@ use crate::graphics::{colour::Colour, target::Target};
 /// Root [`Target`] that actually writes to a framebuffer
 ///
 /// This can be replaced by anything else that implements [`Target`]
-pub struct Screen<'a> {
-	pub frame_buffer: &'a mut [Colour],
+pub struct Screen<'a, Pixel> {
+	pub frame_buffer: &'a mut [Pixel],
 	width: usize,
 	height: usize,
 	pub z_buffer: &'a mut [f32],
-	pub draw_colour: Colour,
+	pub draw_colour: Pixel,
 }
-impl<'a> Target for Screen<'a> {
-	type Item = Colour;
+impl<'a, Pixel> Target for Screen<'a, Pixel>
+where
+	Pixel: Clone + Default,
+{
+	type Item = Pixel;
 
 	fn set(&mut self, x: usize, y: usize, value: Self::Item) {
 		let w = self.width;
@@ -23,7 +26,7 @@ impl<'a> Target for Screen<'a> {
 	}
 
 	fn get(&self, x: usize, y: usize) -> Self::Item {
-		self.frame()[y * self.width + x]
+		self.frame()[y * self.width + x].clone()
 	}
 
 	fn set_depth(&mut self, x: usize, y: usize, value: f32) {
@@ -53,15 +56,15 @@ impl<'a> Target for Screen<'a> {
 	}
 
 	fn draw_colour(&self) -> Self::Item {
-		self.draw_colour
+		self.draw_colour.clone()
 	}
 	fn set_draw_colour(&mut self, value: Self::Item) {
 		self.draw_colour = value;
 	}
 }
-impl<'a> Screen<'a> {
+impl<'a, Pixel> Screen<'a, Pixel> where Pixel: Clone + Default {
 	pub fn new(
-		frame_buffer: &'a mut [Colour],
+		frame_buffer: &'a mut [Pixel],
 		z_buffer: &'a mut [f32],
 		width: usize,
 		height: usize,
@@ -71,15 +74,15 @@ impl<'a> Screen<'a> {
 			z_buffer,
 			width,
 			height,
-			draw_colour: Colour::new(0x48, 0xb2, 0xe8, 255),
+			draw_colour: Pixel::default(),
 		}
 	}
 	#[inline]
-	pub fn frame(&self) -> &[Colour] {
+	pub fn frame(&self) -> &[Pixel] {
 		self.frame_buffer
 	}
 	#[inline]
-	pub fn frame_mut(&mut self) -> &mut [Colour] {
+	pub fn frame_mut(&mut self) -> &mut [Pixel] {
 		self.frame_buffer
 	}
 	pub fn reset_z_buffer(&mut self) {

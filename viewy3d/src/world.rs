@@ -25,7 +25,7 @@ impl World {
 		Self { objects, cameras }
 	}
 
-	pub fn draw(&mut self, screen: &mut Screen) {
+	pub fn draw(&mut self, screen: &mut Screen<Colour>) {
 		let _x: std::time::Duration = SystemTime::now()
 			.duration_since(SystemTime::UNIX_EPOCH)
 			.unwrap();
