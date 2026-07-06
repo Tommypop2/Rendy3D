@@ -1,7 +1,7 @@
 #[cfg(feature = "std")]
 use rendy3d_maths::geometry::triangle::Triangle;
 
-use crate::graphics::geometry::{point::AbsoluteScreenCoordinate};
+use crate::graphics::geometry::point::AbsoluteScreenCoordinate;
 
 pub struct Polygon<'a> {
 	points: &'a [AbsoluteScreenCoordinate],
@@ -12,7 +12,8 @@ impl<'a> Polygon<'a> {
 	}
 	#[cfg(feature = "std")]
 	pub fn to_triangles(&self) -> Vec<Triangle<AbsoluteScreenCoordinate>> {
-		let mut triangles: Vec<Triangle<AbsoluteScreenCoordinate>> = Vec::with_capacity(self.points.len() - 2);
+		let mut triangles: Vec<Triangle<AbsoluteScreenCoordinate>> =
+			Vec::with_capacity(self.points.len() - 2);
 		let first = self.points[0];
 		let len = self.points.len();
 		for i in 1..(len - 1) {

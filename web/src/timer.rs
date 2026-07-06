@@ -4,7 +4,7 @@ use web_sys::Performance;
 
 /// Standardises getting the current time between wasm and std environments
 
-/// 
+///
 pub trait Timer {
 	fn secs(&self) -> f64;
 }

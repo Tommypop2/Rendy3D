@@ -4,9 +4,7 @@ use rendy3d::{
 	graphics::{
 		camera::Camera,
 		colour::Colour,
-		geometry::{
-			clipping::SutherlandHodgman, point::AbsoluteScreenCoordinate,
-		},
+		geometry::{clipping::SutherlandHodgman, point::AbsoluteScreenCoordinate},
 		geometry_3d::point::Point,
 		mesh::vertices::NormalVertex,
 		object::Object,

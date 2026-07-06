@@ -9,9 +9,7 @@ use rendy3d::{
 	},
 	render::render,
 };
-use rendy3d_maths::{
-	matrices::matrix4::Matrix4, vector::vector3::Vector3,
-};
+use rendy3d_maths::{matrices::matrix4::Matrix4, vector::vector3::Vector3};
 use std::hint::black_box;
 struct Bench {
 	c: Colour,

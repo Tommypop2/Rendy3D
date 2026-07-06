@@ -68,14 +68,6 @@ pub fn render<M, P, T, U, V, F>(
 						)
 					}),
 				);
-				// t.map_vertices(|(p, a)| {
-				// 	(
-				// 		Point::from_vector(Vector3::from_homogenous(p))
-				// 			.to_pixel_coordinate(target.area()),
-				// 		a,
-				// 	)
-				// })
-				// .draw(target, pipeline);
 			}
 		}
 		// If all vertices are inside the viewing frustum, render
