@@ -168,15 +168,11 @@ where
 	}
 }
 
-// pub struct NoClip;
-// impl<T> TriangleClipper<T> for NoClip {
-// 	type ClipResult = ();
+pub struct NoClip;
+impl<T> TriangleClipper<T> for NoClip {
+	type ClipResult = [Option<Triangle<Vertex<T>>>; 1];
 
-// 	fn clip(triangle: Triangle<Vertex<T>>) -> impl Iterator<Item = Triangle<Vertex<T>>> {
-// 		todo!()
-// 	}
-
-// 	fn clip_equation(triangle: Triangle<Vertex<T>>, equation: Vector4<f64>) -> Self::ClipResult {
-// 		todo!()
-// 	}
-// }
+	fn clip(triangle: Triangle<Vertex<T>>) -> impl Iterator<Item = Triangle<Vertex<T>>> {
+		Some(triangle).into_iter()
+	}
+}
