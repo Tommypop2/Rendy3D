@@ -1,10 +1,11 @@
 //! Implementation of a triangle clipping algorithm
 
-use rendy3d_maths::{geometry::{quad::Quad, triangle::Triangle}, vector::vector4::Vector4};
-
-use crate::graphics::{
-	interpolate::Interpolate,
+use rendy3d_maths::{
+	geometry::{quad::Quad, triangle::Triangle},
+	vector::vector4::Vector4,
 };
+
+use crate::graphics::interpolate::Interpolate;
 #[derive(Clone, Copy)]
 pub enum ClippingPlane {
 	NearZ,
@@ -40,8 +41,6 @@ pub trait TriangleClipper<T> {
 	type ClipResult: IntoIterator<Item = Option<Triangle<Vertex<T>>>>;
 	/// Clips triangle by each equation in turn
 	fn clip(triangle: Triangle<Vertex<T>>) -> impl Iterator<Item = Triangle<Vertex<T>>>;
-	/// Clips triangle by a single equation
-	fn clip_equation(triangle: Triangle<Vertex<T>>, equation: Vector4<f64>) -> Self::ClipResult;
 }
 
 pub struct SutherlandHodgman;
@@ -65,27 +64,15 @@ impl SutherlandHodgman {
 		(p, a)
 	}
 }
-impl<T> TriangleClipper<T> for SutherlandHodgman
-where
-	T: Interpolate + Clone,
-{
-	type ClipResult = [Option<Triangle<Vertex<T>>>; 2];
-	fn clip(triangle: Triangle<Vertex<T>>) -> impl Iterator<Item = Triangle<Vertex<T>>> {
-		Self::clip_equation(triangle, ClippingPlane::NearZ.equation())
-			.into_iter()
-			.flatten()
-			.flat_map(|triangle| Self::clip_equation(triangle, ClippingPlane::FarZ.equation()))
-			.flatten()
-			.flat_map(|t| Self::clip_equation(t, ClippingPlane::NegX.equation()))
-			.flatten()
-			.flat_map(|t| Self::clip_equation(t, ClippingPlane::PosX.equation()))
-			.flatten()
-			.flat_map(|t| Self::clip_equation(t, ClippingPlane::NegY.equation()))
-			.flatten()
-			.flat_map(|t| Self::clip_equation(t, ClippingPlane::PosY.equation()))
-			.flatten()
-	}
-	fn clip_equation(triangle: Triangle<Vertex<T>>, equation: Vector4<f64>) -> Self::ClipResult {
+impl SutherlandHodgman {
+	/// Clips triangle by a single equation
+	fn clip_equation<T>(
+		triangle: Triangle<Vertex<T>>,
+		equation: Vector4<f64>,
+	) -> [Option<Triangle<Vertex<T>>>; 2]
+	where
+		T: Interpolate + Clone,
+	{
 		// let near_plane = Vector4::new(0.0, 0.0, 1.0, 1.0);
 		let v0 = triangle.vertex1;
 		let v1 = triangle.vertex2;
@@ -157,6 +144,27 @@ where
 			_ => unreachable!(),
 		};
 		out_triangles
+	}
+}
+impl<T> TriangleClipper<T> for SutherlandHodgman
+where
+	T: Interpolate + Clone,
+{
+	type ClipResult = [Option<Triangle<Vertex<T>>>; 2];
+	fn clip(triangle: Triangle<Vertex<T>>) -> impl Iterator<Item = Triangle<Vertex<T>>> {
+		Self::clip_equation(triangle, ClippingPlane::NearZ.equation())
+			.into_iter()
+			.flatten()
+			.flat_map(|triangle| Self::clip_equation(triangle, ClippingPlane::FarZ.equation()))
+			.flatten()
+			.flat_map(|t| Self::clip_equation(t, ClippingPlane::NegX.equation()))
+			.flatten()
+			.flat_map(|t| Self::clip_equation(t, ClippingPlane::PosX.equation()))
+			.flatten()
+			.flat_map(|t| Self::clip_equation(t, ClippingPlane::NegY.equation()))
+			.flatten()
+			.flat_map(|t| Self::clip_equation(t, ClippingPlane::PosY.equation()))
+			.flatten()
 	}
 }
 
