@@ -155,3 +155,30 @@ where
 		Self { data, z_reciprocal }
 	}
 }
+
+#[derive(Clone, Copy)]
+pub struct Static<T> {
+	data: T,
+}
+impl<T> Static<T> {
+	pub fn new(data: T) -> Self {
+		Self { data }
+	}
+	pub fn get(self) -> T {
+		self.data
+	}
+}
+
+impl<T> Interpolate for Static<T>
+where
+	T: Copy,
+{
+	fn interpolate2(a: &Self, _b: &Self, _x: f32, _y: f32) -> Self {
+		// If static, a should be equal to b
+		*a
+	}
+	fn interpolate3(a: &Self, _b: &Self, _c: &Self, _x: f32, _y: f32, _z: f32) -> Self {
+		// If static, a should be equal to b
+		*a
+	}
+}
