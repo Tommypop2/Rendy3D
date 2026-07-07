@@ -13,7 +13,7 @@ It is being built for learning purposes so performance and features are likely n
 
 ## TODO
 
-- [ ] Move application of the projection matrices into the shader
+- [x] Move application of the projection matrices into the shader
 - [ ] Optimize triangle clipping (maybe do XY clipping in 2D on integer coordinates)
 - [ ] Multithreading
 - [ ] Shadows
