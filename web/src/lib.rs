@@ -266,16 +266,7 @@ pub fn entry(event_loop: EventLoop<()>) {
 						Cube::new(2.0),
 						&mut WebDemo {},
 						&mut target,
-						{
-							let x = time.secs();
-
-							Matrix4::scale_x(height.get() as f64 / width.get() as f64)
-								* Matrix4::translation(Vector3::new(0.0, 0.0, -2.0))
-								* Matrix4::rotation_z(x) * Matrix4::rotation_y(x)
-								* Matrix4::rotation_x(x) * Matrix4::scale(0.4)
-							// Matrix4::identity()
-						},
-						Matrix4::new_perspective(1.0, 1.0, 20.0, 0.1),
+						(time.secs(), height.get() as f64 / width.get() as f64),
 					);
 					buffer.present().unwrap();
 					window.request_redraw();

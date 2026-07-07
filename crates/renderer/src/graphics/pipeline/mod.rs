@@ -13,6 +13,8 @@ use crate::graphics::{
 pub trait Pipeline {
 	/// Output of vertex shader
 	type VsOut: Interpolate;
+	// Additional input state for the vertex shader
+	type VsIn;
 	/// Type of fragments emitted by fragment shader
 	type Fragment;
 	/// Input vertex type
@@ -21,7 +23,7 @@ pub trait Pipeline {
 	type ClippingStrategy: TriangleClipper<Self::VsOut>;
 
 	/// Vertex shader
-	fn vertex(&self, index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut);
+	fn vertex(&self, index: usize, vertex: Self::Vertex, state: Self::VsIn) -> (Point, Self::VsOut);
 
 	/// Fragment shader
 	fn fragment(&self, position: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment;
