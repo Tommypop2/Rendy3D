@@ -16,11 +16,17 @@ struct Bench {
 }
 impl Pipeline for Bench {
 	type VsOut = Colour;
+	type VsIn = Matrix4<f64>;
 	type Vertex = Point;
 	type Fragment = Colour;
 	type ClippingStrategy = SutherlandHodgman;
-	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
-		(vertex, self.c)
+	fn vertex(
+		&self,
+		_index: usize,
+		vertex: Self::Vertex,
+		state: Self::VsIn,
+	) -> (Point, Self::VsOut) {
+		(vertex.apply(state), self.c)
 	}
 
 	fn fragment(&self, _pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
@@ -30,14 +36,13 @@ impl Pipeline for Bench {
 		rendy3d::graphics::pipeline::back_face_culling::BackFaceCulling::CullClockwise
 	}
 }
-fn draw_triangle(c: Colour, target: &mut Screen, transform: Matrix4<f64>) -> u64 {
+fn draw_triangle(c: Colour, target: &mut Screen<Colour>, transform: Matrix4<f64>) -> u64 {
 	// Draw the same triangle lots of times
 	render(
 		Cube::new(2.0),
 		&mut Bench { c },
 		target,
-		transform,
-		Matrix4::new_perspective(1.0, 1.0, 20.0, 0.1),
+		Matrix4::new_perspective(1.0, 1.0, 20.0, 0.1) * transform,
 	);
 	2
 }

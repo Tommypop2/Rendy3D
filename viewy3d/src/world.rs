@@ -56,8 +56,8 @@ impl World {
 						light_direction: Vector3::new(0.0, -0.2, -1.0),
 					},
 					&mut camera.viewport.target(screen),
-					transform,
-					camera.projection.clone(),
+					(transform,
+					camera.projection.clone()),
 				);
 				// render_mesh(
 				// 	&mut camera.viewport.target(screen),
@@ -79,16 +79,18 @@ struct CoolShaders {
 impl Pipeline for CoolShaders {
 	type Fragment = Colour;
 	type VsOut = Colour;
+	type VsIn = (Matrix4<f64>, Matrix4<f64>);
 	type Vertex = NormalVertex;
 	type ClippingStrategy = SutherlandHodgman;
 
-	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
+	fn vertex(&self, _index: usize, mut vertex: Self::Vertex, state: Self::VsIn) -> (Point, Self::VsOut) {
+		vertex.position *= state.0;
 		let intensity = vertex.normal.dot_with(&self.light_direction);
 		// println!("{intensity}");
 		let val = (255.0 * intensity * 100.0) as u8;
 		// let val = 200;
 		let c = Colour::new(val, val, val, 0xff);
-		(vertex.position, c)
+		(vertex.position.apply(state.1), c)
 	}
 	fn fragment(&self, pos: AbsoluteScreenCoordinate, data: Self::VsOut) -> Self::Fragment {
 		// let (r, g, b) = hsv_to_rgb((pos.z * 360.0).clamp(0.0, 360.0) as f64 * 0.75, 1.0, 1.0);
