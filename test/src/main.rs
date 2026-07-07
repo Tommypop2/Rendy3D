@@ -167,16 +167,23 @@ struct Test {
 	texture: ImageTexture,
 }
 impl Pipeline for Test {
+	type VsIn = (Matrix4<f64>, Matrix4<f64>);
 	type VsOut = (PerspectiveCorrectInterpolate<Vector2<f64>>, f64);
 	type Vertex = TexturedVertex;
 	type Fragment = Colour;
 	type ClippingStrategy = SutherlandHodgman;
-	fn vertex(&self, _index: usize, vertex: Self::Vertex) -> (Point, Self::VsOut) {
+	fn vertex(
+		&self,
+		_index: usize,
+		mut vertex: Self::Vertex,
+		state: Self::VsIn,
+	) -> (Point, Self::VsOut) {
+		vertex *= state.0;
 		let intensity = vertex.normal.dot_with(&self.light_direction);
 		// dbg!(&vertex);
 		let z = vertex.position.z;
 		(
-			vertex.position,
+			vertex.position.apply(state.1),
 			(
 				PerspectiveCorrectInterpolate::new(vertex.texture, z),
 				intensity / 1.5,
@@ -225,7 +232,12 @@ impl World {
 
 	fn draw<
 		U: Interpolate + Clone,
-		T: Pipeline<VsOut = U, Fragment = Colour, Vertex = TexturedVertex>,
+		T: Pipeline<
+				VsOut = U,
+				Fragment = Colour,
+				Vertex = TexturedVertex,
+				VsIn = (Matrix4<f64>, Matrix4<f64>),
+			>,
 	>(
 		&mut self,
 		screen: &mut Screen<Colour>,
@@ -261,15 +273,12 @@ impl World {
 					* Matrix4::scale_x(
 						camera.viewport.area.height() as f64 / camera.viewport.area.width() as f64,
 					) * base_transform.clone();
-				let target: &mut rendy3d::graphics::viewport::ViewportTarget<'_, Screen<'_, Colour>> =
-					&mut camera.viewport.target(screen);
-				render(
-					object.triangles(),
-					pipeline,
-					target,
-					transform,
-					camera.projection.clone(),
-				);
+				let target: &mut rendy3d::graphics::viewport::ViewportTarget<
+					'_,
+					Screen<'_, Colour>,
+				> = &mut camera.viewport.target(screen);
+				let s = (transform, camera.projection.clone());
+				render(object.triangles(), pipeline, target, s);
 			}
 		}
 	}
