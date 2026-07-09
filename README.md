@@ -26,6 +26,20 @@ Experiment with shader composition (implementing a shader on top of an existing 
 
 Maybe a new crate for a more fully-featured engine?
 
+Possibly seperate into renderer (literally just drawing triangles), rendering engine(cameras, shadows, mesh rendering), game engine(inputs, collisions, nicer transformation handling, etc...). The current `renderer` crate currently handles the first 2
+
+## Game Engine Notes
+
+See unity/godot for inspiration. The line between rendering engine and game engine can be a bit blurry. e.g should the camera/shadows be a feature in the renderer, or should the renderer render from one direction only & have the game engine itself handle cameras & rendering from different perspectives for shadows. Shadows are sort of a renderer job but cameras are an engine concern but the cameras are needed for shadows.
+
+- Objects with transformations natively (no need to manipulate triangle arrays)
+- Maybe collisions?
+- Profiling tools (fps monitoring at a minimum)
+- Input handling/event loop
+- Renderer agnostic would be really cool (euc | some opengl/vulkan renderer)
+
+Can test both with rubiks cube & mars lander project maybe? -> Maybe do rubiks renderer first and copy any useful abstractions into the engine
+
 ## Useful Resources
 
 - <https://trenki2.github.io/blog/2017/06/06/developing-a-software-renderer-part1/>
