@@ -8,8 +8,6 @@ use rendy3d::graphics::screen::Screen;
 use rendy3d::graphics::target::Target;
 use rendy3d::graphics::viewport::Viewport;
 use rendy3d::maths::geometry::bounding_area::BoundingArea2D;
-use rendy3d::maths::matrices::matrix4::Matrix4;
-use rendy3d::maths::vector::vector3::Vector3;
 use rendy3d::render::render;
 use std::marker::PhantomData;
 use std::num::NonZeroU32;
